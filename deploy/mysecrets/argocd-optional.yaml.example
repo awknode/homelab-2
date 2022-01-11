@@ -308,24 +308,6 @@ stringData:
     persistence:
       config:
         enabled: true
-  kasten-k10.yaml: |
-    executorReplicas: 1
-    ingress:
-      create: true
-      tls:
-        enabled: true
-        secretName: "k10-tls"
-      class: "nginx"
-      host: "k10.example.com"
-      annotations:
-        kubernetes.io/ingress.class: "nginx"
-        cert-manager.io/cluster-issuer: "letsencrypt-prod"
-        external-dns.alpha.kubernetes.io/hostname: "k10.example.com."
-        nginx.ingress.kubernetes.io/auth-url: "http://authelia.authelia.svc.cluster.local/api/verify"
-        nginx.ingress.kubernetes.io/auth-signin: "example.com"
-    auth:
-      tokenAuth:
-        enabled: true
   kuma.yaml: |
     ingress:
       annotations:
