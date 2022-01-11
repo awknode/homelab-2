@@ -315,7 +315,7 @@ stringData:
       tls:
         enabled: true
         secretName: "k10-tls"
-      class: nginx
+      class: "nginx"
       host: "k10.example.com"
       annotations:
         kubernetes.io/ingress.class: "nginx"
