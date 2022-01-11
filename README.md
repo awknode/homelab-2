@@ -86,7 +86,7 @@ press the sync button at the top and wait for argocd to have synced all apps unt
 ### 7.) configure external-dns
 external-dns does need credentials in order to connect we ll use kubeseal to save these credentials encrypted.
 ```
-cd deploy/mysecrets
+cd ../mysecrets
 
 cp cloudflare-credentials-external-dns.yaml.example cloudflare-credentials-external-dns.yaml
 nano cloudflare-credentials-external-dns.yaml
@@ -96,7 +96,6 @@ cat cloudflare-credentials-external-dns.yaml | kubeseal -o yaml | kubectl apply 
 
 ### 8.) configure optional apps
 ```
-cd deploy/mysecrets
 cp argocd-optional.yaml.example argocd-optional.yaml
 nano argocd-optional.yaml
 ```
