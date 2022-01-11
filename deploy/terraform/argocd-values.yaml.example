@@ -1,0 +1,63 @@
+server:
+  extraArgs:
+    - --insecure
+  config:
+    # Argo CD's externally facing base URL (optional). Required when configuring SSO
+    url: https://argocd.example.com
+    # Argo CD instance label key
+    application.instanceLabelKey: argocd.argoproj.io/instance
+    resource.customizations: |
+      argoproj.io/Application:
+        health.lua: |
+          hs = {}
+          hs.status = "Progressing"
+          hs.message = ""
+          if obj.status ~= nil then
+            if obj.status.health ~= nil then
+              hs.status = obj.status.health.status
+              if obj.status.health.message ~= nil then
+                hs.message = obj.status.health.message
+              end
+            end
+          end
+          return hs
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issue: letsencrypt-prod
+      external-dns.alpha.kubernetes.io/hostname: "argocd.example.com."
+      nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+      nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
+    ingressClassName: nginx
+    hosts:
+    - argocd.example.com
+    tls:
+    - secretName: argocd-tls-certificate
+      hosts:
+      - argocd.example.com
+
+  certificate:
+    enabled: true
+    # -- Certificate manager domain
+    domain: argocd.example.com
+    issuer:
+      # -- Certificate manager issuer
+      kind: ClusterIssuer
+      # -- Certificate manager name
+      name: letsencrypt-prod
+    # -- Certificate manager additional hosts
+    additionalHosts: []
+    # -- Certificate manager secret name
+    secretName: argocd-tls-certificate
+apiVersionOverrides: 
+  cert-manager: "cert-manager.io/v1"
+repoServer:
+  volumeMounts:
+    - name: helm-values
+      mountPath: /helm-values
+  volumes:
+    - name: helm-values
+      secret:
+        secretName: helm-values
+        #only optional mounts here as on first boot this secret wont be available yet 
+        optional: true

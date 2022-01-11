@@ -1,0 +1,57 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  source:
+    chart: redis
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: "15.6.10"
+    helm:
+      parameters:
+      - name: env.TZ
+        value: "Europe/Berlin"
+      - name: auth.enabled
+        value: "false"
+      valueFiles:
+        - /helm-values/shared-dbs-redis.yaml
+  destination:
+    namespace: shared-dbs
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgresql
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: postgresql
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: "10.15.1"
+    helm:
+      parameters:
+      - name: env.TZ
+        value: "Europe/Berlin"
+      valueFiles:
+        - /helm-values/shared-dbs-postgresql.yaml
+  destination:
+    namespace: shared-dbs
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

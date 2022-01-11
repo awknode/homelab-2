@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: plex
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    chart: plex
+    repoURL: https://k8s-at-home.com/charts/
+    targetRevision: "6.2.0"
+    helm:
+      parameters:
+      - name: env.PLEX_CLAIM
+        value: claim-2V-isqzUyAMRtVe-etMT
+      - name: env.TZ
+        value: "Europe/Berlin"
+      - name: persistence.config.enabled
+        value: "true"
+      - name: persistence.config.mountPath
+        value: "/plex/config"
+      - name: persistence.config.accessMode 
+        value: "ReadWriteOnce"
+      - name: persistence.config.size 
+        value: "5Gi"
+      - name: persistence.config.storageClass
+        value: "freenas-iscsi-csi"
+      - name: persistence.originals.enabled
+        value: "true"
+      - name: persistence.originals.mountPath
+        value: "/plex/media"
+      - name: persistence.originals.accessMode 
+        value: "ReadWriteOnce"
+      - name: persistence.originals.size 
+        value: "6000Gi"
+      - name: persistence.originals.storageClass
+        value: "freenas-iscsi-csi"
+      valueFiles:
+        - /helm-values/plex.yaml
+  destination:
+    namespace: plexserver
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

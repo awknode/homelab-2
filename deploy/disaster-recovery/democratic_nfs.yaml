@@ -1,0 +1,83 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: zfs-nfs
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  project: default
+  source:
+    repoURL: https://democratic-csi.github.io/charts/
+    targetRevision: "0.8.3"
+    chart: democratic-csi
+    helm:
+      values: |
+        csiDriver:
+          # should be globally unique for a given cluster
+          name: "org.democratic-csi.nfs"
+
+        storageClasses:
+        - name: freenas-nfs-csi
+          defaultClass: false
+          reclaimPolicy: Retain
+          volumeBindingMode: Immediate
+          allowVolumeExpansion: true
+          parameters:
+            fsType: nfs
+
+          mountOptions:
+          - noatime
+          - nfsvers=4
+          secrets:
+            provisioner-secret:
+            controller-publish-secret:
+            node-stage-secret:
+            node-publish-secret:
+            controller-expand-secret:
+
+        driver:
+          config:
+            driver: freenas-nfs
+            instance_id:
+            httpConnection:
+              protocol: http
+              host: 172.16.137.108
+              port: 80
+              username: root
+              password: "574$afZ7$!"
+              allowInsecure: true
+            sshConnection:
+              host: 172.16.137.108
+              port: 22
+              username: root
+              # use either password or key
+              password: "574$afZ7$!"
+                #      privateKey: |
+                #        -----BEGIN RSA PRIVATE KEY-----
+                #        ...
+                #        -----END RSA PRIVATE KEY-----
+            zfs:
+              datasetParentName: a1/k8s/nfs/v
+              detachedSnapshotsDatasetParentName: a1/k8s/nfs/s
+              datasetEnableQuotas: true
+              datasetEnableReservation: false
+              datasetPermissionsMode: "0777"
+              datasetPermissionsUser: root
+              datasetPermissionsGroup: wheel
+            nfs:
+              shareHost: 172.16.137.108
+              shareAlldirs: false
+              shareAllowedHosts: []
+              shareAllowedNetworks: []
+              shareMaprootUser: root
+              shareMaprootGroup: wheel
+              shareMapallUser: ""
+              shareMapallGroup: ""
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: democratic-csi
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

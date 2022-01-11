@@ -1,0 +1,429 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: helm-values
+  namespace: argocd
+stringData:
+  authelia.yaml: |
+    pod:
+      kind: StatefulSet
+      extraVolumeMounts:
+        - name: users-database
+          mountPath: "/config/users"
+          readOnly: true
+      extraVolumes:
+        - name: users-database
+          secret:
+            secretName: authelia-users
+            items:
+              - key: users_database.yml
+                path: users_database.yml
+    configMap:
+      authentication_backend:
+        ldap:
+          enabled: false
+        file:
+          enabled: true
+          password:
+            algorithm: sha512
+            iterations: 100000
+          path: /config/users/users_database.yml
+      session:
+        redis:
+          enabled: false
+        domain: example.com
+        expiration: 3600
+        inactivity: 300
+      storage:
+        local:
+          enabled: true
+        postgres:
+          enabled: false
+      notifier:
+        filesystem:
+          enabled: true
+          filename: /config/notification.txt
+      smtp:
+        enabled: false
+        enabledSecret: false
+        host: mail.example.com
+        port: 25
+        timeout: 5s
+        username: auth@example.com
+        plain_password: homelab
+        sender: auth@example.com
+        identifier: mail.example.com
+        subject: "[Authelia] {title}"
+        startup_check_address: auth@example.com
+        disable_require_tls: false
+        disable_html_emails: false
+        tls:
+          server_name: "mail.example.com"
+          skip_verify: false
+          minimum_version: TLS1.2
+      identity_providers:
+        oidc:
+          enabled: false
+      theme: dark
+      access_control:
+        default_policy: deny
+        rules:
+          - domain: '*.example.com'
+            subject: 'group:admins'
+            policy: one_factor
+          - domain: argocd.example.com
+            policy: two_factor
+          - domain: bitwarden.example.com
+            policy: two_factor
+    ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        external-dns.alpha.kubernetes.io/hostname: "auth.example.com."
+      certManager: "true"
+    domain: example.com
+  bitwarden.yaml: |
+    ingress:
+      main:
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          external-dns.alpha.kubernetes.io/hostname: "auth.example.com."
+          nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+          nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
+        enabled: true
+        hosts:
+          - host: bitwarden.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  port: 80
+              - path: /notifications/hub/negotiate
+                pathType: Prefix
+                service:
+                  port: 80
+              - path: /notifications/hub
+                pathType: Prefix
+                service:
+                  port: 3012
+        tls:
+        - secretName: bitwarden-tls
+          hosts:
+          - bitwarden.example.com
+    persistence:
+      config:
+        enabled: true
+    postgresql:
+      enabled: true
+      postgresqlUsername: ime
+      postgresqlPassword: homelab
+      postgresqlDatabase: ime
+      persistence:
+        enabled: true
+        storageClass: "freenas-iscsi-csi"
+        accessModes:
+          - ReadWriteOnce
+  democratic_iscsi.yaml: |
+    csiDriver:
+      # should be globally unique for a given cluster
+      name: "org.democratic-csi.iscsi"
+
+    # add note here about volume expansion requirements
+    storageClasses:
+    - name: freenas-iscsi-csi
+      # annotations:
+      #   k10.kasten.io/is-snapshot-class: "true"
+      #   volumesnapshotclasses.snapshot.storage.k8s.io: "true"
+      defaultClass: false
+      reclaimPolicy: Retain
+      volumeBindingMode: Immediate
+      allowVolumeExpansion: true
+      parameters:
+        # for block-based storage can be ext3, ext4, xfs
+        fsType: ext4
+
+      mountOptions: []
+      secrets:
+        provisioner-secret:
+        controller-publish-secret:
+        node-stage-secret:
+        node-publish-secret:
+        controller-expand-secret:
+
+    driver:
+      config:
+        driver: freenas-iscsi
+        instance_id:
+        httpConnection:
+          protocol: http
+          host: 172.16.137.108
+          port: 80
+          username: root
+          password: "homelab"
+          allowInsecure: true
+          apiVersion: 2
+        sshConnection:
+          host: 172.16.137.108
+          port: 22
+          username: root
+          # use either password or key
+          password: "homelab"
+        zfs:
+          # the example below is useful for TrueNAS 12
+          cli:
+            paths:
+              zfs: /usr/local/sbin/zfs
+              zpool: /usr/local/sbin/zpool
+              sudo: /usr/local/bin/sudo
+              chroot: /usr/sbin/chroot
+          # total volume name (zvol/<datasetParentName>/<pvc name>) length cannot exceed 63 chars
+          # https://www.ixsystems.com/documentation/freenas/11.2-U5/storage.html#zfs-zvol-config-opts-tab
+          # standard volume naming overhead is 46 chars
+          # datasetParentName should therefore be 17 chars or less
+          datasetParentName: a1/k8s/iscsi/v
+          detachedSnapshotsDatasetParentName: a1/k8s/iscsi/s
+          # "" (inherit), lz4, gzip-9, etc
+          zvolCompression:
+          # "" (inherit), on, off, verify
+          zvolDedup:
+          zvolEnableReservation: false
+          # 512, 1K, 2K, 4K, 8K, 16K, 64K, 128K default is 16K
+          zvolBlocksize:
+        iscsi:
+          targetPortal: "172.16.137.108:3260"
+          targetPortals: []
+          # leave empty to omit usage of -I with iscsiadm
+          interface:
+          namePrefix: csi-
+          nameSuffix: "-cluster"
+          # add as many as needed
+          targetGroups:
+            # get the correct ID from the "portal" section in the UI
+            - targetGroupPortalGroup: 1
+              # get the correct ID from the "initiators" section in the UI
+              targetGroupInitiatorGroup: 1
+              # None, CHAP, or CHAP Mutual
+              targetGroupAuthType: None
+              # get the correct ID from the "Authorized Access" section of the UI
+              # only required if using Chap
+              targetGroupAuthGroup:
+          extentInsecureTpc: true
+          extentXenCompat: false
+          extentDisablePhysicalBlocksize: true
+          # 512, 1024, 2048, or 4096,
+          extentBlocksize: 4096
+          # "" (let FreeNAS decide, currently defaults to SSD), Unknown, SSD, 5400, 7200, 10000, 15000
+          extentRpm: "7200"
+          # 0-100 (0 == ignore)
+          extentAvailThreshold: 0
+    # volumeSnapshotClasses:
+    # - name: freenas-iscsi-csi
+    #   annotations:
+    #     k10.kasten.io/is-snapshot-class: "true"
+    #     volumesnapshotclasses.snapshot.storage.k8s.io: "true"
+    #   parameters:
+  democratic_nfs.yaml: |
+    csiDriver:
+      # should be globally unique for a given cluster
+      name: "org.democratic-csi.nfs"
+
+    storageClasses:
+    - name: freenas-nfs-csi
+      defaultClass: false
+      reclaimPolicy: Retain
+      volumeBindingMode: Immediate
+      allowVolumeExpansion: true
+      parameters:
+        fsType: nfs
+
+      mountOptions:
+      - noatime
+      - nfsvers=4
+      secrets:
+        provisioner-secret:
+        controller-publish-secret:
+        node-stage-secret:
+        node-publish-secret:
+        controller-expand-secret:
+
+    driver:
+      config:
+        driver: freenas-nfs
+        instance_id:
+        httpConnection:
+          protocol: http
+          host: 172.16.137.108
+          port: 80
+          username: root
+          password: "homelab"
+          allowInsecure: true
+        sshConnection:
+          host: 172.16.137.108
+          port: 22
+          username: root
+          # use either password or key
+          password: "homelab!"
+          #      privateKey: |
+          #        -----BEGIN RSA PRIVATE KEY-----
+          #        ...
+          #        -----END RSA PRIVATE KEY-----
+        zfs:
+          datasetParentName: a1/k8s/nfs/v
+          detachedSnapshotsDatasetParentName: a1/k8s/nfs/s
+          datasetEnableQuotas: true
+          datasetEnableReservation: false
+          datasetPermissionsMode: "0777"
+          datasetPermissionsUser: root
+          datasetPermissionsGroup: wheel
+        nfs:
+          shareHost: 172.16.137.108
+          shareAlldirs: false
+          shareAllowedHosts: []
+          shareAllowedNetworks: []
+          shareMaprootUser: root
+          shareMaprootGroup: wheel
+          shareMapallUser: ""
+          shareMapallGroup: ""
+  heimdall.yaml: |
+    ingress:
+      main:
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          external-dns.alpha.kubernetes.io/hostname: "hub.example.com."
+        enabled: true
+        hosts:
+          - host: hub.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  port: 80
+        tls:
+        - secretName: hub-tls
+          hosts:
+          - hub.example.com
+    persistence:
+      config:
+        enabled: true
+  kasten-k10.yaml: |
+    executorReplicas: 1
+    ingress:
+      create: true
+      tls:
+        enabled: true
+        secretName: "k10-tls"
+      class: nginx
+      host: "k10.example.com"
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        external-dns.alpha.kubernetes.io/hostname: "k10.example.com."
+        nginx.ingress.kubernetes.io/auth-url: "http://authelia.authelia.svc.cluster.local/api/verify"
+        nginx.ingress.kubernetes.io/auth-signin: "example.com"
+    auth:
+      tokenAuth:
+        enabled: true
+  kuma.yaml: |
+    ingress:
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        external-dns.alpha.kubernetes.io/hostname: "uptime.example.com."
+        nginx.ingress.kubernetes.io/auth-url: "http://authelia.authelia.svc.cluster.local/api/verify"
+        nginx.ingress.kubernetes.io/auth-signin: "https://auth.example.com"
+      enabled: true
+      hosts:
+        - host: uptime.example.com
+          paths:
+            - path: /
+              pathType: Prefix
+              service:
+                port: 80
+      tls:
+      - secretName: uptime-tls
+        hosts:
+        - uptime.example.com
+    persistence:
+      enabled: "true"
+      storageClass: "freenas-iscsi-csi"
+      size: "1Gi"
+  nextcloud.yaml: |
+    mariadb:
+      enabled: true
+      auth:
+        database: ncloud
+        username: ncloud
+        password: homelab
+      architecture: standalone
+      primary:
+        persistence:
+          enabled: false
+          storageClass: "freenas-iscsi-csi"
+          accessMode: ReadWriteOnce
+          size: 1Gi
+    nextcloud:
+      configs:
+        trusted_domains.config.php: |-
+          <?php
+          $CONFIG = [          
+            'trusted_domains' => [
+              0 => 'localhost',
+              1 => 'nextcloud.kube.home',
+              2 => 'nextcloud.example.com'
+            ]
+          ];
+  photoprism.yaml: |
+    ingress:
+      main:
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          external-dns.alpha.kubernetes.io/hostname: "photos.example.com."
+          nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+          nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
+        enabled: true
+        hosts:
+          - host: photos.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  port: 2342
+        tls:
+        - secretName: photoprism-tls
+          hosts:
+          - photos.example.com
+  plex.yaml: |
+    ingress:
+      main:
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          external-dns.alpha.kubernetes.io/hostname: "plex.example.com."
+          nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+          nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
+        enabled: true
+        hosts:
+          - host: plex.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  port: 32400
+        tls:
+        - secretName: plexserver-tls
+          hosts:
+          - plex.example.com
+  shared-dbs-postgresql.yaml: |
+    postgresqlDatabase: "ime"
+    postgresqlUsername: "ime"
+    postgresqlPassword: "homelab"
+    global:
+      storageClass: "freenas-iscsi-csi"
+  shared-dbs-redis.yaml: |
+    global:
+      storageClass: "freenas-iscsi-csi"
+    architecture: "standalone"

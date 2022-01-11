@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: linkerd
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    chart: linkerd2
+    repoURL: https://helm.linkerd.io/stable
+    targetRevision: "2.11.1"
+    helm:
+      parameters:
+      - name: identityTrustAnchorsPEM
+        value: {{ .Values.linkerd.anchor }}
+      - name: identity.issuer.tls.crtPEM
+        value: {{ .Values.linkerd.crt }}
+      - name: identity.issuer.tls.keyPEM
+        value: {{ .Values.linkerd.key }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+
+  destination:
+    namespace: linkerd
+    server: https://kubernetes.default.svc

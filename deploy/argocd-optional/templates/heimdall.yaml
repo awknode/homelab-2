@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: heimdall
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    chart: heimdall
+    repoURL: https://k8s-at-home.com/charts/
+    targetRevision: "8.1.0"
+    helm:
+      valueFiles:
+        - /helm-values/heimdall.yaml
+  destination:
+    namespace: heimdall
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

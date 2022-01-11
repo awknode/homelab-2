@@ -1,0 +1,26 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: authelia
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    chart: authelia
+    targetRevision: 0.7.7
+    repoURL: https://charts.authelia.com
+    helm:
+      valueFiles:
+        - /helm-values/authelia.yaml
+  destination:
+    namespace: authelia
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

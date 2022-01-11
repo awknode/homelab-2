@@ -1,0 +1,9 @@
+users:
+  loeken:
+    displayname: "loeken"
+    # Password is authelia
+    password: "replacesecret"
+    email: loeken@internetz.me
+    groups:
+      - admins
+      - dev

@@ -1,0 +1,11 @@
+apiVersion: v2
+name: bootstrap-apps
+description: A Helm chart to bootstrap other argocd applications
+type: application
+version: 0.0.1
+appVersion: "1.0"
+
+# dependencies:
+# - name: democratic-csi
+#   repository: https://democratic-csi.github.io/charts/
+#   version: 0.8.3

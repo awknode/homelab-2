@@ -1,0 +1,10 @@
+**/.terraform/*
+**/.terraform.lock.hcl*
+**.tfstate
+**.tfstate.*
+**kubeconfig
+variables.tf
+**myusers.yaml
+deploy/mysecrets/argocd-optional.yaml
+deploy/mysecrets/cloudflare-credentials-external-dns.yaml
+deploy/terraform/argocd-values.yaml

@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kuma
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    chart: uptime-kuma
+    repoURL: https://duyet.github.io/charts
+    targetRevision: "0.1.6"
+    helm:
+      valueFiles:
+        - /helm-values/kuma.yaml
+
+  destination:
+    namespace: kuma
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
