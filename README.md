@@ -100,19 +100,24 @@ cd deploy/mysecrets
 cp argocd-optional.yaml.example argocd-optional.yaml
 nano argocd-optional.yaml
 ```
-
-### 8.) create your secrets
 since we installed the kubeseal controller via the argocd-core apps we can now apply these 2 secrets - but encrypt them first.
 ```
 cat argocd-optional.yaml | kubeseal | kubectl apply -f -
+```
+### 8.) configure authelia
+authelia is setup to currently use a simple yaml file, which it reads from a secret, we can use this little helepr script to generate a simple layout for our username/email/password and save it as a sealedSecret
+```
+cd deploy/mysecrets
+./create_authelia_secret.sh loeken loeken@internetz.me topsecure
 ```
 
 ### 9.) save your secrets
 in the above command we encrypted our secrets with kubeseal this works by the kubeseal controller running in the cluster, and encrypting it for us instead of then running the encrypted kubernetes code we can also decide to save it to a yaml file
 ```
 cat argocd-optional.yaml | kubeseal -o yaml > argocd-optional-encrypted.yaml
+cat cloudflare-credentials-external-dns.yaml | kubeseal -o yaml > cloudflare-credentials-external-dns-encrypted.yaml
 ```
-since these are encrypted you can also store these in your github repo.
+as the name indicates these have been encrypted by the kubeseal controller
 
 ### 10.) sync bootstrap-optional-apps
 you can now again head to the argocd dashboard, at this stage the ingress should be working too, then head to the bootstrap-optional-apps app and click on sync.

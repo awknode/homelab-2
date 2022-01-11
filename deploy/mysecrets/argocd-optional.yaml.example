@@ -43,24 +43,24 @@ stringData:
         filesystem:
           enabled: true
           filename: /config/notification.txt
-      smtp:
-        enabled: false
-        enabledSecret: false
-        host: mail.example.com
-        port: 25
-        timeout: 5s
-        username: auth@example.com
-        plain_password: homelab
-        sender: auth@example.com
-        identifier: mail.example.com
-        subject: "[Authelia] {title}"
-        startup_check_address: auth@example.com
-        disable_require_tls: false
-        disable_html_emails: false
-        tls:
-          server_name: "mail.example.com"
-          skip_verify: false
-          minimum_version: TLS1.2
+        smtp:
+          enabled: false
+          enabledSecret: false
+          host: mail.example.com
+          port: 25
+          timeout: 5s
+          username: auth@example.com
+          plain_password: homelab
+          sender: auth@example.com
+          identifier: mail.example.com
+          subject: "[Authelia] {title}"
+          startup_check_address: auth@example.com
+          disable_require_tls: false
+          disable_html_emails: false
+          tls:
+            server_name: "mail.example.com"
+            skip_verify: false
+            minimum_version: TLS1.2
       identity_providers:
         oidc:
           enabled: false
@@ -264,7 +264,7 @@ stringData:
           port: 22
           username: root
           # use either password or key
-          password: "homelab!"
+          password: "homelab"
           #      privateKey: |
           #        -----BEGIN RSA PRIVATE KEY-----
           #        ...
