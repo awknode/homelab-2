@@ -89,7 +89,7 @@ stringData:
         annotations:
           kubernetes.io/ingress.class: "nginx"
           cert-manager.io/cluster-issuer: "letsencrypt-prod"
-          external-dns.alpha.kubernetes.io/hostname: "auth.example.com."
+          external-dns.alpha.kubernetes.io/hostname: "bitwarden.example.com."
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
         enabled: true
@@ -399,13 +399,35 @@ stringData:
         - secretName: plexserver-tls
           hosts:
           - plex.example.com
-  shared-dbs-postgresql.yaml: |
-    postgresqlDatabase: "ime"
-    postgresqlUsername: "ime"
-    postgresqlPassword: "homelab"
-    global:
-      storageClass: "freenas-iscsi-csi"
-  shared-dbs-redis.yaml: |
-    global:
-      storageClass: "freenas-iscsi-csi"
-    architecture: "standalone"
+  home-assistant.yaml: |
+    ingress:
+      main:
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          external-dns.alpha.kubernetes.io/hostname: "ha.internetz.me."
+          nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+          nginx.ingress.kubernetes.io/auth-signin: https://auth.internetz.me
+        enabled: true
+        hosts:
+          - host: ha.internetz.me
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  port: 2342
+        tls:
+        - secretName: ha-tls
+          hosts:
+          - ha.internetz.me
+    postgresql:
+      enabled: true
+      image:
+        repository: bitnami/postgresql
+        tag: 14.1.0
+      postgresqlUsername: home-assistant
+      postgresqlPassword: home-assistant-pass
+      postgresqlDatabase: home-assistant
+      persistence:
+        enabled: false
+        # storageClass: ""
