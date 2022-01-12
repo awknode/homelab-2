@@ -86,3 +86,32 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: influxdb
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  source:
+    chart: influxdb
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: "2.5.1"
+    helm:
+      parameters:
+      - name: env.TZ
+        value: "Europe/Berlin"
+      valueFiles:
+        - /helm-values/shared-dbs-influxdb.yaml
+  destination:
+    namespace: shared-dbs
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
