@@ -11,24 +11,29 @@ Proxmox needs to be installed on destination server. Clone this repo to your lap
 ## What's inside?
 Core:
 - terraform code to bootstrap 3 debian k3s nodes inside proxmox
-- argocd 
-- cert-manager
-- external-dns + cluster issuer
-- nginx-ingress
-- sealed secrets
-- volume snapshots
 
-Optional:
-- authelia
-- bitwarden rust
-- democratic csi for iscsi and nfs
-- heimdall
-- kasten-k10
-- uptime kuma
-- nextcloud
-- photoprism
-- plex
-- shared-dbs ( postgresql )
+Charts:
+| Chart Name       | Helm   | App      | Source           |
+| ---------------- | ------ | -------- | ---------------- |
+| argocd           | 3.29.5 | 2.2.2    | argoproj         |     
+| cert-manager     | 1.6.1  |          | jetstack         |
+| external-dns     | 6.0.2  | 0.10.2   | bitnami          |
+| nginx-ingress    | 9.1.0  | 1.1.0    | bitnami          |
+| sealed secrets   | 1.16.1 | 0.17.1   | sealed-secrets   |
+| volume snapshots | 0.0.1  |          | local helm chart |
+
+Optional Charts:
+| Chart Name       | Helm   | App      | Source           |
+| ---------------- | ------ | -------- | ---------------- |
+| authelia         | 0.7.7  | 4.33.1   | truecharts       |
+| vaultwarden      | 4.0.0  | 1.22.2   | k8s-at-home      |
+| democratic csi   | 0.8.3  | 0.8.3    | democratic-csi   |
+| heimdall         | 8.1.0  | 2.2.2    | k8s-at-home      |
+| kasten-k10       | 4.5.6  | 4.5.6    | kasten-k10       |
+| uptime kuma      | 0.1.6  | 1.8.0    | duyet            |
+| nextcloud        | 2.11.3 | 22.2.3   | nextcloud        |
+| photoprism       | 6.2.0  | 20211018 | k8s-at-home      |
+| plex             | 6.2.0  | 1.24.1   | k8s-at-home      |
 
 ## How does it work?
 ### 1.) github.com account

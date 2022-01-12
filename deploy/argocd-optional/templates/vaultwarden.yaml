@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: bitwardenrs
+  name: vaultwarden
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "3"
@@ -16,9 +16,9 @@ spec:
       - name: env.TZ
         value: "Europe/Berlin"
       valueFiles:
-        - /helm-values/bitwarden.yaml
+        - /helm-values/vaultwarden.yaml
   destination:
-    namespace: bitwardenrs
+    namespace: vaultwarden
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
