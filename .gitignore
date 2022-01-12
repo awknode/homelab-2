@@ -10,3 +10,5 @@ deploy/mysecrets/cloudflare-credentials-external-dns.yaml
 deploy/terraform/argocd-values.yaml
 deploy/linkerd_keys/**
 deploy/mysecrets/authelia_config.yaml
+deploy/mysecrets/cloudflare-credentials-external-dns-encrypted.yaml
+deploy/mysecrets/argocd-optional-encrypted.yaml

@@ -80,11 +80,13 @@ then head to https://localhost:8081 login with the username admin and the passwo
 
 ### 6.) sync bootstrap-core-apps
 ![todo](/docs/img/sync-argocd-core.png)
-press the sync button at the top and wait for argocd to have synced all apps untill you see the same view as you can see in the screenshot here
-![done](/docs/img/sync-argocd-core-done.png)
+press the sync button at the top and wait for argocd to have synced all apps untill you see it being stuck on external-dns
+
 
 ### 7.) configure external-dns
 external-dns does need credentials in order to connect we ll use kubeseal to save these credentials encrypted.
+
+you can create the credentials as instructed here: https://github.com/kubernetes-sigs/external-dns/blob/master/docs/tutorials/cloudflare.md
 ```
 cd ../mysecrets
 
@@ -93,6 +95,8 @@ nano cloudflare-credentials-external-dns.yaml
 
 cat cloudflare-credentials-external-dns.yaml | kubeseal -o yaml | kubectl apply -f -
 ```
+then all apps should sync up.
+![done](/docs/img/sync-argocd-core-done.png)
 
 ### 8.) configure optional apps
 ```
