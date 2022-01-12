@@ -29,7 +29,7 @@ Optional Charts:
 | vaultwarden      | 4.0.0  | 1.22.2   | k8s-at-home      | vaultwarden password manager                    |
 | democratic csi   | 0.8.3  | 0.8.3    | democratic-csi   | csi with nfs/iscsi to consume external storage  |
 | heimdall         | 8.1.0  | 2.2.2    | k8s-at-home      | a simple dashboard to link to other services    |
-| kasten-k10       | 4.5.6  | 4.5.6    | kasten-k10       | backup/disaster recovery for volumesnapshots    |
+| kasten-k10       | 4.5.5  | 4.5.5    | kasten-k10       | backup/disaster recovery for volumesnapshots    |
 | uptime kuma      | 0.1.6  | 1.8.0    | duyet            | very simple nodejs uptime/status page           |
 | nextcloud        | 2.11.3 | 22.2.3   | nextcloud        | self hosted dropbox alternative                 |
 | photoprism       | 6.2.0  | 20211018 | k8s-at-home      | self hosted icloud/google photos alternative    |
