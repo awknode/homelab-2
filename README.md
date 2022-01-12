@@ -1,8 +1,3 @@
-<style type="css">
-table {
-    width:100%;
-}
-</style>
 # loeken's homelab
 This repo contains my homelab setup. I run this on a single server, but this can also be spread across multiple servers for HA. This setup has been tested on debian 11 / proxmox pve 7. 
 - 32 x Intel(R) Xeon(R) CPU E5-2630 v3 @ 2.40GHz (2 Sockets )
