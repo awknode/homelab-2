@@ -399,35 +399,40 @@ stringData:
         - secretName: plexserver-tls
           hosts:
           - plex.example.com
-  home-assistant.yaml: |
+  home_assistant.yaml: |
     ingress:
-      main:
-        annotations:
-          kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "letsencrypt-prod"
-          external-dns.alpha.kubernetes.io/hostname: "ha.internetz.me."
-          nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
-          nginx.ingress.kubernetes.io/auth-signin: https://auth.internetz.me
-        enabled: true
-        hosts:
-          - host: ha.internetz.me
-            paths:
-              - path: /
-                pathType: Prefix
-                service:
-                  port: 2342
-        tls:
-        - secretName: ha-tls
-          hosts:
-          - ha.internetz.me
-    postgresql:
       enabled: true
-      image:
-        repository: bitnami/postgresql
-        tag: 14.1.0
-      postgresqlUsername: home-assistant
-      postgresqlPassword: home-assistant-pass
-      postgresqlDatabase: home-assistant
-      persistence:
-        enabled: false
-        # storageClass: ""
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        external-dns.alpha.kubernetes.io/hostname: "ha.internetz.me."
+        nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+        nginx.ingress.kubernetes.io/auth-signin: https://auth.internetz.me
+      hosts:
+        - host: ha.internetz.me
+          paths:
+            - path: /
+              pathType: Prefix
+              service:
+                port: 8123
+      tls:
+      - secretName: ha-tls
+        hosts:
+        - ha.internetz.me
+    mariadb:
+      enabled: true
+      architecture: standalone
+      auth:
+        database: home-assistant
+        username: home-assistant
+        password: homelab
+        rootPassword: homelab
+      primary:
+        persistence:
+          enabled: true
+          storageClass: "freenas-iscsi-csi"
+    persistence:
+      config:
+        enabled: "true"
+        storageClass: "freenas-iscsi-csi"
+        size: "1Gi"

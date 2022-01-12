@@ -12,44 +12,8 @@ spec:
     repoURL: https://k8s-at-home.com/charts/
     targetRevision: "8.1.0"
     helm:
-      values: |
-        ingress:
-          main:
-            enabled: true
-            annotations:
-              kubernetes.io/ingress.class: "nginx"
-              cert-manager.io/cluster-issuer: "letsencrypt-prod"
-              external-dns.alpha.kubernetes.io/hostname: "ha.internetz.me."
-              nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
-              nginx.ingress.kubernetes.io/auth-signin: https://auth.internetz.me
-            hosts:
-              - host: ha.internetz.me
-                paths:
-                  - path: /
-                    pathType: Prefix
-                    service:
-                      port: 2342
-            tls:
-            - secretName: ha-tls
-              hosts:
-              - ha.internetz.me
-        mariadb:
-          enabled: true
-          architecture: standalone
-          auth:
-            database: home-assistant
-            username: home-assistant
-            password: homelab
-            rootPassword: homelab
-          primary:
-            persistence:
-              enabled: true
-              storageClass: "freenas-iscsi-csi"
-        persistence:
-          config:
-            enabled: "true"
-            storageClass: "freenas-iscsi-csi"
-            size: "1Gi"
+      valueFiles:
+        - /helm-values/home_assistant.yaml
   destination:
     namespace: home-assistant
     server: https://kubernetes.default.svc
