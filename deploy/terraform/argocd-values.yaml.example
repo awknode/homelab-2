@@ -21,6 +21,36 @@ server:
             end
           end
           return hs
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issue: letsencrypt-prod
+      external-dns.alpha.kubernetes.io/hostname: "argocd.example.com."
+      nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+      nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
+    ingressClassName: nginx
+    hosts:
+    - argocd.example.com
+    tls:
+    - secretName: argocd-tls-certificate
+      hosts:
+      - argocd.example.com
+
+  certificate:
+    enabled: true
+    # -- Certificate manager domain
+    domain: argocd.example.com
+    issuer:
+      # -- Certificate manager issuer
+      kind: ClusterIssuer
+      # -- Certificate manager name
+      name: letsencrypt-prod
+    # -- Certificate manager additional hosts
+    additionalHosts: []
+    # -- Certificate manager secret name
+    secretName: argocd-tls-certificate
+apiVersionOverrides: 
+  cert-manager: "cert-manager.io/v1"
 repoServer:
   volumeMounts:
     - name: helm-values

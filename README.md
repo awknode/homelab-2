@@ -58,6 +58,8 @@ nano argocd-values.yaml
 ### 3.) Bootstrap with terraform
 
 the next part will create a new proxmox template based on debian 11 with cloud-init/nfs/iscsi support, afterwards it will create 3 vms of this template and install k3s as a 3 node k3s master-cluster. once the cluster is up it will install a helm chart for cert-manager, argocd and deploy/helm/bootstrap-core-apps. argocd is installed by feeding the argocd: section from deploy/helm/bootstrap-core-apps/values.yaml. this means that this values.yaml will contain all the config specific to your setup
+
+you also have to edit the argocd-values.yaml inside the terraform folder, those will define the ingress for argocd.
 ```
 terraform init
 terraform plan
