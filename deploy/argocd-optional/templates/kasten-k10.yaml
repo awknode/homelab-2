@@ -15,9 +15,6 @@ spec:
       values: |
         global:
           persistence:
-            type: "pvc"
-            enabled: true
-            size: "10Gi"
             storageClass: "freenas-iscsi-csi"
   destination:
     namespace: kasten-io
