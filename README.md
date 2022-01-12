@@ -21,11 +21,11 @@ Charts:
 | Chart Name       | Helm   | App      | Source           | Description                                     |
 | ---------------- | ------ | -------- | ---------------- | ----------------------------------------------- |
 | argocd           | 3.29.5 | 2.2.2    | argoproj         | watches git repo and applies updates            |
-| cert-manager     | 1.6.1  |          | jetstack         | issues tls certificates - letsencrypt           | 
+| cert-manager     | 1.6.1  | 1.6.1    | jetstack         | issues tls certificates - letsencrypt           | 
 | external-dns     | 6.0.2  | 0.10.2   | bitnami          | updates ips of dns records cloudflare           |
 | nginx-ingress    | 9.1.0  | 1.1.0    | bitnami          | nginx reverse proxy for ingress traffic         | 
 | sealed secrets   | 1.16.1 | 0.17.1   | sealed-secrets   | encrypts secrets in cluster                     |
-| volume snapshots | 0.0.1  |          | local helm chart | snapshots of volumes for backup                 |
+| volume snapshots | 0.0.1  | 0.0.1    | local helm chart | snapshots of volumes for backup                 |
 
 Optional Charts:
 | Chart Name       | Helm   | App      | Source           | Description                                     |
