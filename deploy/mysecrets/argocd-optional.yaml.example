@@ -439,6 +439,4 @@ stringData:
   kasten.yaml: |
     global:
       persistence:
-        enabled: true
-        size: "10Gi"
         storageClass: "freenas-iscsi-csi"
