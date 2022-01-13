@@ -24,7 +24,7 @@ server:
   ingress:
     enabled: true
     annotations:
-      cert-manager.io/cluster-issue: letsencrypt-prod
+      cert-manager.io/cluster-issue: letsencrypt-staging
       external-dns.alpha.kubernetes.io/hostname: "argocd.example.com."
       nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
       nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
@@ -44,7 +44,7 @@ server:
       # -- Certificate manager issuer
       kind: ClusterIssuer
       # -- Certificate manager name
-      name: letsencrypt-prod
+      name: letsencrypt-staging
     # -- Certificate manager additional hosts
     additionalHosts: []
     # -- Certificate manager secret name

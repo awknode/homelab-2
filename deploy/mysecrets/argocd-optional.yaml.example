@@ -79,7 +79,7 @@ stringData:
       enabled: true
       annotations:
         kubernetes.io/ingress.class: "nginx"
-        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        cert-manager.io/cluster-issuer: "letsencrypt-staging"
         external-dns.alpha.kubernetes.io/hostname: "auth.example.com."
       certManager: "true"
     domain: example.com
@@ -88,7 +88,7 @@ stringData:
       main:
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          cert-manager.io/cluster-issuer: "letsencrypt-staging"
           external-dns.alpha.kubernetes.io/hostname: "vaultwarden.example.com."
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
@@ -291,7 +291,7 @@ stringData:
       main:
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          cert-manager.io/cluster-issuer: "letsencrypt-staging"
           external-dns.alpha.kubernetes.io/hostname: "hub.example.com."
         enabled: true
         hosts:
@@ -312,7 +312,7 @@ stringData:
     ingress:
       annotations:
         kubernetes.io/ingress.class: "nginx"
-        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        cert-manager.io/cluster-issuer: "letsencrypt-staging"
         external-dns.alpha.kubernetes.io/hostname: "uptime.example.com."
         nginx.ingress.kubernetes.io/auth-url: "http://authelia.authelia.svc.cluster.local/api/verify"
         nginx.ingress.kubernetes.io/auth-signin: "https://auth.example.com"
@@ -362,7 +362,7 @@ stringData:
       main:
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          cert-manager.io/cluster-issuer: "letsencrypt-staging"
           external-dns.alpha.kubernetes.io/hostname: "photos.example.com."
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
@@ -383,7 +383,7 @@ stringData:
       main:
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          cert-manager.io/cluster-issuer: "letsencrypt-staging"
           external-dns.alpha.kubernetes.io/hostname: "plex.example.com."
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
@@ -404,7 +404,7 @@ stringData:
       enabled: true
       annotations:
         kubernetes.io/ingress.class: "nginx"
-        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        cert-manager.io/cluster-issuer: "letsencrypt-staging"
         external-dns.alpha.kubernetes.io/hostname: "ha.internetz.me."
         nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
         nginx.ingress.kubernetes.io/auth-signin: https://auth.internetz.me
@@ -458,7 +458,7 @@ sonarr.yaml: |
       main:
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          cert-manager.io/cluster-issuer: "letsencrypt-staging"
           external-dns.alpha.kubernetes.io/hostname: "sonarr.internetz.me."
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.internetz.me
