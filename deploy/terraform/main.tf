@@ -114,7 +114,7 @@ EOF
 resource "proxmox_vm_qemu" "k3s-master-01" {
   agent = 1
   onboot = true
-  name = "k3s-master-01"
+  name = var.k3s_nodename_01
   target_node = var.proxmox_node_name
   clone = "template"
   full_clone = true
@@ -156,7 +156,7 @@ resource "proxmox_vm_qemu" "k3s-master-01" {
 resource "proxmox_vm_qemu" "k3s-master-02" {
   agent = 1
   onboot = true
-  name = "k3s-master-02"
+  name = var.k3s_nodename_02
   target_node = var.proxmox_node_name
   clone = "template"
   full_clone = true
@@ -203,7 +203,7 @@ resource "proxmox_vm_qemu" "k3s-master-02" {
 resource "proxmox_vm_qemu" "k3s-master-03" {
   agent = 1
   onboot = true
-  name = "k3s-master-03"
+  name = var.k3s_nodename_03
   target_node = var.proxmox_node_name
   clone = "template"
   full_clone = true

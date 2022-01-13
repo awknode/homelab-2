@@ -399,6 +399,10 @@ stringData:
         - secretName: plex-tls
           hosts:
           - plex.example.com
+    podSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
   home_assistant.yaml: |
     ingress:
       enabled: true
@@ -440,7 +444,7 @@ stringData:
     global:
       persistence:
         storageClass: "freenas-iscsi-csi"
-sonarr.yaml: |
+  sonarr.yaml: |
     persistence:
       config:
         type: "pvc"

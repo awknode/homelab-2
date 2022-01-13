@@ -50,6 +50,18 @@ variable "linkerd_gen_certs" {
     type = string
     default = "yes"
 }
+variable "k3s_nodename_01" {
+    type = string
+    default = "k3s-master-01"
+}
+variable "k3s_nodename_02" {
+    type = string
+    default = "k3s-master-02"
+}
+variable "k3s_nodename_03" {
+    type = string
+    default = "k3s-master-03"
+}
 variable "k3s_internal_ip_node_01" {
     type = string
     default = "172.16.137.101"

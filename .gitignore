@@ -5,7 +5,8 @@
 **kubeconfig
 variables.tf
 **myusers.yaml
-deploy/mysecrets/argocd-optional.yaml
+deploy/mysecrets/argocd-optional-prod.yaml
+deploy/mysecrets/argocd-optional-staging.yaml
 deploy/mysecrets/cloudflare-credentials-external-dns.yaml
 deploy/terraform/argocd-values.yaml
 deploy/linkerd_keys/**
