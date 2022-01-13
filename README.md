@@ -13,27 +13,28 @@ Core:
 - terraform code to bootstrap 3 debian k3s nodes inside proxmox
 
 Charts:
-| Chart Name       | Helm   | App      | Source           | Description                                     |
-| ---------------- | ------ | -------- | ---------------- | ----------------------------------------------- |
-| argocd           | 3.29.5 | 2.2.2    | argoproj         | watches git repo and applies updates            |
-| cert-manager     | 1.6.1  | 1.6.1    | jetstack         | issues tls certificates - letsencrypt           | 
-| external-dns     | 6.0.2  | 0.10.2   | bitnami          | updates ips of dns records cloudflare           |
-| nginx-ingress    | 9.1.0  | 1.1.0    | bitnami          | nginx reverse proxy for ingress traffic         | 
-| sealed secrets   | 1.16.1 | 0.17.1   | sealed-secrets   | encrypts secrets in cluster                     |
-| volume snapshots | 0.0.1  | 0.0.1    | local helm chart | snapshots of volumes for backup                 |
+| Chart Name       | Helm   | App        | Source           | Description                                     |
+| ---------------- | ------ | ---------- | ---------------- | ----------------------------------------------- |
+| argocd           | 3.29.5 | 2.2.2      | argoproj         | watches git repo and applies updates            |
+| cert-manager     | 1.6.1  | 1.6.1      | jetstack         | issues tls certificates - letsencrypt           | 
+| external-dns     | 6.0.2  | 0.10.2     | bitnami          | updates ips of dns records cloudflare           |
+| nginx-ingress    | 9.1.0  | 1.1.0      | bitnami          | nginx reverse proxy for ingress traffic         | 
+| sealed secrets   | 1.16.1 | 0.17.1     | sealed-secrets   | encrypts secrets in cluster                     |
+| volume snapshots | 0.0.1  | 0.0.1      | local helm chart | snapshots of volumes for backup                 |
 
 Optional Charts:
-| Chart Name       | Helm   | App      | Source           | Description                                     |
-| ---------------- | ------ | -------- | ---------------- | ----------------------------------------------- | 
-| authelia         | 0.7.7  | 4.33.1   | truecharts       | SSO/two factor auth service works with nginx    |
-| vaultwarden      | 4.0.0  | 1.22.2   | k8s-at-home      | vaultwarden password manager                    |
-| democratic csi   | 0.8.3  | 0.8.3    | democratic-csi   | csi with nfs/iscsi to consume external storage  |
-| heimdall         | 8.1.0  | 2.2.2    | k8s-at-home      | a simple dashboard to link to other services    |
-| kasten-k10       | 4.5.5  | 4.5.5    | kasten-k10       | backup/disaster recovery for volumesnapshots    |
-| uptime kuma      | 0.1.6  | 1.8.0    | duyet            | very simple nodejs uptime/status page           |
-| nextcloud        | 2.11.3 | 22.2.3   | nextcloud        | self hosted dropbox alternative                 |
-| photoprism       | 6.2.0  | 20211018 | k8s-at-home      | self hosted icloud/google photos alternative    |
-| plex             | 6.2.0  | 1.24.1   | k8s-at-home      | self hosted media transcoding/streaming service |
+| Chart Name       | Helm   | App        | Source           | Description                                     |
+| ---------------- | ------ | ---------- | ---------------- | ----------------------------------------------- | 
+| authelia         | 0.7.7  | 4.33.1     | truecharts       | SSO/two factor auth service works with nginx    |
+| vaultwarden      | 4.0.0  | 1.22.2     | k8s-at-home      | vaultwarden password manager                    |
+| democratic csi   | 0.8.3  | 0.8.3      | democratic-csi   | csi with nfs/iscsi to consume external storage  |
+| heimdall         | 8.1.0  | 2.2.2      | k8s-at-home      | a simple dashboard to link to other services    |
+| kasten-k10       | 4.5.5  | 4.5.5      | kasten-k10       | backup/disaster recovery for volumesnapshots    |
+| uptime kuma      | 0.1.6  | 1.8.0      | duyet            | very simple nodejs uptime/status page           |
+| nextcloud        | 2.11.3 | 22.2.3     | nextcloud        | self hosted dropbox alternative                 |
+| photoprism       | 6.2.0  | 20211018   | k8s-at-home      | self hosted icloud/google photos alternative    |
+| plex             | 6.2.0  | 1.24.1     | k8s-at-home      | self hosted media transcoding/streaming service |
+| sonarr           | 15.3.0 | 3.0.6.1342 | k8s-at-home      | sonarr is a pv for Usenet and BitTorrent users  |
 
 ## How does it work?
 ### 1.) github.com account

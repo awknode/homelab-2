@@ -12,10 +12,8 @@ spec:
     repoURL: https://charts.kasten.io/
     targetRevision: "4.5.5"
     helm:
-      values: |
-        global:
-          persistence:
-            storageClass: "freenas-iscsi-csi"
+      valueFiles:
+        - /helm-values/kasten.yaml
   destination:
     namespace: kasten-io
     server: https://kubernetes.default.svc

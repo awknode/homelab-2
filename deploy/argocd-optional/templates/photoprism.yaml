@@ -13,8 +13,6 @@ spec:
     targetRevision: "6.2.0"
     helm:
       parameters:
-      - name: env.TZ
-        value: "Europe/Berlin"
       - name: env.PHOTOPRISM_ADMIN_PASSWORD
         value: "changeme"
       - name: persistence.config.enabled
