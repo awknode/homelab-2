@@ -15,7 +15,7 @@ spec:
       valueFiles:
         - /helm-values/overseerr.yaml
   destination:
-    namespace: sonar
+    namespace: overseer
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
