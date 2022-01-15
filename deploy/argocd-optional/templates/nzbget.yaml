@@ -10,7 +10,7 @@ spec:
   source:
     chart: nzbget
     repoURL: https://k8s-at-home.com/charts/
-    targetRevision: "9.2.0"
+    targetRevision: "12.2.0"
     helm:
       valueFiles:
         - /helm-values/nzbget.yaml
