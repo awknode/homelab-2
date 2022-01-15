@@ -35,6 +35,10 @@ Optional Charts:
 | photoprism       | 6.2.0  | 20211018   | k8s-at-home      | self hosted icloud/google photos alternative    |
 | plex             | 6.2.0  | 1.24.1     | k8s-at-home      | self hosted media transcoding/streaming service |
 | sonarr           | 15.3.0 | 3.0.6.1342 | k8s-at-home      | sonarr is a pv for Usenet and BitTorrent users  |
+| radarr           | 15.2.0 | 3.2.2.5080 | k8s-at-home      | a fork of sonarr to work with movies            |
+| overseerr        | 5.2.0  | 1.26.1     | k8s-at-home      | manages requests for sonarr, radarr, plex       |
+| home-assistant   | 12.0.1 | 2021.12.7  | k8s-at-home      | opensource home automation solution             |
+| rtorrent-flood   | 9.2.0  | 4.7.0      | k8s-at-home      | nodejs frontend for rtorrent ( with rtorrent )  |
 
 ## How does it work?
 ### 1.) github.com account
