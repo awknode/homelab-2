@@ -10,7 +10,7 @@ spec:
   source:
     chart: openldap-stack-ha
     repoURL: https://jp-gouin.github.io/helm-openldap/
-    targetRevision: "15.3.0"
+    targetRevision: "2.1.6"
     helm:
     helm:
       # start using raw values first for new charts, once the chart is stable move it to the /helm-values/ section
