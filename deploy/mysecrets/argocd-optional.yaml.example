@@ -5,107 +5,107 @@ metadata:
   namespace: argocd
 stringData:
   authelia.yaml: |
-    domain: example.com
-      pod:
-        kind: StatefulSet
-        extraVolumeMounts:
-          - name: users-database
-            mountPath: "/config/users"
-            readOnly: true
-        extraVolumes:
-          - name: users-database
-            secret:
-              secretName: authelia-users
-              items:
-                - key: users_database.yml
-                  path: users_database.yml
-      configMap:
-        authentication_backend:
-          ldap:
-            enabled: false
-          file:
-            enabled: true
-            password:
-              algorithm: sha512
-              iterations: 100000
-            path: /config/users/users_database.yml
-        session:
-          redis:
-            enabled: false
-          domain: example.com
-          expiration: 3600
-          inactivity: 300
-        storage:
-          local:
-            enabled: true
-          postgres:
-            enabled: false
-        notifier:
-          filesystem:
-            enabled: false
-            filename: /config/notification.txt
-          smtp:
-            enabled: true
-            enabledSecret: false
-            host: mail.example.com
-            port: 25
-            timeout: 5s
-            username: auth@example.com
-            plain_password: homelab
-            sender: auth@example.com
-            identifier: mail.example.com
-            subject: "[Authelia] {title}"
-            startup_check_address: auth@example.com
-            disable_require_tls: false
-            disable_html_emails: false
-            tls:
-              server_name: "mail.example.com"
-              skip_verify: false
-              minimum_version: TLS1.2
-        identity_providers:
-          oidc:
-            enabled: false
-        theme: dark
-        access_control:
-          default_policy: deny
-          rules:
-            - domain: '*.example.com'
-              subject: 'group:admins'
-              policy: one_factor
-            - domain: vaultwarden.example.com
-              policy: two_factor
-            - domain: ha.example.com
-              policy: two_factor
-            - domain: nextcloud.example.com
-              policy: two_factor
-            - domain: photos.example.com
-              policy: two_factor
-            - domain: plex.example.com
-              policy: two_factor
-            - domain: sonarr.example.com
-              policy: two_factor
-            - domain: radarr.example.com
-              policy: two_factor
-            - domain: overseerr.example.com
-              policy: two_factor
-      ingress:
-        annotations:
-          kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "letsencrypt-prod"
-          external-dns.alpha.kubernetes.io/hostname: "auth.example.com."
-          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
-        enabled: true
-        hosts:
-          - host: auth.example.com
-            paths:
-              - path: /
-                pathType: Prefix
-                service:
-                  port: 80
-        ingressClassName: "nginx"
-        tls:
+  domain: example.com
+    pod:
+      kind: StatefulSet
+      extraVolumeMounts:
+        - name: users-database
+          mountPath: "/config/users"
+          readOnly: true
+      extraVolumes:
+        - name: users-database
+          secret:
+            secretName: authelia-users
+            items:
+              - key: users_database.yml
+                path: users_database.yml
+    configMap:
+      authentication_backend:
+        ldap:
+          enabled: false
+        file:
           enabled: true
-          secret: auth-tls
+          password:
+            algorithm: sha512
+            iterations: 100000
+          path: /config/users/users_database.yml
+      session:
+        redis:
+          enabled: false
+        domain: example.com
+        expiration: 3600
+        inactivity: 300
+      storage:
+        local:
+          enabled: true
+        postgres:
+          enabled: false
+      notifier:
+        filesystem:
+          enabled: false
+          filename: /config/notification.txt
+        smtp:
+          enabled: true
+          enabledSecret: false
+          host: mail.example.com
+          port: 25
+          timeout: 5s
+          username: auth@example.com
+          plain_password: homelab
+          sender: auth@example.com
+          identifier: mail.example.com
+          subject: "[Authelia] {title}"
+          startup_check_address: auth@example.com
+          disable_require_tls: false
+          disable_html_emails: false
+          tls:
+            server_name: "mail.example.com"
+            skip_verify: false
+            minimum_version: TLS1.2
+      identity_providers:
+        oidc:
+          enabled: false
+      theme: dark
+      access_control:
+        default_policy: deny
+        rules:
+          - domain: '*.example.com'
+            subject: 'group:admins'
+            policy: one_factor
+          - domain: vaultwarden.example.com
+            policy: two_factor
+          - domain: ha.example.com
+            policy: two_factor
+          - domain: nextcloud.example.com
+            policy: two_factor
+          - domain: photos.example.com
+            policy: two_factor
+          - domain: plex.example.com
+            policy: two_factor
+          - domain: sonarr.example.com
+            policy: two_factor
+          - domain: radarr.example.com
+            policy: two_factor
+          - domain: overseerr.example.com
+            policy: two_factor
+    ingress:
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        external-dns.alpha.kubernetes.io/hostname: "auth.example.com."
+        external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+      enabled: true
+      hosts:
+        - host: auth.example.com
+          paths:
+            - path: /
+              pathType: Prefix
+              service:
+                port: 80
+      ingressClassName: "nginx"
+      tls:
+        enabled: true
+        secret: auth-tls
   democratic_iscsi.yaml: |
     csiDriver:
       # should be globally unique for a given cluster
