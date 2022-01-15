@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: radarr
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    chart: radarr
+    repoURL: https://k8s-at-home.com/charts/
+    targetRevision: "15.2.0"
+    helm:
+      valueFiles:
+        - /helm-values/radarr.yaml
+  destination:
+    namespace: radarr
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
