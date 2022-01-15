@@ -1,0 +1,97 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: openldap
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    chart: openldap-stack-ha
+    repoURL: https://jp-gouin.github.io/helm-openldap/
+    targetRevision: "15.3.0"
+    helm:
+    helm:
+      # start using raw values first for new charts, once the chart is stable move it to the /helm-values/ section
+      values: |
+        replicaCount: 2
+        adminPassword: homelab
+        configPassword: homelab
+        # Default configuration for openldap as environment variables. These get injected directly in the container.
+        # Use the env variables from https://github.com/osixia/docker-openldap#beginner-guide
+        env:
+          LDAP_LOG_LEVEL: "256"
+          LDAP_ORGANISATION: "Example Inc."
+          LDAP_DOMAIN: "example.org"
+          LDAP_READONLY_USER: "false"
+          LDAP_READONLY_USER_USERNAME: "readonly"
+          LDAP_READONLY_USER_PASSWORD: "readonly"
+          LDAP_RFC2307BIS_SCHEMA: "false"
+          LDAP_BACKEND: "mdb"
+          LDAP_TLS: "true"
+          LDAP_TLS_CRT_FILENAME: "tls.crt"
+          LDAP_TLS_KEY_FILENAME: "tls.key"
+          LDAP_TLS_DH_PARAM_FILENAME: "dhparam.pem"
+          LDAP_TLS_CA_CRT_FILENAME: "ca.crt"
+          LDAP_TLS_ENFORCE: "false"
+          CONTAINER_LOG_LEVEL: "4"
+          LDAP_TLS_REQCERT: "never"
+          KEEP_EXISTING_CONFIG: "false"
+          LDAP_REMOVE_CONFIG_AFTER_SETUP: "true"
+          LDAP_SSL_HELPER_PREFIX: "ldap"
+          LDAP_TLS_VERIFY_CLIENT: "never"
+          LDAP_TLS_PROTOCOL_MIN: "3.0"
+          LDAP_TLS_CIPHER_SUITE: "NORMAL"
+        persistence:
+          storageClass: "freenas-iscsi-csi"
+          size: 1Gi
+        ltb-passwd:
+          ingress:
+            enabled: false
+            hosts:
+            - host: ltb-passwd.internetz.cloud
+              paths:
+                - path: /
+                  pathType: Prefix
+                  service:
+                    port: 80
+            annotations:
+              kubernetes.io/ingress.class: "nginx"
+              cert-manager.io/cluster-issuer: "letsencrypt-prod"
+              external-dns.alpha.kubernetes.io/hostname: "ltb-passwd.internetz.cloud."
+              external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          ldap:
+            server: ldap://openldap-openldap-stack-ha
+            searchBase: dc=internetz,dc=cloud
+            # existingSecret: openldaptest
+            bindDN: cn=admin,dc=example,dc=cloud
+            bindPWKey: homelab
+        # tls:
+        #   enabled: true
+        #   secret: openldap-tls
+        phpldapadmin:
+          ingress:
+            annotations:
+              kubernetes.io/ingress.class: "nginx"
+              cert-manager.io/cluster-issuer: "letsencrypt-prod"
+              external-dns.alpha.kubernetes.io/hostname: "ldap-admin.internetz.cloud."
+              external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+            hosts:
+            - host: ltb-passwd.internetz.cloud
+              paths:
+                - path: /
+                  pathType: Prefix
+                  service:
+                    port: 80
+      # valueFiles:
+      #   - /helm-values/openldap.yaml
+  destination:
+    namespace: openldap
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
