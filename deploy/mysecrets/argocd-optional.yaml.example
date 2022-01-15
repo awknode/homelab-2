@@ -5,126 +5,107 @@ metadata:
   namespace: argocd
 stringData:
   authelia.yaml: |
-    pod:
-      kind: StatefulSet
-      extraVolumeMounts:
-        - name: users-database
-          mountPath: "/config/users"
-          readOnly: true
-      extraVolumes:
-        - name: users-database
-          secret:
-            secretName: authelia-users
-            items:
-              - key: users_database.yml
-                path: users_database.yml
-    configMap:
-      authentication_backend:
-        ldap:
-          enabled: false
-        file:
-          enabled: true
-          password:
-            algorithm: sha512
-            iterations: 100000
-          path: /config/users/users_database.yml
-      session:
-        redis:
-          enabled: false
-        domain: example.com
-        expiration: 3600
-        inactivity: 300
-      storage:
-        local:
-          enabled: true
-        postgres:
-          enabled: false
-      notifier:
-        filesystem:
-          enabled: true
-          filename: /config/notification.txt
-        smtp:
-          enabled: false
-          enabledSecret: false
-          host: mail.example.com
-          port: 25
-          timeout: 5s
-          username: auth@example.com
-          plain_password: homelab
-          sender: auth@example.com
-          identifier: mail.example.com
-          subject: "[Authelia] {title}"
-          startup_check_address: auth@example.com
-          disable_require_tls: false
-          disable_html_emails: false
-          tls:
-            server_name: "mail.example.com"
-            skip_verify: false
-            minimum_version: TLS1.2
-      identity_providers:
-        oidc:
-          enabled: false
-      theme: dark
-      access_control:
-        default_policy: deny
-        rules:
-          - domain: '*.example.com'
-            subject: 'group:admins'
-            policy: one_factor
-          - domain: argocd.example.com
-            policy: two_factor
-          - domain: vaultwarden.example.com
-            policy: two_factor
-    ingress:
-      enabled: true
-      annotations:
-        kubernetes.io/ingress.class: "nginx"
-        cert-manager.io/cluster-issuer: "letsencrypt-staging"
-        external-dns.alpha.kubernetes.io/hostname: "auth.example.com."
-      certManager: "true"
     domain: example.com
-  vaultwarden.yaml: |
-    ingress:
-      main:
+      pod:
+        kind: StatefulSet
+        extraVolumeMounts:
+          - name: users-database
+            mountPath: "/config/users"
+            readOnly: true
+        extraVolumes:
+          - name: users-database
+            secret:
+              secretName: authelia-users
+              items:
+                - key: users_database.yml
+                  path: users_database.yml
+      configMap:
+        authentication_backend:
+          ldap:
+            enabled: false
+          file:
+            enabled: true
+            password:
+              algorithm: sha512
+              iterations: 100000
+            path: /config/users/users_database.yml
+        session:
+          redis:
+            enabled: false
+          domain: example.com
+          expiration: 3600
+          inactivity: 300
+        storage:
+          local:
+            enabled: true
+          postgres:
+            enabled: false
+        notifier:
+          filesystem:
+            enabled: false
+            filename: /config/notification.txt
+          smtp:
+            enabled: true
+            enabledSecret: false
+            host: mail.example.com
+            port: 25
+            timeout: 5s
+            username: auth@example.com
+            plain_password: homelab
+            sender: auth@example.com
+            identifier: mail.example.com
+            subject: "[Authelia] {title}"
+            startup_check_address: auth@example.com
+            disable_require_tls: false
+            disable_html_emails: false
+            tls:
+              server_name: "mail.example.com"
+              skip_verify: false
+              minimum_version: TLS1.2
+        identity_providers:
+          oidc:
+            enabled: false
+        theme: dark
+        access_control:
+          default_policy: deny
+          rules:
+            - domain: '*.example.com'
+              subject: 'group:admins'
+              policy: one_factor
+            - domain: vaultwarden.example.com
+              policy: two_factor
+            - domain: ha.example.com
+              policy: two_factor
+            - domain: nextcloud.example.com
+              policy: two_factor
+            - domain: photos.example.com
+              policy: two_factor
+            - domain: plex.example.com
+              policy: two_factor
+            - domain: sonarr.example.com
+              policy: two_factor
+            - domain: radarr.example.com
+              policy: two_factor
+            - domain: overseerr.example.com
+              policy: two_factor
+      ingress:
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "letsencrypt-staging"
-          external-dns.alpha.kubernetes.io/hostname: "vaultwarden.example.com."
-          nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
-          nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          external-dns.alpha.kubernetes.io/hostname: "auth.example.com."
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
         enabled: true
         hosts:
-          - host: vaultwarden.example.com
+          - host: auth.example.com
             paths:
               - path: /
                 pathType: Prefix
                 service:
                   port: 80
-              - path: /notifications/hub/negotiate
-                pathType: Prefix
-                service:
-                  port: 80
-              - path: /notifications/hub
-                pathType: Prefix
-                service:
-                  port: 3012
+        ingressClassName: "nginx"
         tls:
-        - secretName: vaultwarden-tls
-          hosts:
-          - vaultwarden.example.com
-    persistence:
-      config:
-        enabled: true
-    postgresql:
-      enabled: true
-      postgresqlUsername: ime
-      postgresqlPassword: homelab
-      postgresqlDatabase: ime
-      persistence:
-        enabled: true
-        storageClass: "freenas-iscsi-csi"
-        accessModes:
-          - ReadWriteOnce
+          enabled: true
+          secret: auth-tls
   democratic_iscsi.yaml: |
     csiDriver:
       # should be globally unique for a given cluster
@@ -133,9 +114,9 @@ stringData:
     # add note here about volume expansion requirements
     storageClasses:
     - name: freenas-iscsi-csi
-      # annotations:
-      #   k10.kasten.io/is-snapshot-class: "true"
-      #   volumesnapshotclasses.snapshot.storage.k8s.io: "true"
+      annotations:
+        k10.kasten.io/is-snapshot-class: "true"
+        volumesnapshotclasses.snapshot.storage.k8s.io: "true"
       defaultClass: false
       reclaimPolicy: Retain
       volumeBindingMode: Immediate
@@ -218,12 +199,11 @@ stringData:
           extentRpm: "7200"
           # 0-100 (0 == ignore)
           extentAvailThreshold: 0
-    # volumeSnapshotClasses:
-    # - name: freenas-iscsi-csi
-    #   annotations:
-    #     k10.kasten.io/is-snapshot-class: "true"
-    #     volumesnapshotclasses.snapshot.storage.k8s.io: "true"
-    #   parameters:
+    volumeSnapshotClasses:
+    - name: freenas-iscsi-csi
+      annotations:
+        k10.kasten.io/is-snapshot-class: "true"
+        volumesnapshotclasses.snapshot.storage.k8s.io: "true"
   democratic_nfs.yaml: |
     csiDriver:
       # should be globally unique for a given cluster
@@ -265,10 +245,10 @@ stringData:
           username: root
           # use either password or key
           password: "homelab"
-          #      privateKey: |
-          #        -----BEGIN RSA PRIVATE KEY-----
-          #        ...
-          #        -----END RSA PRIVATE KEY-----
+            #      privateKey: |
+            #        -----BEGIN RSA PRIVATE KEY-----
+            #        ...
+            #        -----END RSA PRIVATE KEY-----
         zfs:
           datasetParentName: a1/k8s/nfs/v
           detachedSnapshotsDatasetParentName: a1/k8s/nfs/s
@@ -291,8 +271,9 @@ stringData:
       main:
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "letsencrypt-staging"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
           external-dns.alpha.kubernetes.io/hostname: "hub.example.com."
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
         enabled: true
         hosts:
           - host: hub.example.com
@@ -308,14 +289,56 @@ stringData:
     persistence:
       config:
         enabled: true
+        storageClass: freenas-iscsi-csi
+  home_assistant.yaml: |
+    ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        external-dns.alpha.kubernetes.io/hostname: "ha.example.com."
+        external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+        nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+        nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
+      hosts:
+        - host: ha.example.com
+          paths:
+            - path: /
+              pathType: Prefix
+              service:
+                port: 8123
+      tls:
+      - secretName: ha-tls
+        hosts:
+        - ha.example.com
+    mariadb:
+      enabled: true
+      architecture: standalone
+      auth:
+        database: home-assistant
+        username: home-assistant
+        password: homelab
+        rootPassword: homelab
+      primary:
+        persistence:
+          enabled: true
+          storageClass: "freenas-iscsi-csi"
+    persistence:
+      config:
+        enabled: "true"
+        storageClass: "freenas-iscsi-csi"
+        size: "1Gi"
+  kasten.yaml: |
+    global:
+      persistence:
+        storageClass: "freenas-iscsi-csi"
   kuma.yaml: |
     ingress:
       annotations:
         kubernetes.io/ingress.class: "nginx"
-        cert-manager.io/cluster-issuer: "letsencrypt-staging"
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
         external-dns.alpha.kubernetes.io/hostname: "uptime.example.com."
-        nginx.ingress.kubernetes.io/auth-url: "http://authelia.authelia.svc.cluster.local/api/verify"
-        nginx.ingress.kubernetes.io/auth-signin: "https://auth.example.com"
+        external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
       enabled: true
       hosts:
         - host: uptime.example.com
@@ -347,26 +370,75 @@ stringData:
           accessMode: ReadWriteOnce
           size: 1Gi
     nextcloud:
+      host: nextcloud.example.com
       configs:
         trusted_domains.config.php: |-
           <?php
-          $CONFIG = [          
+          $CONFIG = [
+            'overwriteprotocol' => 'https',
             'trusted_domains' => [
               0 => 'localhost',
               1 => 'nextcloud.kube.home',
               2 => 'nextcloud.example.com'
             ]
           ];
+    ingress:
+      className: "nginx"
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        external-dns.alpha.kubernetes.io/hostname: "nextcloud.example.com."
+        external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+        nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+        nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
+        nginx.ingress.kubernetes.io/server-snippet: |-
+          server_tokens off;
+          proxy_hide_header X-Powered-By;
+          
+          rewrite ^/.well-known/webfinger /public.php?service=webfinger last;
+          rewrite ^/.well-known/host-meta /public.php?service=host-meta last;
+          rewrite ^/.well-known/host-meta.json /public.php?service=host-meta-json;
+          location = /.well-known/carddav {
+            return 301 $scheme://$host/remote.php/dav;
+          }
+          location = /.well-known/caldav {
+            return 301 $scheme://$host/remote.php/dav;
+          }
+          location = /robots.txt {
+            allow all;
+            log_not_found off;
+            access_log off;
+          }
+          location ~ ^/(?:build|tests|config|lib|3rdparty|templates|data)/ {
+            deny all;
+          }
+          location ~ ^/(?:autotest|occ|issue|indie|db_|console) {
+            deny all;
+          }
+      enabled: true
+      hosts:
+        - host: nextcloud.example.com
+          paths:
+            - path: /
+              pathType: Prefix
+              service:
+                port: 8080
+      tls:
+      - secretName: nextcloud-tls
+        hosts:
+        - nextcloud.example.com
   photoprism.yaml: |
     ingress:
       main:
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "letsencrypt-staging"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
           external-dns.alpha.kubernetes.io/hostname: "photos.example.com."
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
         enabled: true
+        ingressClassName: "nginx"
         hosts:
           - host: photos.example.com
             paths:
@@ -379,15 +451,36 @@ stringData:
           hosts:
           - photos.example.com
   plex.yaml: |
+    persistence:
+      config:
+        mountPath: "/config"
+        enabled: true
+        accessMode: "ReadWriteOnce"
+        size: "5Gi"
+        storageClass: "freenas-iscsi-csi"
+      transcode:
+        enabled: true
+        mountPath: "/transcode"
+        accessMode: "ReadWriteOnce"
+        size: "10Gi"
+        storageClass: "freenas-iscsi-csi"
+      shared-media:
+        enabled: true
+        mountPath: "/shared-media"
+        accessMode: "ReadWriteOnce"
+        size: "100Gi"
+        storageClass: "freenas-iscsi-csi"
     ingress:
       main:
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "letsencrypt-staging"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
           external-dns.alpha.kubernetes.io/hostname: "plex.example.com."
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
         enabled: true
+        ingressClassName: "nginx"
         hosts:
           - host: plex.example.com
             paths:
@@ -396,79 +489,74 @@ stringData:
                 service:
                   port: 32400
         tls:
-        - secretName: plex-tls
+        - secretName: plexserver-tls
           hosts:
           - plex.example.com
     podSecurityContext:
       runAsUser: 568
       runAsGroup: 568
       fsGroup: 568
-  home_assistant.yaml: |
-    ingress:
-      enabled: true
-      annotations:
-        kubernetes.io/ingress.class: "nginx"
-        cert-manager.io/cluster-issuer: "letsencrypt-staging"
-        external-dns.alpha.kubernetes.io/hostname: "ha.internetz.me."
-        nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
-        nginx.ingress.kubernetes.io/auth-signin: https://auth.internetz.me
-      hosts:
-        - host: ha.internetz.me
-          paths:
-            - path: /
-              pathType: Prefix
-              service:
-                port: 8123
-      tls:
-      - secretName: ha-tls
-        hosts:
-        - ha.internetz.me
-    mariadb:
-      enabled: true
-      architecture: standalone
-      auth:
-        database: home-assistant
-        username: home-assistant
-        password: homelab
-        rootPassword: homelab
-      primary:
-        persistence:
-          enabled: true
-          storageClass: "freenas-iscsi-csi"
+  radarr.yaml: |
     persistence:
       config:
-        enabled: "true"
-        storageClass: "freenas-iscsi-csi"
-        size: "1Gi"
-  kasten.yaml: |
-    global:
-      persistence:
-        storageClass: "freenas-iscsi-csi"
-  sonarr.yaml: |
-    persistence:
-      config:
-        type: "pvc"
         enabled: true
         accessMode: "ReadWriteOnce"
-        size: "5Gi"
         storageClass: "freenas-iscsi-csi"
+        size: "5Gi"
       media:
         enabled: true
-        mountPath: "/media"
         accessMode: "ReadWriteOnce"
-        size: "10Gi"
+        size: "50Gi"
         storageClass: "freenas-iscsi-csi"
     ingress:
       main:
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "letsencrypt-staging"
-          external-dns.alpha.kubernetes.io/hostname: "sonarr.internetz.me."
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          external-dns.alpha.kubernetes.io/hostname: "radarr.example.com."
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
-          nginx.ingress.kubernetes.io/auth-signin: https://auth.internetz.me
+          nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
         enabled: true
         hosts:
-          - host: sonarr.internetz.me
+          - host: radarr.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  port: 7878
+        tls:
+        - secretName: radarr-tls
+          hosts:
+          - radarr.example.com
+    podSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+  sonarr.yaml: |
+    persistence:
+      config:
+        enabled: true
+        accessMode: "ReadWriteOnce"
+        storageClass: "freenas-iscsi-csi"
+        size: "5Gi"
+      media:
+        enabled: true
+        accessMode: "ReadWriteOnce"
+        size: "50Gi"
+        storageClass: "freenas-iscsi-csi"
+    ingress:
+      main:
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          external-dns.alpha.kubernetes.io/hostname: "sonarr.example.com."
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+          nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
+        enabled: true
+        hosts:
+          - host: sonarr.example.com
             paths:
               - path: /
                 pathType: Prefix
@@ -477,5 +565,81 @@ stringData:
         tls:
         - secretName: sonarr-tls
           hosts:
-          - sonarr.internetz.me
-
+          - sonarr.example.com
+    podSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+  overseerr.yaml: |
+    persistence:
+      config:
+        type: "pvc"
+        enabled: true
+        mountPath: /app/config
+        accessMode: "ReadWriteOnce"
+        size: "5Gi"
+        storageClass: "freenas-iscsi-csi"
+    ingress:
+      main:
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          external-dns.alpha.kubernetes.io/hostname: "overseerr.example.com."
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+          nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
+        enabled: true
+        hosts:
+          - host: overseerr.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  port: 5055
+        tls:
+        - secretName: overseerr-tls
+          hosts:
+          - overseerr.example.com
+  vaultwarden.yaml: |
+    ingress:
+      main:
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          external-dns.alpha.kubernetes.io/hostname: "vaultwarden.example.com."
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+          nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
+        enabled: true
+        hosts:
+          - host: vaultwarden.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  port: 80
+              - path: /notifications/hub/negotiate
+                pathType: Prefix
+                service:
+                  port: 80
+              - path: /notifications/hub
+                pathType: Prefix
+                service:
+                  port: 3012
+        tls:
+        - secretName: vaultwarden-tls
+          hosts:
+          - vaultwarden.example.com
+    persistence:
+      config:
+        enabled: true
+    postgresql:
+      enabled: true
+      postgresqlUsername: ime
+      postgresqlPassword: homelab
+      postgresqlDatabase: ime
+      persistence:
+        enabled: true
+        storageClass: "freenas-iscsi-csi"
+        accessModes:
+          - ReadWriteOnce
