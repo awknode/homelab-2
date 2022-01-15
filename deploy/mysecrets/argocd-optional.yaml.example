@@ -427,6 +427,74 @@ stringData:
       - secretName: nextcloud-tls
         hosts:
         - nextcloud.example.com
+  nzbget.yaml: |
+    persistence:
+      config:
+        enabled: true
+        accessMode: "ReadWriteOnce"
+        storageClass: "freenas-iscsi-csi"
+        size: "5Gi"
+      media:
+        enabled: true
+        accessMode: "ReadWriteOnce"
+        size: "50Gi"
+        storageClass: "freenas-iscsi-csi"
+      downloads:
+        enabled: true
+        accessMode: "ReadWriteOnce"
+        size: "50Gi"
+        storageClass: "freenas-iscsi-csi"
+    ingress:
+      main:
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          external-dns.alpha.kubernetes.io/hostname: "nzbget.example.com."
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+          nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
+        enabled: true
+        hosts:
+          - host: nzbget.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  port: 6789
+        tls:
+        - secretName: radarr-tls
+          hosts:
+          - nzbget.example.com
+  overseerr.yaml: |
+    persistence:
+      config:
+        type: "pvc"
+        enabled: true
+        mountPath: /app/config
+        accessMode: "ReadWriteOnce"
+        size: "5Gi"
+        storageClass: "freenas-iscsi-csi"
+    ingress:
+      main:
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          external-dns.alpha.kubernetes.io/hostname: "overseerr.example.com."
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+          nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
+        enabled: true
+        hosts:
+          - host: overseerr.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  port: 5055
+        tls:
+        - secretName: overseerr-tls
+          hosts:
+          - overseerr.example.com
   photoprism.yaml: |
     ingress:
       main:
@@ -565,7 +633,7 @@ stringData:
           external-dns.alpha.kubernetes.io/hostname: "rtorrent.example.com."
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
-          nginx.ingress.kubernetes.io/auth-signin: https://auth.internetz.cloud
+          nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
         enabled: true
         hosts:
           - host: rtorrent.example.com
@@ -619,36 +687,6 @@ stringData:
       runAsUser: 568
       runAsGroup: 568
       fsGroup: 568
-  overseerr.yaml: |
-    persistence:
-      config:
-        type: "pvc"
-        enabled: true
-        mountPath: /app/config
-        accessMode: "ReadWriteOnce"
-        size: "5Gi"
-        storageClass: "freenas-iscsi-csi"
-    ingress:
-      main:
-        annotations:
-          kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "letsencrypt-prod"
-          external-dns.alpha.kubernetes.io/hostname: "overseerr.example.com."
-          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
-          nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
-          nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
-        enabled: true
-        hosts:
-          - host: overseerr.example.com
-            paths:
-              - path: /
-                pathType: Prefix
-                service:
-                  port: 5055
-        tls:
-        - secretName: overseerr-tls
-          hosts:
-          - overseerr.example.com
   vaultwarden.yaml: |
     ingress:
       main:
