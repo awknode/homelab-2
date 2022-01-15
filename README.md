@@ -39,6 +39,7 @@ Optional Charts:
 | overseerr        | 5.2.0  | 1.26.1     | k8s-at-home      | manages requests for sonarr, radarr, plex       |
 | home-assistant   | 12.0.1 | 2021.12.7  | k8s-at-home      | opensource home automation solution             |
 | rtorrent-flood   | 9.2.0  | 4.7.0      | k8s-at-home      | nodejs frontend for rtorrent ( with rtorrent )  |
+| nzbget           | 12.2.0 | 21.1       | k8s-at-home      | newsbin client to download from usenet          |
 
 ## How does it work?
 ### 1.) github.com account
