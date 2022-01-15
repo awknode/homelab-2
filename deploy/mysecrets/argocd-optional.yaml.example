@@ -465,6 +465,10 @@ stringData:
         - secretName: radarr-tls
           hosts:
           - nzbget.example.com
+    podSecurityContext:
+      runAsUser: 911
+      runAsGroup: 911
+      fsGroup: 911
   overseerr.yaml: |
     persistence:
       config:
