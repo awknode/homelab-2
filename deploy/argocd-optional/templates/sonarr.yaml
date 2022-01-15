@@ -15,7 +15,7 @@ spec:
       valueFiles:
         - /helm-values/sonarr.yaml
   destination:
-    namespace: sonar
+    namespace: sonarr
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:

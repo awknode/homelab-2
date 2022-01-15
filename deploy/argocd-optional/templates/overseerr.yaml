@@ -15,7 +15,7 @@ spec:
       valueFiles:
         - /helm-values/overseerr.yaml
   destination:
-    namespace: overseer
+    namespace: overseerr
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
