@@ -42,10 +42,10 @@ stringData:
           enabled: false
       notifier:
         filesystem:
-          enabled: false
+          enabled: true
           filename: /config/notification.txt
         smtp:
-          enabled: true
+          enabled: false
           enabledSecret: false
           host: mail.example.com
           port: 25
