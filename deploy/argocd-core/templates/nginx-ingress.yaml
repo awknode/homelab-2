@@ -10,7 +10,7 @@ spec:
   source:
     chart: nginx-ingress-controller
     repoURL: https://charts.bitnami.com/bitnami
-    targetRevision: "9.1.0"
+    targetRevision: "9.1.2"
   destination:
     namespace: nginx-ingress
     server: https://kubernetes.default.svc
