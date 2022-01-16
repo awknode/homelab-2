@@ -15,7 +15,7 @@ spec:
       valueFiles:
         - /helm-values/radarr.yaml
   destination:
-    namespace: radarr
+    namespace: media
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
