@@ -14,12 +14,12 @@ spec:
     helm:
       # start using raw values first for new charts, once the chart is stable move it to the /helm-values/ section
       values: |
-        persistence:
-          config:
-            enabled: true
-            accessMode: "ReadWriteOnce"
-            storageClass: "freenas-iscsi-csi"
-            size: "5Gi"
+        # persistence:
+        #   config:
+        #     enabled: true
+        #     accessMode: "ReadWriteOnce"
+        #     storageClass: "freenas-iscsi-csi"
+        #     size: "5Gi"
         ingress:
           main:
             annotations:
