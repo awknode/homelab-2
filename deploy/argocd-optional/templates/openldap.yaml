@@ -46,12 +46,7 @@ spec:
           ingress:
             enabled: true
             hosts:
-              - host: ltb-passwd.internetz.cloud
-                paths:
-                  - path: /
-                    pathType: Prefix
-                    service:
-                      port: 80
+              - ltb-passwd.internetz.cloud
             annotations:
               kubernetes.io/ingress.class: "nginx"
               cert-manager.io/cluster-issuer: "letsencrypt-prod"
