@@ -12,18 +12,14 @@ spec:
     repoURL: https://jp-gouin.github.io/helm-openldap/
     targetRevision: "2.1.6"
     helm:
-    helm:
-      # start using raw values first for new charts, once the chart is stable move it to the /helm-values/ section
       values: |
-        replicaCount: 2
-        adminPassword: homelab
-        configPassword: homelab
-        # Default configuration for openldap as environment variables. These get injected directly in the container.
-        # Use the env variables from https://github.com/osixia/docker-openldap#beginner-guide
+        replicaCount: 1
+        adminPassword: admin
+        configPassword: 9h8sdfg9sdgfjsdfg8sdgsdfjgklsdfg8sdgfhj
         env:
           LDAP_LOG_LEVEL: "256"
-          LDAP_ORGANISATION: "Example Inc."
-          LDAP_DOMAIN: "example.org"
+          LDAP_ORGANISATION: "Internetz Cloud"
+          LDAP_DOMAIN: "internetz.cloud"
           LDAP_READONLY_USER: "false"
           LDAP_READONLY_USER_USERNAME: "readonly"
           LDAP_READONLY_USER_PASSWORD: "readonly"
@@ -48,28 +44,31 @@ spec:
           size: 1Gi
         ltb-passwd:
           ingress:
-            enabled: false
+            enabled: true
             hosts:
-            - host: ltb-passwd.internetz.cloud
-              paths:
-                - path: /
-                  pathType: Prefix
-                  service:
-                    port: 80
+              - host: ltb-passwd.internetz.cloud
+                paths:
+                  - path: /
+                    pathType: Prefix
+                    service:
+                      port: 80
             annotations:
               kubernetes.io/ingress.class: "nginx"
               cert-manager.io/cluster-issuer: "letsencrypt-prod"
               external-dns.alpha.kubernetes.io/hostname: "ltb-passwd.internetz.cloud."
               external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+              nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+              nginx.ingress.kubernetes.io/auth-signin: https://auth.internetz.cloud
+            tls:
+              - secretName: ltb-passwd-tls
+                hosts:
+                  - ltb-passwd.internetz.cloud
           ldap:
             server: ldap://openldap-openldap-stack-ha
             searchBase: dc=internetz,dc=cloud
-            # existingSecret: openldaptest
-            bindDN: cn=admin,dc=example,dc=cloud
-            bindPWKey: homelab
-        # tls:
-        #   enabled: true
-        #   secret: openldap-tls
+            bindDN: cn=admin,dc=internetz,dc=cloud
+            bindPWKey: LDAP_ADMIN_PASSWORD
+
         phpldapadmin:
           ingress:
             annotations:
@@ -77,13 +76,14 @@ spec:
               cert-manager.io/cluster-issuer: "letsencrypt-prod"
               external-dns.alpha.kubernetes.io/hostname: "ldap-admin.internetz.cloud."
               external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+              nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+              nginx.ingress.kubernetes.io/auth-signin: https://auth.internetz.cloud
             hosts:
-            - host: ltb-passwd.internetz.cloud
-              paths:
-                - path: /
-                  pathType: Prefix
-                  service:
-                    port: 80
+              - ldap-admin.internetz.cloud
+            tls:
+              - secretName: phpldapadmin-tls
+                hosts:
+                - ldap-admin.internetz.cloud
       # valueFiles:
       #   - /helm-values/openldap.yaml
   destination:
