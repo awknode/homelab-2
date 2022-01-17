@@ -15,7 +15,7 @@ spec:
       valueFiles:
         - /helm-values/rtorrent-flood.yaml
   destination:
-    namespace: rtorrent-flood
+    namespace: media
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:

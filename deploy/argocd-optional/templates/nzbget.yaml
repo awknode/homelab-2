@@ -15,7 +15,7 @@ spec:
       valueFiles:
         - /helm-values/nzbget.yaml
   destination:
-    namespace: nzbget
+    namespace: media
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:

@@ -15,7 +15,7 @@ spec:
       valueFiles:
         - /helm-values/plex.yaml
   destination:
-    namespace: plex
+    namespace: media
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:

@@ -12,39 +12,10 @@ spec:
     repoURL: https://k8s-at-home.com/charts/
     targetRevision: "4.2.0"
     helm:
-      # start using raw values first for new charts, once the chart is stable move it to the /helm-values/ section
-      values: |
-        # persistence:
-        #   config:
-        #     enabled: true
-        #     accessMode: "ReadWriteOnce"
-        #     storageClass: "freenas-iscsi-csi"
-        #     size: "5Gi"
-        ingress:
-          main:
-            annotations:
-              kubernetes.io/ingress.class: "nginx"
-              cert-manager.io/cluster-issuer: "letsencrypt-prod"
-              external-dns.alpha.kubernetes.io/hostname: "prowlarr.internetz.cloud."
-              external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
-              nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
-              nginx.ingress.kubernetes.io/auth-signin: https://auth.internetz.cloud
-            enabled: true
-            hosts:
-              - host: prowlarr.internetz.cloud
-                paths:
-                  - path: /
-                    pathType: Prefix
-                    service:
-                      port: 9696
-            tls:
-            - secretName: prowlarr-tls
-              hosts:
-              - prowlarr.internetz.cloud
-      # valueFiles:
-      #   - /helm-values/prowlarr.yaml
+      valueFiles:
+        - /helm-values/prowlarr.yaml
   destination:
-    namespace: prowlarr
+    namespace: media
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
