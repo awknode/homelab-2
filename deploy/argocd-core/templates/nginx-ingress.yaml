@@ -13,8 +13,6 @@ spec:
     targetRevision: "9.1.2"
     helm:
       parameters:
-      - name: hostNetwork
-        value: "true"
       - name: service.externalTrafficPolicy
         value: "Local"
   destination:
