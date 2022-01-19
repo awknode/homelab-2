@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sonarr
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    chart: sonarr
+    repoURL: https://k8s-at-home.com/charts/
+    targetRevision: "15.3.0"
+    helm:
+      # start using raw values first for new charts, once the chart is stable move it to the /helm-values/ section
+      values: |
+        
+      # valueFiles:
+      #   - /helm-values/sonarr.yaml
+  destination:
+    namespace: sonarr
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

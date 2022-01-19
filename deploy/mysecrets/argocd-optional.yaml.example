@@ -5,9 +5,25 @@ metadata:
   namespace: argocd
 stringData:
   authelia.yaml: |
+    secret:
+      storageEncryptionKey:
+        key: STORAGE_ENCRYPTION_KEY
+        value: "storage_you_must_generate_a_random_string_of_more_than_twenty_chars_and_configure_this"
+        filename: STORAGE_ENCRYPTION_KEY
+      sessionEncryptionKey:
+        key: SESSION_ENCRYPTION_KEY
+        value: "session_you_must_generate_a_random_string_of_more_than_twenty_chars_and_configure_this"
+        filename: SESSION_ENCRYPTION_KEY
+    persistence:
+      enabled: true
+      mountPath: "/config"
+      storageClass: "freenas-iscsi-csi"
+      accessMode: "ReadWriteMany"
     domain: example.com
     pod:
+      replicas: 2
       kind: StatefulSet
+      revisionHistoryLimit: 2
       extraVolumeMounts:
         - name: users-database
           mountPath: "/config/users"
@@ -20,6 +36,7 @@ stringData:
               - key: users_database.yml
                 path: users_database.yml
     configMap:
+      default_redirection_url: "https://hub.example.com"
       authentication_backend:
         ldap:
           enabled: false
@@ -36,16 +53,18 @@ stringData:
         expiration: 3600
         inactivity: 300
       storage:
+        encryption_key: "you_must_generate_a_random_string_of_more_than_twenty_chars_and_configure_this"
         local:
           enabled: true
         postgres:
           enabled: false
+          
       notifier:
         filesystem:
-          enabled: true
+          enabled: false
           filename: /config/notification.txt
         smtp:
-          enabled: false
+          enabled: true
           enabledSecret: false
           host: mail.example.com
           port: 25
@@ -68,13 +87,21 @@ stringData:
       theme: dark
       access_control:
         default_policy: deny
+        networks:
+        - name: internal
+          networks:
+          - 10.42.1.12/32
         rules:
-          - domain: '*.example.com'
-            subject: 'group:admins'
-            policy: one_factor
-          - domain: vaultwarden.example.com
-            policy: two_factor
-          - domain: ha.example.com
+          - domain: ['*.example.com']
+            policy: bypass
+            networks:
+            - internal
+          - domain: ['sonarr.example.com']
+            policy: bypass
+            resources:
+              - "^/api([/?].*)?$"
+              - "^/signalr([/?].*)?$"
+          - domain: ['vaultwarden.example.com', 'ha.example.com']
             policy: two_factor
           - domain: nextcloud.example.com
             policy: two_factor
@@ -88,6 +115,11 @@ stringData:
             policy: two_factor
           - domain: overseerr.example.com
             policy: two_factor
+          - domain: ldap-admin.example.com
+            policy: two_factor
+          - domain: '*.example.com'
+            subject: 'group:admins'
+            policy: one_factor
     ingress:
       annotations:
         kubernetes.io/ingress.class: "nginx"
@@ -102,7 +134,6 @@ stringData:
               pathType: Prefix
               service:
                 port: 80
-      ingressClassName: "nginx"
       tls:
         enabled: true
         secret: auth-tls
@@ -536,12 +567,12 @@ stringData:
         accessMode: "ReadWriteOnce"
         size: "10Gi"
         storageClass: "freenas-iscsi-csi"
-      shared-media:
+      media:
         enabled: true
-        mountPath: "/shared-media"
-        accessMode: "ReadWriteOnce"
-        size: "100Gi"
-        storageClass: "freenas-iscsi-csi"
+        accessMode: "ReadWriteMany"
+        size: "1000Gi"
+        storageClass: "freenas-nfs-csi"
+        existingClaim: "shared-media"
     ingress:
       main:
         annotations:
@@ -552,7 +583,6 @@ stringData:
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
         enabled: true
-        ingressClassName: "nginx"
         hosts:
           - host: plex.example.com
             paths:
@@ -568,6 +598,38 @@ stringData:
       runAsUser: 568
       runAsGroup: 568
       fsGroup: 568
+  prowlarr.yaml: |
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+    persistence:
+      config:
+        enabled: true
+        accessMode: "ReadWriteOnce"
+        storageClass: "freenas-iscsi-csi"
+        size: "5Gi"
+    ingress:
+      main:
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          external-dns.alpha.kubernetes.io/hostname: "prowlarr.example.com."
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+          nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
+        enabled: true
+        hosts:
+          - host: prowlarr.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  port: 9696
+        tls:
+        - secretName: prowlarr-tls
+          hosts:
+          - prowlarr.example.com
   radarr.yaml: |
     persistence:
       config:
@@ -578,8 +640,9 @@ stringData:
       media:
         enabled: true
         accessMode: "ReadWriteOnce"
-        size: "50Gi"
-        storageClass: "freenas-iscsi-csi"
+        size: "1000Gi"
+        storageClass: "freenas-nfs-csi"
+        existingClaim: "shared-media"
     ingress:
       main:
         annotations:
@@ -626,9 +689,10 @@ stringData:
       downloads:
         enabled: true
         mountPath: "/downloads"
-        accessMode: "ReadWriteOnce"
-        size: "100Gi"
-        storageClass: "freenas-iscsi-csi"
+        accessMode: "ReadWriteMany"
+        size: "1000Gi"
+        storageClass: "freenas-nfs-csi"
+        existingClaim: "shared-media"
     ingress:
       main:
         annotations:
@@ -663,9 +727,10 @@ stringData:
         size: "5Gi"
       media:
         enabled: true
-        accessMode: "ReadWriteOnce"
-        size: "50Gi"
-        storageClass: "freenas-iscsi-csi"
+        accessMode: "ReadWriteMany"
+        size: "1000Gi"
+        storageClass: "freenas-nfs-csi"
+        existingClaim: "shared-media"
     ingress:
       main:
         annotations:
