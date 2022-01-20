@@ -87,15 +87,11 @@ stringData:
       theme: dark
       access_control:
         default_policy: deny
-        networks:
-        - name: internal
-          networks:
-          - 10.42.1.12/32
         rules:
-          - domain: ['*.example.com']
+          - domain: ['plex.internetz.cloud']
             policy: bypass
-            networks:
-            - internal
+            resources:
+              - "^/web/index.html"
           - domain: ['sonarr.example.com']
             policy: bypass
             resources:
@@ -718,6 +714,11 @@ stringData:
       runAsUser: 1000
       runAsGroup: 1000
       fsGroup: 1000
+  shared_dbs_postgresql.yaml: |
+    postgresqlDatabase: "authelia"
+    postgresqlUsername: "authelia"
+    postgresqlPassword: "authelia"
+    storageClass: "freenas-iscsi-csi"
   sonarr.yaml: |
     persistence:
       config:

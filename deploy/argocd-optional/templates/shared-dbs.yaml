@@ -16,7 +16,7 @@ spec:
       - name: env.TZ
         value: "Europe/Berlin"
       valueFiles:
-        - /helm-values/shared_dbs.yaml
+        - /helm-values/shared_dbs_postgresql.yaml
   destination:
     namespace: shared-dbs
     server: https://kubernetes.default.svc
