@@ -15,7 +15,9 @@ spec:
       parameters:
       - name: service.externalTrafficPolicy
         value: "Local"
-
+      values: |
+        config: |-
+          use-forwarded-headers: "true"
   destination:
     namespace: nginx-ingress
     server: https://kubernetes.default.svc
