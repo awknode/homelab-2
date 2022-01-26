@@ -15,8 +15,6 @@ spec:
       parameters:
       - name: service.externalTrafficPolicy
         value: "Local"
-      - name: hostNetwork
-        value: "true"
       - name: kind
         value: "Daemonset"
   destination:
