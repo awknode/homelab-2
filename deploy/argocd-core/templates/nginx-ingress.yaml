@@ -15,9 +15,7 @@ spec:
       parameters:
       - name: service.externalTrafficPolicy
         value: "Local"
-      values: |
-        config: |-
-          use-proxy-protocol: "true"
+
   destination:
     namespace: nginx-ingress
     server: https://kubernetes.default.svc
