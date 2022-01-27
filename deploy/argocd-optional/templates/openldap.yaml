@@ -12,7 +12,7 @@ spec:
     repoURL: https://jp-gouin.github.io/helm-openldap/
     targetRevision: "2.1.6"
     helm:
-      valueFiles: |
+      valueFiles:
         - /helm-values/openldap.yaml
   destination:
     namespace: openldap
