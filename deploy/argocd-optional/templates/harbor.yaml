@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: harbor
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  source:
+    chart: harbor
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: "11.2.2"
+    helm:
+      parameters:
+      - name: env.TZ
+        value: "Europe/Berlin"
+      values: |
+        ## Ingress parameters
+        ##
+        ingress:
+          enabled: true
+          pathType: ImplementationSpecific
+          hosts:
+            core: core.harbor.internetz.cloud
+            notary: notary.harbor.internetz.cloud
+          controller: default
+          annotations:
+            kubernetes.io/ingress.class: "nginx"
+            cert-manager.io/cluster-issuer: "letsencrypt-prod"
+            external-dns.alpha.kubernetes.io/hostname: "auth.internetz.cloud."
+            external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+            ingress.kubernetes.io/ssl-redirect: 'true'
+            ingress.kubernetes.io/proxy-body-size: '0'
+            nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+            nginx.ingress.kubernetes.io/proxy-body-size: '0'
+      # valueFiles:
+      #   - /helm-values/harbor.yaml
+  destination:
+    namespace: shared-dbs
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
