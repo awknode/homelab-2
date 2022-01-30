@@ -8,16 +8,18 @@ metadata:
 spec:
   project: default
   source:
-    chart: nginx-ingress-controller
-    repoURL: https://charts.bitnami.com/bitnami
-    targetRevision: "9.1.2"
+    chart: nginx-ingress
+    repoURL: https://helm.nginx.com/stable
+    targetRevision: "1.12.0"
     helm:
       parameters:
-      - name: service.externalTrafficPolicy
-        value: "Local"
-      values: |
-        config: |-
-          use-forwarded-headers: "true"
+      # - name: service.externalTrafficPolicy
+      #   value: "Local"
+      - name: service.type
+        value: "NodePort"
+      # values: |
+      #   config: |-
+      #     use-forwarded-headers: "true"
   destination:
     namespace: nginx-ingress
     server: https://kubernetes.default.svc
