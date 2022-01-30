@@ -13,8 +13,12 @@ spec:
     targetRevision: "0.12.0"
     helm:
       parameters:
-       - name: service.externalTrafficPolicy
-         value: "Local"
+        - name: service.externalTrafficPolicy
+          value: "Local"
+        - name:  controller.service.enabled
+          value: "true"
+        - name:  controller.service.type
+          value: "LoadBalancer"
       # values: |
       #   config: |-
       #     use-forwarded-headers: "true"
