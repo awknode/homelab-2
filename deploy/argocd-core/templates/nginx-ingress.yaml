@@ -10,13 +10,11 @@ spec:
   source:
     chart: nginx-ingress
     repoURL: https://helm.nginx.com/stable
-    targetRevision: "1.12.0"
+    targetRevision: "0.12.0"
     helm:
       parameters:
-      # - name: service.externalTrafficPolicy
-      #   value: "Local"
-      - name: service.type
-        value: "NodePort"
+       - name: service.externalTrafficPolicy
+         value: "Local"
       # values: |
       #   config: |-
       #     use-forwarded-headers: "true"
