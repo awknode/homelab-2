@@ -8,20 +8,17 @@ metadata:
 spec:
   project: default
   source:
-    chart: nginx-ingress
-    repoURL: https://helm.nginx.com/stable
-    targetRevision: "0.12.0"
+    chart: nginx-ingress-controller
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: "9.1.2"
     helm:
       parameters:
-        - name: service.externalTrafficPolicy
-          value: "Local"
-        - name:  controller.service.enabled
-          value: "true"
-        - name:  controller.service.type
-          value: "LoadBalancer"
-      # values: |
-      #   config: |-
-      #     use-forwarded-headers: "true"
+      - name: service.externalTrafficPolicy
+        value: "Local"
+      - name: service.type
+        value: "LoadBalancer"
+      - name: service.annotations
+        value: "metallb.universe.tf/address-pool: generic-cluster-pool"
   destination:
     namespace: nginx-ingress
     server: https://kubernetes.default.svc
