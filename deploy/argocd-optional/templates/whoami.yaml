@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: whoami
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    chart: whoami
+    repoURL: https://charts.riftbit.com/charts/
+    targetRevision: "2.6.2"
+    helm:
+      values: |
+        ingress:
+          enabled: true
+          ingressClassName: "nginx"
+          pathType: ImplementationSpecific
+
+          annotations: {}
+              kubernetes.io/ingress.class: "nginx"
+              cert-manager.io/cluster-issuer: "letsencrypt-prod"
+              external-dns.alpha.kubernetes.io/hostname: "whoami.internetz.cloud."
+              external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+              nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+              nginx.ingress.kubernetes.io/auth-signin: https://auth.internetz.cloud
+          hosts:
+            - host: whoami.internetz.cloud
+              path: /
+          tls: []
+          - secretName: whoami-tls
+            hosts:
+              - whoami.internetz.cloud
+      # valueFiles:
+      #   - /helm-values/whoami.yaml
+  destination:
+    namespace: whoami
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
