@@ -20,25 +20,23 @@ spec:
         externalURL: https://core.harbor.internetz.cloud
         global:
           storageClass: freenas-iscsi-csi
-        service:
-          type: ingress
-          tls:
-            commonName: core.harbor.internetz.cloud
-            enabled: true
-          externalTrafficPolicy: true
         notary:
           enabled: false
+        core:
+          tls:
+            existingSecret: 
         ingress:
+          certManager: true
           enabled: true
-          pathType: Prefix
+          pathType: ImplementationSpecific
           hosts:
             core: core.harbor.internetz.cloud
-            notary: notary.harbor.internetz.cloud
           controller: default
           annotations:
             kubernetes.io/ingress.class: "nginx"
             cert-manager.io/cluster-issuer: "letsencrypt-prod"
-            external-dns.alpha.kubernetes.io/hostname: "notary.harbor.internetz.cloud.,core.harbor.internetz.cloud."
+            external-dns.alpha.kubernetes.io/hostname: "core.harbor.internetz.cloud."
+            external-dns.alpha.kubernetes.io/target: "46.142.60.21"
             external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
             #ingress.kubernetes.io/ssl-redirect: 'true'
             #ingress.kubernetes.io/proxy-body-size: '0'

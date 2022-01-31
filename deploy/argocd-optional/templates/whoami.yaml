@@ -9,31 +9,11 @@ spec:
   project: default
   source:
     chart: whoami
-    repoURL: https://charts.riftbit.com/charts/
-    targetRevision: "2.6.2"
+    repoURL: 'https://cowboysysop.github.io/charts/'
+    targetRevision: 2.5.3
     helm:
-      values: |
-        ingress:
-          enabled: true
-          ingressClassName: "nginx"
-          pathType: ImplementationSpecific
-
-          annotations: {}
-              kubernetes.io/ingress.class: "nginx"
-              cert-manager.io/cluster-issuer: "letsencrypt-prod"
-              external-dns.alpha.kubernetes.io/hostname: "whoami.internetz.cloud."
-              external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
-              nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
-              nginx.ingress.kubernetes.io/auth-signin: https://auth.internetz.cloud
-          hosts:
-            - host: whoami.internetz.cloud
-              path: /
-          tls: []
-          - secretName: whoami-tls
-            hosts:
-              - whoami.internetz.cloud
-      # valueFiles:
-      #   - /helm-values/whoami.yaml
+      valueFiles:
+        - /helm-values/whoami.yaml
   destination:
     namespace: whoami
     server: https://kubernetes.default.svc
@@ -43,3 +23,6 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+
+
+Unable to save changes: application spec for whoami is invalid: InvalidSpecError: Unable to generate manifests in : rpc error: code = Unknown desc = `helm template . --name-template whoami --namespace whoami --kube-version 1.22 --values /tmp/values-764459092.yaml --api-versions acme.cert-manager.io/v1 --api-versions acme.cert-manager.io/v1/Challenge --api-versions acme.cert-manager.io/v1/Order --api-versions admissionregistration.k8s.io/v1 --api-versions admissionregistration.k8s.io/v1/MutatingWebhookConfiguration --api-versions admissionregistration.k8s.io/v1/ValidatingWebhookConfiguration --api-versions apiextensions.k8s.io/v1 --api-versions apiextensions.k8s.io/v1/CustomResourceDefinition --api-versions apiregistration.k8s.io/v1 --api-versions apiregistration.k8s.io/v1/APIService --api-versions apps/v1 --api-versions apps/v1/ControllerRevision --api-versions apps/v1/DaemonSet --api-versions apps/v1/Deployment --api-versions apps/v1/ReplicaSet --api-versions apps/v1/StatefulSet --api-versions argoproj.io/v1alpha1 --api-versions argoproj.io/v1alpha1/AppProject --api-versions argoproj.io/v1alpha1/Application --api-versions argoproj.io/v1alpha1/ArgoCDExtension --api-versions autoscaling/v1 --api-versions autoscaling/v1/HorizontalPodAutoscaler --api-versions autoscaling/v2beta1 --api-versions autoscaling/v2beta1/HorizontalPodAutoscaler --api-versions autoscaling/v2beta2 --api-versions autoscaling/v2beta2/HorizontalPodAutoscaler --api-versions batch/v1 --api-versions batch/v1/CronJob --api-versions batch/v1/Job --api-versions batch/v1beta1 --api-versions batch/v1beta1/CronJob --api-versions cert-manager.io/v1 --api-versions cert-manager.io/v1/Certificate --api-versions cert-manager.io/v1/CertificateRequest --api-versions cert-manager.io/v1/ClusterIssuer --api-versions cert-manager.io/v1/Issuer --api-versions certificates.k8s.io/v1 --api-versions certificates.k8s.io/v1/CertificateSigningRequest --api-versions coordination.k8s.io/v1 --api-versions coordination.k8s.io/v1/Lease --api-versions discovery.k8s.io/v1 --api-versions discovery.k8s.io/v1/EndpointSlice --api-versions discovery.k8s.io/v1beta1 --api-versions discovery.k8s.io/v1beta1/EndpointSlice --api-versions events.k8s.io/v1 --api-versions events.k8s.io/v1/Event --api-versions events.k8s.io/v1beta1 --api-versions events.k8s.io/v1beta1/Event --api-versions flowcontrol.apiserver.k8s.io/v1beta1 --api-versions flowcontrol.apiserver.k8s.io/v1beta1/FlowSchema --api-versions flowcontrol.apiserver.k8s.io/v1beta1/PriorityLevelConfiguration --api-versions helm.cattle.io/v1 --api-versions helm.cattle.io/v1/HelmChart --api-versions helm.cattle.io/v1/HelmChartConfig --api-versions k3s.cattle.io/v1 --api-versions k3s.cattle.io/v1/Addon --api-versions networking.k8s.io/v1 --api-versions networking.k8s.io/v1/Ingress --api-versions networking.k8s.io/v1/IngressClass --api-versions networking.k8s.io/v1/NetworkPolicy --api-versions node.k8s.io/v1 --api-versions node.k8s.io/v1/RuntimeClass --api-versions node.k8s.io/v1beta1 --api-versions node.k8s.io/v1beta1/RuntimeClass --api-versions policy/v1 --api-versions policy/v1/PodDisruptionBudget --api-versions policy/v1beta1 --api-versions policy/v1beta1/PodDisruptionBudget --api-versions policy/v1beta1/PodSecurityPolicy --api-versions rbac.authorization.k8s.io/v1 --api-versions rbac.authorization.k8s.io/v1/ClusterRole --api-versions rbac.authorization.k8s.io/v1/ClusterRoleBinding --api-versions rbac.authorization.k8s.io/v1/Role --api-versions rbac.authorization.k8s.io/v1/RoleBinding --api-versions scheduling.k8s.io/v1 --api-versions scheduling.k8s.io/v1/PriorityClass --api-versions storage.k8s.io/v1 --api-versions storage.k8s.io/v1/CSIDriver --api-versions storage.k8s.io/v1/CSINode --api-versions storage.k8s.io/v1/StorageClass --api-versions storage.k8s.io/v1/VolumeAttachment --api-versions storage.k8s.io/v1beta1 --api-versions storage.k8s.io/v1beta1/CSIStorageCapacity --api-versions v1 --api-versions v1/ConfigMap --api-versions v1/Endpoints --api-versions v1/Event --api-versions v1/LimitRange --api-versions v1/Namespace --api-versions v1/Node --api-versions v1/PersistentVolume --api-versions v1/PersistentVolumeClaim --api-versions v1/Pod --api-versions v1/PodTemplate --api-versions v1/ReplicationController --api-versions v1/ResourceQuota --api-versions v1/Secret --api-versions v1/Service --api-versions v1/ServiceAccount --include-crds` failed exit status 1: Error: template: whoami/templates/ingress.yaml:39:20: executing "whoami/templates/ingress.yaml" at <.paths>: range can't iterate over / Use --debug flag to render out invalid YAML

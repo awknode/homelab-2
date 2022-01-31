@@ -10,7 +10,7 @@ spec:
   source:
     chart: uptime-kuma
     repoURL: https://duyet.github.io/charts
-    targetRevision: "0.1.6"
+    targetRevision: "0.1.7"
     helm:
       valueFiles:
         - /helm-values/kuma.yaml

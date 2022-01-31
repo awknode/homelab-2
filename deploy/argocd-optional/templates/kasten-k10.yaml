@@ -10,7 +10,7 @@ spec:
   source:
     chart: k10
     repoURL: https://charts.kasten.io/
-    targetRevision: "4.5.5"
+    targetRevision: "4.5.7"
     helm:
       valueFiles:
         - /helm-values/kasten.yaml

@@ -10,15 +10,17 @@ spec:
   source:
     chart: nginx-ingress-controller
     repoURL: https://charts.bitnami.com/bitnami
-    targetRevision: "9.1.2"
+    targetRevision: "9.1.5"
     helm:
       parameters:
       - name: service.externalTrafficPolicy
-        value: "Local"
+        value: Local
       - name: service.type
-        value: "LoadBalancer"
+        value: LoadBalancer
       - name: service.annotations
-        value: "metallb.universe.tf/address-pool: generic-cluster-pool"
+        value: 'metallb.universe.tf/address-pool: generic-cluster-pool'
+      - name: kind
+        value: DaemonSet
   destination:
     namespace: nginx-ingress
     server: https://kubernetes.default.svc
