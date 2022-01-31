@@ -17,8 +17,6 @@ spec:
         value: Local
       - name: service.type
         value: LoadBalancer
-      - name: service.annotations
-        value: 'metallb.universe.tf/address-pool: generic-cluster-pool'
       - name: kind
         value: DaemonSet
   destination:
