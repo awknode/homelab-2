@@ -19,6 +19,8 @@ spec:
         value: LoadBalancer
       - name: kind
         value: DaemonSet
+      - name: service.loadBalancerIP
+        value: 46.142.60.132
   destination:
     namespace: nginx-ingress
     server: https://kubernetes.default.svc
