@@ -88,7 +88,7 @@ stringData:
       access_control:
         default_policy: deny
         rules:
-          - domain: ['plex.internetz.cloud']
+          - domain: ['plex.example.com']
             policy: bypass
             resources:
               - "^/web/index.html"
@@ -496,6 +496,110 @@ stringData:
       runAsUser: 911
       runAsGroup: 911
       fsGroup: 911
+  openldap.yaml: |
+    service:
+      type: NodePort
+    env:
+      LDAP_DOMAIN: "ldap.example.com"
+      LDAP_ORGANISATION: "loeken"
+      LDAP_TLS: "false"
+      LDAP_TLS_ENFORCE: "false"
+      LDAP_REMOVE_CONFIG_AFTER_SETUP: "true"
+      LDAP_READONLY_USER: "false"
+      LDAP_READONLY_USER_USERNAME: readonly
+      LDAP_READONLY_USER_PASSWORD: homelab
+    replicaCount: 1
+    adminPassword: homelab
+    configPassword: homelab
+    logLevel: trace
+    persistence:
+      storageClass: "freenas-iscsi-csi"
+      size: 1Gi
+    ltb-passwd:
+      ingress:
+        enabled: true
+        hosts:
+          - ltb-passwd.example.com
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          external-dns.alpha.kubernetes.io/hostname: "ltb-passwd.example.com."
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          # nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+          # nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
+        tls:
+          - secretName: ltb-passwd-tls
+            hosts:
+              - ltb-passwd.example.com
+      ldap:
+        server: ldap://openldap-openldap-stack-ha
+        searchBase: dc=ldap,dc=example,dc=com
+        bindDN: cn=admin,dc=ldap,dc=example,dc=com
+        bindPWKey: LDAP_ADMIN_PASSWORD
+
+    phpldapadmin:
+      ingress:
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          external-dns.alpha.kubernetes.io/hostname: "ldap-admin.example.com."
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          # nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+          # nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
+        hosts:
+          - ldap-admin.example.com
+        tls:
+          - secretName: phpldapadmin-tls
+            hosts:
+            - ldap-admin.example.com
+      env:
+        PHPLDAPADMIN_LDAP_HOSTS: "ldap://openldap-openldap-stack-ha:389"
+        PHPLDAPADMIN_HTTPS: "false"
+        PHPLDAPADMIN_TRUST_PROXY_SSL: "true" 
+    customLdifFiles:
+      initial.ldif: |-
+        # Entry 2: ou=Group,dc=ldap,dc=example,dc=com
+        dn: ou=Group,dc=ldap,dc=example,dc=com
+        objectclass: organizationalUnit
+        objectclass: top
+        ou: Group
+
+        # Entry 3: cn=admins,ou=Group,dc=ldap,dc=example,dc=com
+        dn: cn=admins,ou=Group,dc=ldap,dc=example,dc=com
+        cn: admins
+        member: cn=loeken,ou=User,dc=ldap,dc=example,dc=com
+        objectclass: groupOfNames
+        objectclass: top
+
+        # Entry 4: cn=users,ou=Group,dc=ldap,dc=example,dc=com
+        dn: cn=users,ou=Group,dc=ldap,dc=example,dc=com
+        cn: users
+        member: cn=loeken,ou=User,dc=ldap,dc=example,dc=com
+        objectclass: groupOfNames
+        objectclass: top
+
+        # Entry 5: ou=User,dc=ldap,dc=example,dc=com
+        dn: ou=User,dc=ldap,dc=example,dc=com
+        objectclass: organizationalUnit
+        objectclass: top
+        ou: User
+
+        # Entry 6: cn=loeken,ou=User,dc=ldap,dc=example,dc=com
+        dn: cn=loeken,ou=User,dc=ldap,dc=example,dc=com
+        cn: loeken
+        gidnumber: 501
+        givenname: Luke
+        homedirectory: /home/loeken
+        loginshell: /bin/bash
+        objectclass: inetOrgPerson
+        objectclass: posixAccount
+        objectclass: top
+        sn: Filewalker
+        uid: loeken
+        uidnumber: 1000
+        mail: email@example.com
+        # this is "homelab" hased
+        userpassword: {CRYPT}$5$WtLavDZC$ScD.IMUJdgRhMZMtAlyYtbqezxsQ2qfWTVbQOFo5tg4
   overseerr.yaml: |
     persistence:
       config:
@@ -595,10 +699,6 @@ stringData:
       runAsGroup: 568
       fsGroup: 568
   prowlarr.yaml: |
-    podSecurityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
-      fsGroup: 1000
     persistence:
       config:
         enabled: true
@@ -626,6 +726,10 @@ stringData:
         - secretName: prowlarr-tls
           hosts:
           - prowlarr.example.com
+    podSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
   radarr.yaml: |
     persistence:
       config:
@@ -639,6 +743,7 @@ stringData:
         size: "1000Gi"
         storageClass: "freenas-nfs-csi"
         existingClaim: "shared-media"
+        mountPath: "/media"
     ingress:
       main:
         annotations:
@@ -800,3 +905,24 @@ stringData:
         storageClass: "freenas-iscsi-csi"
         accessModes:
           - ReadWriteOnce
+  whoami.yaml: |
+    service:
+      service.externalTrafficPolicy: "Local"
+    ingress:
+      annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        external-dns.alpha.kubernetes.io/hostname: "whoami.example.com."
+        external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+        #nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+        #nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
+      enabled: 'true'
+      ingressClassName: "nginx"
+      pathType: ImplementationSpecific
+      hosts:
+        - host: whoami.example.com
+          paths:
+          - "/"
+      tls:
+      - secretName: whoami-tls
+        hosts:
+          - whoami.example.com
