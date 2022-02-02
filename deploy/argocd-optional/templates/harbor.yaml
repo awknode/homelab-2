@@ -15,39 +15,8 @@ spec:
       parameters:
       - name: env.TZ
         value: "Europe/Berlin"
-      values: |
-        service:
-          type: ingress
-          tls:
-            commonName: harbor.internetz.cloud
-        internalTLS:
-          enabled: false
-        harborAdminPassword: "topsecureshitbaby"
-        externalURL: https://harbor.internetz.cloud
-        global:
-          storageClass: freenas-iscsi-csi
-        notary:
-          enabled: false
-        core:
-          tls:
-            existingSecret: 
-        ingress:
-          certManager: true
-          enabled: true
-          pathType: ImplementationSpecific
-          hosts:
-            core: harbor.internetz.cloud
-          controller: default
-          annotations:
-            kubernetes.io/ingress.class: "nginx"
-            cert-manager.io/cluster-issuer: "letsencrypt-prod"
-            external-dns.alpha.kubernetes.io/hostname: "harbor.internetz.cloud."
-            external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
-            ingress.kubernetes.io/ssl-redirect: 'false'
-            nginx.ingress.kubernetes.io/ssl-redirect: 'false'
-            #ingress.kubernetes.io/proxy-body-size: '0'
-      # valueFiles:
-      #   - /helm-values/harbor.yaml
+      valueFiles:
+        - /helm-values/harbor.yaml
   destination:
     namespace: harbor
     server: https://kubernetes.default.svc
