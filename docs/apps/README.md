@@ -1,5 +1,17 @@
 # apps, recommended setup order
 
+## 1.) Whoami
+[whoami](whoami/README.md)
+
+## 2.) zfs-iscsi
+
+## 3.) zfs-nfs
+
+## 4.) volume-snapshots
+
+## 5.) Openldap
+[openldap](openldap/README.md)
+
 ## 1.) Plex
 [plex](plex/README.md)
 
@@ -17,3 +29,7 @@
 
 ## 6.) Radarr
 [prowlarr](radarr/README.md)
+
+
+## 7.) Nextcloud
+[prowlarr](nextcloud/README.md)

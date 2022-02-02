@@ -79,7 +79,8 @@ resource "null_resource" "create_template" {
       "sudo virt-customize -a /var/lib/vz/images/998/vm-998-disk-0.raw --append-line '/etc/multipath.conf:    find_multipaths yes'",
       "sudo virt-customize -a /var/lib/vz/images/998/vm-998-disk-0.raw --append-line '/etc/multipath.conf:}'",
       "sudo virt-customize -a /var/lib/vz/images/998/vm-998-disk-0.raw --run-command 'systemctl enable open-iscsi.service'",
-
+      "sudo virt-customize -a /var/lib/vz/images/998/vm-998-disk-0.raw --run-command 'echo fs.inotify.max_user_instances = 8192 >> /etc/sysctl.conf'",
+      "sudo virt-customize -a /var/lib/vz/images/998/vm-998-disk-0.raw --run-command 'echo fs.inotify.max_user_watches = 524288 >> /etc/sysctl.conf'",
 
       # Convert the VM to the template
       "sudo qm clone 998 999 --name template --full true",
@@ -193,7 +194,6 @@ resource "proxmox_vm_qemu" "k3s-master-02" {
       --server-ip ${proxmox_vm_qemu.k3s-master-01.default_ipv4_address} \
       --k3s-version ${var.kubernetes_version} \
       --k3s-extra-args '--no-deploy=traefik --node-external-ip=${var.k3s_external_ip_node_02} --advertise-address=${var.k3s_internal_ip_node_02} --node-ip=${var.k3s_internal_ip_node_02}'
-
     EOT
   }
   depends_on = [
@@ -286,7 +286,7 @@ resource "helm_release" "argocd" {
   chart      = "argo-cd"
   create_namespace = true 
   namespace = "argocd"
-  version = "3.29.5"
+  version = "3.33.0"
   
   values = [
     "${file("argocd-values.yaml")}"
