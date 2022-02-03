@@ -1,9 +1,18 @@
 # loeken's homelab
-This repo contains my homelab setup. I run this on a single server, but this can also be spread across multiple servers for HA. This setup has been tested on debian 11 / proxmox pve 7. 
-- 32 x Intel(R) Xeon(R) CPU E5-2630 v3 @ 2.40GHz (2 Sockets )
-- 96 GB RAM
-- HBA with 4 * 4TB disks connected ( storage type "slow" )
-- 1 SSD for OS, 1 SSD for fast blockstorage ( storage type "fast" )
+This repo contains my homelab setup. I run this on a single server ( in 3 kvms ), but this can also be spread across multiple servers for HA. This setup has been tested on debian 11 / proxmox pve 7. 
+
+## how does this work?
+This repo contains a terraform script inside deploy/terraform. this terraform requires a proxmox to be executed, but will then download a debian 11 image and turn it into a template ( with iscsi/nfs support and cloud-init ). this template is then being used to spin up 3 KVMs. Then terraform uses k3sup to install a 3 master k3s cluster. Last but not least it installs argocd via a helm chart. and sets up 2 argocd "apps of apps" inside argocd.
+
+Next to the 3 kvms i run a 4th vm with truenas inside, to which i pass my HBA ( the controller that manages all disks in my server). truenas then is running a zfs pool ( or more if you want ) which provides nfs/iscsi/ssh  servers. this forms the "persistence" storage that is used across all charts
+
+#### argocd-core
+deploy/argocd-core contains a set of argocd apps to install cert-manager/external-dns/nginx-ingress/sealed secrets/volume snapshots. this is sort of the things that have to run for the rest to function.
+
+#### argocd-optional
+deploy/argocd-optional contains a set of argocd apps to install the rest of the included applications.
+
+By default the main 2 charts are installed, but not all apps are installed automatically, this gives you the option to only install the parts that you need.
 
 ## Requirements & Setup
 Proxmox needs to be installed on destination server. Clone this repo to your laptop, your laptop needs to be able to ssh into the proxmox server ( as a user with sudo / NOPASSWD ) for building the proxmox template.
