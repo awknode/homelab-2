@@ -31,7 +31,7 @@ Optional Charts:
 | harbor           | 11.2.2 | 2.4.1      | bitnami          | a self container registry                       |
 | heimdall         | 8.2.0  | 2.2.2      | k8s-at-home      | a simple dashboard to link to other services    |
 | home-assistant   | 12.0.1 | 2021.12.7  | k8s-at-home      | opensource home automation solution             |
-| kasten-k10       | 4.5.7  | 4.5.7      | kasten-k10       | backup/disaster recovery for volumesnapshots    |
+| kasten-k10       | 4.5.8  | 4.5.8      | kasten-k10       | backup/disaster recovery for volumesnapshots    |
 | lidarr           | 13.2.0 | v1.0.0.2255| k8s-at-home      | Lidarr is a music collection manager            |
 | nextcloud        | 2.11.3 | 22.2.3     | nextcloud        | self hosted dropbox alternative                 |
 | nzbget           | 12.2.0 | 21.1       | k8s-at-home      | newsbin client to download from usenet          |
@@ -46,19 +46,44 @@ Optional Charts:
 | vaultwarden      | 4.0.0  | 1.22.2     | k8s-at-home      | vaultwarden password manager                    |
 | whoami           | 0.3.2  | 1.4.0      | halkeye          | whoami - simple go server to print http headers |
 
+## Ingress
+Right now Nginx Ingress Controller runs as a daemonset ( on all 3 nodes ) and binds to port 80/443 It is configured to be used as NodePort as i run these behind a NAT.
+```
+❯ k get svc -n nginx-ingress nginx-ingress-nginx-ingress-controller
+NAME                                     TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)                      AGE
+nginx-ingress-nginx-ingress-controller   NodePort   10.43.233.64   <none>        80:30847/TCP,443:30371/TCP   4h25m
+```
+
+Note: Klipper is k3s's inbuild service load balancer, so when we query port 80/443 we'll get:
+```
+❯ curl -s https://172.16.137.101/ -H "Host: whoami.internetz.cloud" --insecure |grep Forwarded-For
+X-Forwarded-For: 10.42.0.11
+```
+
+however when we query the node ports for example 30371 for https, we ll get the right x-forwarded headers
+```
+❯ curl -s https://172.16.137.101:30371/ -H "Host: whoami.internetz.cloud" --insecure |grep Forwarded-For
+X-Forwarded-For: 172.16.137.1
+```
+
+this is partially due to the externalTrafficPolicy
+```
+      - name: service.externalTrafficPolicy
+        value: Local
+```
+## external-ip
+my home has an ipv4 that semi regularly changes. to avoid having to setup another load balancer in front, i am running k3s with a --node-external-ip to set my public ip on all 3 nodes to my isp's public ip. the services/ingress inherit this value, this allows me to simply updated the systemd startup file / change my ip whenever my home ip changes. external-dns uses this public ip to send to cloudflare
+
 ## 10 Steps to set it up
 
 ### 1.) customizing the values to your liking ( terraform & argocd/helm )
 #### 1.1.) Terraform
-first head to the terraform folder and copy over the defaults variables, then edit the variables.tf you created. you can also edit the domain for the ingress inside the deploy/terraform/argocd-values.yaml ( dont have to push deploy/terraform/argocd-values.yaml to repo )
+first head to the terraform folder and copy over the defaults variables, then edit the variables.tf you created. 
 ```
 cd deploy/terraform
 
 cp variables.tf.example variables.tf
 nano variables.tf
-
-cp argocd-values.yaml.example argocd-values.yaml
-nano argocd-values.yaml
 ```
 
 ### 2.) Bootstrap with terraform

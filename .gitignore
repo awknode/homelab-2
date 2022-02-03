@@ -8,7 +8,6 @@ variables.tf
 deploy/mysecrets/argocd-optional-prod.yaml
 deploy/mysecrets/argocd-optional-staging.yaml
 deploy/mysecrets/cloudflare-credentials-external-dns.yaml
-deploy/terraform/argocd-values.yaml
 deploy/linkerd_keys/**
 deploy/mysecrets/authelia_config.yaml
 #deploy/mysecrets/cloudflare-credentials-external-dns-encrypted.yaml

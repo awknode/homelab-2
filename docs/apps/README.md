@@ -12,6 +12,9 @@
 ## 5.) Openldap
 [openldap](openldap/README.md)
 
+## 6.) authelia
+[openldap](authelia/README.md)
+
 ## 1.) Plex
 [plex](plex/README.md)
 
