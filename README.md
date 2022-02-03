@@ -15,10 +15,9 @@ Core:
 Charts:
 | Chart Name       | Helm   | App        | Source           | Description                                     |
 | ---------------- | ------ | ---------- | ---------------- | ----------------------------------------------- |
-| argocd           | 3.32.1 | 2.2.3      | argoproj         | watches git repo and applies updates            |
+| argocd           | 3.33.2 | 2.2.3      | argoproj         | watches git repo and applies updates            |
 | cert-manager     | 1.7.0  | 1.7.0      | jetstack         | issues tls certificates - letsencrypt           | 
 | external-dns     | 6.1.3  | 0.10.2     | bitnami          | updates ips of dns records cloudflare           |
-| metallb          | 9.1.5  | 1.11.0     | bitnami          | load balancer at level 2                        | 
 | nginx-ingress    | 9.1.5  | 1.1.1      | bitnami          | nginx reverse proxy for ingress traffic         | 
 | sealed secrets   | 2.1.2  | 0.17.3     | sealed-secrets   | encrypts secrets in cluster                     |
 | volume snapshots | 0.0.1  | 0.0.1      | local helm chart | snapshots of volumes for backup                 |
