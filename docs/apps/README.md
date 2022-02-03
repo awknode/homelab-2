@@ -15,24 +15,23 @@
 ## 6.) authelia
 [openldap](authelia/README.md)
 
-## 1.) Plex
+## 7.) Plex
 [plex](plex/README.md)
 
-## 2.) Rtorrent-flood
+## 8.) Rtorrent-flood
 [rtorrent-flood](rtorrent-flood/README.md)
 
-## 2.) nzbget
+## 9.) nzbget
 [nzbget](nzbget/README.md)
 
-## 4.) Prowlarr
+## 10.) Prowlarr
 [prowlarr](prowlarr/README.md)
 
-## 5.) Sonarr
-[prowlarr](sonarr/README.md)
+## 11.) Sonarr
+[sonarr](sonarr/README.md)
 
-## 6.) Radarr
-[prowlarr](radarr/README.md)
+## 12.) Radarr
+[radarr](radarr/README.md)
 
-
-## 7.) Nextcloud
-[prowlarr](nextcloud/README.md)
+## 13.) Nextcloud
+[nextcloud](nextcloud/README.md)

@@ -162,3 +162,5 @@ as the name indicates these have been encrypted by the kubeseal controller
 
 ### 10.) sync bootstrap-optional-apps
 you can now again head to the argocd dashboard, at this stage the ingress should be working too, then head to the bootstrap-optional-apps app and click on sync.
+
+[more details on the apps in the docs/apps section](/docs/apps/README.md)
