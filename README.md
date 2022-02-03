@@ -17,6 +17,15 @@ By default the main 2 charts are installed, but not all apps are installed autom
 ## Requirements & Setup
 Proxmox needs to be installed on destination server. Clone this repo to your laptop, your laptop needs to be able to ssh into the proxmox server ( as a user with sudo / NOPASSWD ) for building the proxmox template.
 
+## current requirements ( i run 3 containers with 10GB of ram each ) with the entire stack and no load you can expect:
+```
+❯ k top nodes
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k3s-prod-01   221m         3%     5844Mi          60%       
+k3s-prod-02   202m         3%     5261Mi          54%       
+k3s-prod-03   344m         5%     5829Mi          59%  
+```
+
 ## What's inside?
 Core:
 - terraform code to bootstrap 3 debian k3s nodes inside proxmox
