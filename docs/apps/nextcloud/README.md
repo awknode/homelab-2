@@ -12,6 +12,7 @@ tab server:
 - server: openldap-openldap-stack-ha.openldap.svc.cluster.local
 - port: 389
 - user dn: cn=admin,dc=ldap,dc=example,dc=com
+- admin password
 - click save credentials
 - click detect base DN
 - click test base DN
@@ -19,7 +20,7 @@ tab server:
 - manually enter LDAP filters (recommended for large directories )
 
 tab user:
-- ldap query: (&(objectclass=inetOrgPerson))
+- edit ldap query: (&(objectclass=inetOrgPerson))
 
 tab login attributes: 
 - ldap query: (&(objectclass=inetOrgPerson)(uid=%uid))
@@ -27,4 +28,4 @@ tab login attributes:
 - verify settings
 
 tab groups
-- ldap query: (&(objectClass=groupOfNames)(cn=user))
+- ldap query: (&(objectClass=groupOfNames)(cn=users))
