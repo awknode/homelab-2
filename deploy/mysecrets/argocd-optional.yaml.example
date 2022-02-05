@@ -107,7 +107,7 @@ stringData:
           policy: bypass
           networks:
             - 10.42.0.0/16
-        - domain: ['lidarr.example.com','sonarr.example.com', 'overseerr.example.com', 'radarr.example.com', 'ha.example.com', 'plex.example.com', 'nextcloud.example.com', 'photos.example.com', 'vaultwarden.example.com']
+        - domain: ['lidarr.example.com','sonarr.example.com', 'overseerr.example.com', 'radarr.example.com', 'ha.example.com', 'plex.example.com', 'nextcloud.example.com', 'ha.example.com', 'vaultwarden.example.com']
           policy: bypass
           resources:
             - "^/api.*"
@@ -135,6 +135,7 @@ stringData:
         cert-manager.io/cluster-issuer: "letsencrypt-staging"
         external-dns.alpha.kubernetes.io/hostname: "auth.example.com."
         external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+        external-dns.alpha.kubernetes.io/ttl: "120"
       enabled: true
       hosts:
         - host: auth.example.com
@@ -331,6 +332,7 @@ stringData:
         cert-manager.io/cluster-issuer: "letsencrypt-staging"
         external-dns.alpha.kubernetes.io/hostname: "harbor.example.com."
         external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+        external-dns.alpha.kubernetes.io/ttl: "120"
         ingress.kubernetes.io/proxy-body-size: '0'
         nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
         nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
@@ -342,6 +344,7 @@ stringData:
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
           external-dns.alpha.kubernetes.io/hostname: "hub.example.com."
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          external-dns.alpha.kubernetes.io/ttl: "120"
         enabled: true
         hosts:
           - host: hub.example.com
@@ -378,6 +381,7 @@ stringData:
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
           external-dns.alpha.kubernetes.io/hostname: "ha.example.com."
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          external-dns.alpha.kubernetes.io/ttl: "120"
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
           nginx.org/websocket-services: home-assistant
@@ -421,6 +425,7 @@ stringData:
         cert-manager.io/cluster-issuer: "letsencrypt-staging"
         external-dns.alpha.kubernetes.io/hostname: "uptime.example.com."
         external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+        external-dns.alpha.kubernetes.io/ttl: "120"
       enabled: true
       hosts:
         - host: uptime.example.com
@@ -459,6 +464,7 @@ stringData:
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
           external-dns.alpha.kubernetes.io/hostname: "lidarr.example.com."
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          external-dns.alpha.kubernetes.io/ttl: "120"
           nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
           nginx.ingress.kubernetes.io/auth-snippet: |
             proxy_set_header X-Forwarded-Method $request_method;
@@ -515,6 +521,7 @@ stringData:
         cert-manager.io/cluster-issuer: "letsencrypt-staging"
         external-dns.alpha.kubernetes.io/hostname: "nextcloud.example.com."
         external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+        external-dns.alpha.kubernetes.io/ttl: "120"
         nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
         nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
         nginx.ingress.kubernetes.io/server-snippet: |-
@@ -599,6 +606,7 @@ stringData:
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
           external-dns.alpha.kubernetes.io/hostname: "nzbget.example.com."
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          external-dns.alpha.kubernetes.io/ttl: "120"
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
         enabled: true
@@ -646,6 +654,7 @@ stringData:
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
           external-dns.alpha.kubernetes.io/hostname: "ltb-passwd.example.com."
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          external-dns.alpha.kubernetes.io/ttl: "120"
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
         tls:
@@ -665,6 +674,7 @@ stringData:
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
           external-dns.alpha.kubernetes.io/hostname: "ldap-admin.example.com."
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          external-dns.alpha.kubernetes.io/ttl: "120"
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
         hosts:
@@ -694,6 +704,7 @@ stringData:
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
           external-dns.alpha.kubernetes.io/hostname: "overseerr.example.com."
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          external-dns.alpha.kubernetes.io/ttl: "120"
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
         enabled: true
@@ -743,6 +754,7 @@ stringData:
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
           external-dns.alpha.kubernetes.io/hostname: "plex.example.com."
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          external-dns.alpha.kubernetes.io/ttl: "120"
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
         enabled: true
@@ -776,6 +788,7 @@ stringData:
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
           external-dns.alpha.kubernetes.io/hostname: "prowlarr.example.com."
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          external-dns.alpha.kubernetes.io/ttl: "120"
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
         enabled: true
@@ -816,6 +829,7 @@ stringData:
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
           external-dns.alpha.kubernetes.io/hostname: "radarr.example.com."
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          external-dns.alpha.kubernetes.io/ttl: "120"
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
         enabled: true
@@ -867,6 +881,7 @@ stringData:
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
           external-dns.alpha.kubernetes.io/hostname: "rtorrent.example.com."
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          external-dns.alpha.kubernetes.io/ttl: "120"
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
         enabled: true
@@ -906,6 +921,7 @@ stringData:
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
           external-dns.alpha.kubernetes.io/hostname: "sonarr.example.com."
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          external-dns.alpha.kubernetes.io/ttl: "120"
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
         enabled: true
@@ -932,6 +948,7 @@ stringData:
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
           external-dns.alpha.kubernetes.io/hostname: "vaultwarden.example.com."
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          external-dns.alpha.kubernetes.io/ttl: "120"
           nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
           nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
         enabled: true
@@ -977,6 +994,7 @@ stringData:
         cert-manager.io/cluster-issuer: "letsencrypt-staging"
         external-dns.alpha.kubernetes.io/hostname: "whoami.example.com."
         external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+        external-dns.alpha.kubernetes.io/ttl: "120"
         #nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
         #nginx.ingress.kubernetes.io/auth-signin: https://auth.example.com
       enabled: 'true'
