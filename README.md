@@ -54,16 +54,16 @@ Optional Charts:
 | heimdall         | 8.2.0  | 2.2.2      | k8s-at-home      | a simple dashboard to link to other services    |
 | home-assistant   | 12.0.1 | 2021.12.7  | k8s-at-home      | opensource home automation solution             |
 | kasten-k10       | 4.5.8  | 4.5.8      | kasten-k10       | backup/disaster recovery for volumesnapshots    |
-| lidarr           | 13.2.0 | v1.0.0.2255| k8s-at-home      | Lidarr is a music collection manager            |
+| lidarr           | 14.0.0 | v1.0.0.2255| k8s-at-home      | Lidarr is a music collection manager            |
 | nextcloud        | 2.11.3 | 22.2.3     | nextcloud        | self hosted dropbox alternative                 |
 | nzbget           | 12.2.0 | 21.1       | k8s-at-home      | newsbin client to download from usenet          |
 | openldap         | 2.1.6  | 2.4.57     | jp-gouin         | openldap / ltb-passwd / phpldapadmin in a chart |
 | overseerr        | 5.2.0  | 1.26.1     | k8s-at-home      | manages requests for sonarr, radarr, plex       |
 | plex             | 6.2.0  | 1.24.1     | k8s-at-home      | self hosted media transcoding/streaming service |
 | prowlar          | 4.2.0  | 0.1.0.421  | k8s-at-home      | self hosted media transcoding/streaming service |
-| radarr           | 15.2.0 | 3.2.2.5080 | k8s-at-home      | a fork of sonarr to work with movies            |
+| radarr           | 16.0.0 | 3.2.2.5080 | k8s-at-home      | a fork of sonarr to work with movies            |
 | rtorrent-flood   | 9.2.0  | 4.7.0      | k8s-at-home      | nodejs frontend for rtorrent ( with rtorrent )  |
-| sonarr           | 15.3.0 | 3.0.6.1342 | k8s-at-home      | sonarr is a pv for Usenet and BitTorrent users  |
+| sonarr           | 16.0.0 | 3.0.6.1342 | k8s-at-home      | sonarr is a pv for Usenet and BitTorrent users  |
 | uptime kuma      | 0.1.7  | 1.11.3     | duyet            | very simple nodejs uptime/status page           |
 | vaultwarden      | 4.0.0  | 1.22.2     | k8s-at-home      | vaultwarden password manager                    |
 | whoami           | 0.3.2  | 1.4.0      | halkeye          | whoami - simple go server to print http headers |

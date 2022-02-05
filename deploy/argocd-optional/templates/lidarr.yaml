@@ -10,7 +10,7 @@ spec:
   source:
     chart: lidarr
     repoURL: https://k8s-at-home.com/charts/
-    targetRevision: "13.2.0"
+    targetRevision: "14.0.0"
     helm:
       valueFiles:
         - /helm-values/lidarr.yaml

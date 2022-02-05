@@ -10,7 +10,7 @@ spec:
   source:
     chart: sonarr
     repoURL: https://k8s-at-home.com/charts/
-    targetRevision: "15.3.0"
+    targetRevision: "16.0.0"
     helm:
       valueFiles:
         - /helm-values/sonarr.yaml
