@@ -57,3 +57,7 @@ userpassword: {CRYPT}$5$WtLavDZC$ScD.IMUJdgRhMZMtAlyYtbqezxsQ2qfWTVbQOFo5tg4
 ```
 
 the userpassword resolves to "homelab"
+
+#### creating a new user
+
+create a user in the Ou=User then head to the Ou=Group section to add the user to a group
