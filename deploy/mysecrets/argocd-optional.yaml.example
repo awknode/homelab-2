@@ -849,6 +849,20 @@ stringData:
       runAsGroup: 568
       fsGroup: 568
   rtorrent-flood.yaml: |
+    # on the first launch we need to chown the media files from our pvc shared-media for this we need to startup rtorrent
+    # as root first, so at the bottom of this rtorent-flood.yaml change all podSecurityContext ids to 0
+    # then uncomment this initContainers block
+    # initContainers:
+    #   take-data-dir-plex:
+    #     image: alpine
+    #     command:
+    #       - chown
+    #       - -R
+    #       - 568:568
+    #       - /downloads
+    #     volumeMounts:
+    #       - name: downloads
+    #         mountPath: /downloads
     service:
       bittorrent:
         enabled: true
@@ -897,9 +911,9 @@ stringData:
           hosts:
           - rtorrent.example.com
     podSecurityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
-      fsGroup: 1000
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
   sonarr.yaml: |
     persistence:
       config:

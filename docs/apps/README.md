@@ -36,17 +36,17 @@
 ## 12.) nzbget
 [nzbget](nzbget/README.md)
 
-## 13.) Prowlarr
-[prowlarr](prowlarr/README.md)
-
-## 14.) Sonarr
+## 13.) Sonarr
 [sonarr](sonarr/README.md)
 
-## 15.) Radarr
+## 14.) Radarr
 [radarr](radarr/README.md)
 
-## 16.) Lidarr
+## 15.) Lidarr
 [lidarr](lidarr/README.md)
+
+## 16.) Prowlarr
+[prowlarr](prowlarr/README.md)
 
 ## 17.) Overseer
 [overseerr](overseerr/README.md)

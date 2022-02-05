@@ -11,7 +11,7 @@ Settings -> Dowload clients
 - username/password set in rtorrent
   
 ###### nzbget
-- hostname nzbget
+- hostname nzbget.media
 - port 6789
 - username/password set in nzbget
 - Category: TV
