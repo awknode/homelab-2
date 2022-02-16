@@ -4,7 +4,7 @@ mypasswd="$3"
 hashed_pass=`docker run authelia/authelia:latest authelia hash-password $mypasswd | cut -d' ' -f 3`
 echo $hashed_pass
 echo 'users:
-  loeken:
+  awknode:
     displayname: "admin"
     password: "'$hashed_pass'"
     email: "'$2'"
