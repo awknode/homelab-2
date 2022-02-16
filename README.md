@@ -78,13 +78,13 @@ nginx-ingress-nginx-ingress-controller   NodePort   10.43.233.64   <none>       
 
 Note: Klipper is k3s's inbuild service load balancer, so when we query port 80/443 we'll get:
 ```
-❯ curl -s https://172.16.137.101/ -H "Host: whoami.internetz.cloud" --insecure |grep Forwarded-For
+❯ curl -s https://172.16.137.101/ -H "Host: whoami.awknode.cloud" --insecure |grep Forwarded-For
 X-Forwarded-For: 10.42.0.11
 ```
 
 however when we query the node ports for example 30371 for https, we ll get the right x-forwarded headers
 ```
-❯ curl -s https://172.16.137.101:30371/ -H "Host: whoami.internetz.cloud" --insecure |grep Forwarded-For
+❯ curl -s https://172.16.137.101:30371/ -H "Host: whoami.awknode.cloud" --insecure |grep Forwarded-For
 X-Forwarded-For: 172.16.137.1
 ```
 
@@ -171,7 +171,7 @@ cat argocd-optional.yaml | kubeseal | kubectl apply -f -
 authelia is setup to currently use a simple yaml file, which it reads from a secret, we can use this little helepr script to generate a simple layout for our username/email/password and save it as a sealedSecret
 ```
 cd deploy/mysecrets
-./create_authelia_secret.sh loeken loeken@internetz.me topsecure
+./create_authelia_secret.sh awknode root@awknode.com topsecure
 ```
 
 ### 9.) save your secrets
