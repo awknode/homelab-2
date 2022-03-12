@@ -9,8 +9,12 @@ spec:
   project: default
   source:
     chart: cert-manager
-    repoURL: https://kubernetes-sigs.github.io/external-dns/
+    repoURL: https://charts.jetstack.io
     targetRevision: 1.7.1
+    helm:
+      parameters:
+      - name: installCRDs
+        value: "true"
   destination:
     namespace: cert-manager
     server: https://kubernetes.default.svc
