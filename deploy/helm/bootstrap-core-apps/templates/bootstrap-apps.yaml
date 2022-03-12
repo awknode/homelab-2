@@ -9,7 +9,7 @@ metadata:
 spec:
   project: default
   source:
-    path: deploy/bootstrap-core-apps
+    path: deploy/argocd/bootstrap-core-apps
     repoURL: https://github.com/loeken/homelab
     targetRevision: HEAD
   destination:
