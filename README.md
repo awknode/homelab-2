@@ -228,9 +228,9 @@ nano argocd-bootstrap-core-apps-repo.yaml
 replace the ssh key section with the private key we created above ( id_rsa_homelab_private_deploy_key ).
 
 ```
-cat argocd-openldap.yaml | kubeseal | kubectl apply -f  -
+cat argocd-bootstrap-core-apps-repo.yaml | kubeseal | kubectl apply -f  -
 ```
-we display the contents of argocd-openldap.yaml use kubeseal to send it to the cluster and then kubeapply it to the cluster in encrypted format.
+we display the contents of argocd-bootstrap-core-apps-repo.yaml use kubeseal to send it to the cluster and then kubeapply it to the cluster in encrypted format.
 
 From this moment forwards we can start managing the rest of the applications through argocd.
 
