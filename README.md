@@ -230,3 +230,7 @@ cat argocd-openldap.yaml | kubeseal | kubectl apply -f  -
 we display the contents of argocd-openldap.yaml use kubeseal to send it to the cluster and then kubeapply it to the cluster in encrypted format.
 
 From this moment forwards we can start managing the rest of the applications through argocd.
+
+the rest of the core apps can by synced in one go, only external-dns will need another secret, containing the credentials ( such as cloudflare`s api key/token ) so the cluster can update external dns.
+
+[external-dns documents on creating api key/token](https://github.com/kubernetes-sigs/external-dns/blob/master/docs/tutorials/cloudflare.md)

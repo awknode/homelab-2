@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloudflare-secrets
+  namespace: external-dns
+type: Opaque
+stringData:
+  cloudflare_api_token: "YOUR TOKEN"
+  cloudflare_api_key: "YOUR API KEY"
+# https://github.com/kubernetes-sigs/external-dns/blob/master/docs/tutorials/cloudflare.md
