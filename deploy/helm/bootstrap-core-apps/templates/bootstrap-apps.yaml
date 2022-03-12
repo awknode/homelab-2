@@ -1,4 +1,17 @@
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.myrepo }}
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  name: staging-v3-k3s-ovh
+  url: git@github.com:vcealicu/staging-v3-k3s-ovh
+  sshPrivateKey: |
+    {{ .Values.myrepoDeployKey | indent 4 }}
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -10,7 +23,7 @@ spec:
   project: default
   source:
     path: deploy/argocd/bootstrap-core-apps
-    repoURL: https://github.com/loeken/homelab
+    repoURL: git@github.com:{{ .Values.myrepo }}
     targetRevision: HEAD
   destination:
     namespace: argocd

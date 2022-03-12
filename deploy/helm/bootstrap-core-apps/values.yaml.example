@@ -1,0 +1,5 @@
+myrepo: loeken/homelab-private
+myrepoDeployKey: |
+  -----BEGIN OPENSSH PRIVATE KEY-----
+  YOURKEY
+  -----END OPENSSH PRIVATE KEY-----

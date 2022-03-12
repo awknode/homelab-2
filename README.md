@@ -1,26 +1,40 @@
 # homelab
 
-## note about old version
-argocd doesnt allow mounting secrets to the repo server anymore. re-created the project
+## 1. index
 
-## motivation
+- [homelab](#homelab)
+  - [1. index](#1-index)
+  - [1.2. note about old version](#12-note-about-old-version)
+  - [1.3. motivation](#13-motivation)
+  - [1.4. the hardware](#14-the-hardware)
+  - [2. proxmox installation](#2-proxmox-installation)
+    - [2.1 creating debian 11 template](#21-creating-debian-11-template)
+  - [3. fork this repo](#3-fork-this-repo)
+    - [3.1. create a new private repo](#31-create-a-new-private-repo)
+    - [3.2 push changes from loeken/homelab to private repo](#32-push-changes-from-loekenhomelab-to-private-repo)
+    - [3.3. configure upstream](#33-configure-upstream)
+    - [3.4 how to pull changes from "upstream"](#34-how-to-pull-changes-from-upstream)
+    - [3.5. create a deploy key, upload it github so argocd can pull from the private repo](#35-create-a-deploy-key-upload-it-github-so-argocd-can-pull-from-the-private-repo)
+  - [4. bootstrapping kubernetes](#4-bootstrapping-kubernetes)
 
+## 1.2. note about old version
+argocd doesnt allow mounting secrets to the repo server anymore. re-created the project - started from scratch.
+
+## 1.3. motivation
 I've recently changed from an android phone to a second hand iphone se 2020. At the same time i started to renovate my flat ( smart home aspects ). These 2 events ( and a few other smaller events ) made me want to claim ownership of my own data, migrate away from services such as google, apple and the clouds - ideally without losing the convenience it gives me. I used to run a homeserver with proxmox managed by ansible playbooks before - but since its 2022 and kubernetes is a thing i wanted to use kubernetes for this project. I also want this stuff to be "secure".
 
-
-## the hardware
+## 1.4. the hardware
 I see a lot of ppl attempting to run their homelab in high availability - i dont really plan to run any "critical applications", these i would run in the clouds. I ll by running the entire stack on a single server ( that happens to have a bunch of disks ), we ll be running 4 vms in proxmox, 3 that form a k3s cluster and 1 that provides storage ( truenas ). If you want to attempt to run it in ha you can run the 3 k3s nodes on 3 seperated hardware, provide a redundant truenas and off you go...
+![proxmox-vms](docs/img/proxmox-vms.png)
 
-![img](docs/img/proxmox-vms.png)
-
-## proxmox installation
+## 2. proxmox installation
 proxmox installation is quite forward. I ll be installing debian 11 with full disk encryption on a single ssd ( feel free to go redundant here ). and then i ll update the debian 11 to become a proxmox ve7 host ( the proxmox installer doesnt come with a convenient way to do full disk encryption).
 
 As for storage I have a 4Unit server with 24hdd slots with a HBA - since this is PCI device i ll simply pass this pci device with all disks to the truenas instance. if you dont have a similar device you can still pass in storage from the disks to the truenas vm using proxmox.
 
 I also do use proxmox to configure simple firewall rules on the hosts - but that is pretty much it. Once proxmox is running we can start using this repository to create vms etc.
 
-### proxmox debian 11 template
+### 2.1 creating debian 11 template
 as the image build process is a one off thing i ve moved it to a seperate folder to reduce confusion :)
 
 To get started building an image we first need to set some values in the variables.tf. This file will contain variables specific to your own setup - this is why the repo doesnt come with the file directly but with a variables.tf.example, you then create a variables.tf based of variables.tf.example - this allows you to pull changes from github.com/loeken/homelab at a later stage and dont have your variables.tf overwritten - while you can still compare the structure of both files for changes.
@@ -30,25 +44,12 @@ cd deploy/terraform
 cp variables.tf.example variables.tf
 ```
 
-the terraform script to build the template only references the first 3 variables inside the variables.tf file. now lets build a template
 
-```
-cd proxmox-debian-11-template
-terraform init
-terraform plan
-terraform apply
-```
+## 3. fork this repo
+![img](docs/img/upstream-repo.png)
+This allows you to pull the changes that i make to my setup from github.com/loeken/homelab, send to your repo and thus apply the changes to your config
 
-then we can create the k3s cluster
-```
-cd ../k3s
-terraform init
-terraform plan
-terraform apply
-```
-
-
-## create private repo
+### 3.1. create a new private repo
 head to github, if you havent done so yet create an account, then create a new homelab in this example i ll call it github.com/loeken/homelab-private
 
 the principles are outlined here: https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository
@@ -66,13 +67,14 @@ Receiving objects: 100% (30/30), 8.89 KiB | 8.89 MiB/s, done.
 Resolving deltas: 100% (5/5), done.
 ```
 
+### 3.2 push changes from loeken/homelab to private repo
 now we cd into the homelab.git folder to then push the changes to our newly created private repo
 ```
 cd homelab.git
 git push --mirror git@github.com:loeken/homelab-private
 ```
 
-
+### 3.3. configure upstream
 we now clone our own private repo and add the public repo as an upstream, this allows you to pull all the changes that i send to github.com/loeken/homelab
 ```
 cd ~/Projects/private
@@ -81,7 +83,7 @@ cd homelab-private
 git remote add upstream https://github.com/loeken/homelab.git
 ```
 
-### how to pull changes from "upstream"
+### 3.4 how to pull changes from "upstream"
 ```
 git pull upstream main
 remote: Enumerating objects: 6, done.
@@ -124,3 +126,51 @@ and then last but not lease we can send the updates that we pulled from upstream
 ```
 git push origin main
 ```
+
+### 3.5. create a deploy key, upload it github so argocd can pull from the private repo
+```
+cd Projects/private/homelab
+mkdir deploy/mysecrets
+cd deploy/mysecrets
+ssh-keygen -t rsa -b 4096
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/loeken/.ssh/id_rsa): id_rsa_homelab_private_deploy_key
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in id_rsa_homelab_private_deploy_key
+Your public key has been saved in id_rsa_homelab_private_deploy_key.pub
+The key fingerprint is:
+SHA256:u2ghdom2SWnEd+7TtakYGe9j4yIdu94dPNMag3OpqEk loeken@0x00f
+The key's randomart image is:
++---[RSA 4096]----+
+|                 |
+|                 |
+|   .             |
+|    o . .        |
+|   . + +S        |
+|    O + o= o.o   |
+|   = =E++++.Xo.  |
+|    o.oo*B==oB   |
+|     .++***+o    |
++----[SHA256]-----+
+```
+
+now head to your github repo like https://github.com/loeken/homelab-private/settings/keys/new and insert the contents of id_rsa_homelab_private_deploy_key.pub call it argocd-deploy-key this key is read only - so perfect for what we need it for ( argocd to pull code from out private repo ).
+
+## 4. bootstrapping kubernetes
+then we can create the k3s cluster for this to function. We'l run terraform which creates 3 vms for k3s, installs k3s using k3sup, then installs helm, it then adds the repo for argocd, installs argocd and then last but not least triggeres a local helm chart located in deploy/helm/bootstrap-core-apps. This local helm chart comes with a values.yaml to set your own settings. This app follows the "app of app" pattern ( it basically is responsible for loading all other apps - and updates in the future ).
+
+In your private repo 
+```
+cd Projects/private/homelab
+nano deploy/helm/bootstrap-core-apps/values.yaml
+```
+
+```
+cd Projects/private/homelab/terraform/deploy/k3s
+terraform init
+terraform plan
+terraform apply
+```
+
+
