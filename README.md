@@ -15,7 +15,7 @@
     - [2.3. configure upstream](#23-configure-upstream)
     - [2.4 how to pull changes from "upstream"](#24-how-to-pull-changes-from-upstream)
     - [2.5. create a deploy key, add it to the github repository, so argocd can pull from the private repo](#25-create-a-deploy-key-add-it-to-the-github-repository-so-argocd-can-pull-from-the-private-repo)
-    - [3.1 creating debian 11 template](#31-creating-debian-11-template)
+  - [3. creating debian 11 template](#3-creating-debian-11-template)
   - [4. bootstrapping kubernetes](#4-bootstrapping-kubernetes)
 
 ## 1.2. note about old version
@@ -152,7 +152,7 @@ The key's randomart image is:
 
 now head to your github repo like https://github.com/loeken/homelab-private/settings/keys/new and insert the contents of id_rsa_homelab_private_deploy_key.pub call it argocd-deploy-key this key is read only - so perfect for what we need it for ( argocd to pull code from out private repo ).
 
-### 3.1 creating debian 11 template
+## 3. creating debian 11 template
 as the image build process is a one off thing i ve moved it to a seperate folder to reduce confusion :)
 
 To get started building an image we first need to set some values in the variables.tf. This file will contain variables specific to your own setup - this is why the repo doesnt come with the file directly but with a variables.tf.example, you then create a variables.tf based of variables.tf.example - this allows you to pull changes from github.com/loeken/homelab at a later stage and dont have your variables.tf overwritten - while you can still compare the structure of both files for changes.
@@ -234,3 +234,6 @@ From this moment forwards we can start managing the rest of the applications thr
 the rest of the core apps can by synced in one go, only external-dns will need another secret, containing the credentials ( such as cloudflare`s api key/token ) so the cluster can update external dns.
 
 [external-dns documents on creating api key/token](https://github.com/kubernetes-sigs/external-dns/blob/master/docs/tutorials/cloudflare.md)
+
+```
+cd ~/Projects/private/homelab-private/deploy/mysecrets
