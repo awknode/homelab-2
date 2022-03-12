@@ -17,6 +17,7 @@
     - [2.5. create a deploy key, add it to the github repository, so argocd can pull from the private repo](#25-create-a-deploy-key-add-it-to-the-github-repository-so-argocd-can-pull-from-the-private-repo)
   - [3. creating debian 11 template](#3-creating-debian-11-template)
   - [4. bootstrapping kubernetes](#4-bootstrapping-kubernetes)
+    - [4.1. argocd sync bootstrap-core-app of apps](#41-argocd-sync-bootstrap-core-app-of-apps)
 
 ## 1.2. note about old version
 argocd doesnt allow mounting secrets to the repo server anymore. re-created the project - started from scratc
@@ -210,6 +211,7 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 kubectl -n argocd port-forward svc/argocd-server 8081:443
 ```
 
+### 4.1. argocd sync bootstrap-core-app of apps
 now we can visit http://localhost:8081 in our browser. at this stage the bootstrap-core-apps app will be in a failed state as it needs the private key of the deploy we created above to be able to pull from github. 
 
 error message in argocd's webui:
