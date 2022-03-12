@@ -9,13 +9,13 @@
   - [1.4. motivation](#14-motivation)
   - [1.5. the hardware](#15-the-hardware)
   - [2. proxmox installation](#2-proxmox-installation)
-    - [2.1 creating debian 11 template](#21-creating-debian-11-template)
-  - [3. fork this repo](#3-fork-this-repo)
-    - [3.1. create a new private repo](#31-create-a-new-private-repo)
-    - [3.2 push changes from loeken/homelab to private repo](#32-push-changes-from-loekenhomelab-to-private-repo)
-    - [3.3. configure upstream](#33-configure-upstream)
-    - [3.4 how to pull changes from "upstream"](#34-how-to-pull-changes-from-upstream)
-    - [3.5. create a deploy key, upload it github so argocd can pull from the private repo](#35-create-a-deploy-key-upload-it-github-so-argocd-can-pull-from-the-private-repo)
+  - [2. fork this repo](#2-fork-this-repo)
+    - [2.1. create a new private repo](#21-create-a-new-private-repo)
+    - [2.2 push changes from loeken/homelab to private repo](#22-push-changes-from-loekenhomelab-to-private-repo)
+    - [2.3. configure upstream](#23-configure-upstream)
+    - [2.4 how to pull changes from "upstream"](#24-how-to-pull-changes-from-upstream)
+    - [2.5. create a deploy key, add it to the github repository, so argocd can pull from the private repo](#25-create-a-deploy-key-add-it-to-the-github-repository-so-argocd-can-pull-from-the-private-repo)
+    - [3.1 creating debian 11 template](#31-creating-debian-11-template)
   - [4. bootstrapping kubernetes](#4-bootstrapping-kubernetes)
 
 ## 1.2. note about old version
@@ -39,25 +39,16 @@ As for storage I have a 4Unit server with 24hdd slots with a HBA - since this is
 
 I also do use proxmox to configure simple firewall rules on the hosts - but that is pretty much it. Once proxmox is running we can start using this repository to create vms etc.
 
-### 2.1 creating debian 11 template
-as the image build process is a one off thing i ve moved it to a seperate folder to reduce confusion :)
-
-To get started building an image we first need to set some values in the variables.tf. This file will contain variables specific to your own setup - this is why the repo doesnt come with the file directly but with a variables.tf.example, you then create a variables.tf based of variables.tf.example - this allows you to pull changes from github.com/loeken/homelab at a later stage and dont have your variables.tf overwritten - while you can still compare the structure of both files for changes.
-
-```
-cd deploy/terraform
-cp variables.tf.example variables.tf
-```
-
-
-## 3. fork this repo
+## 2. fork this repo
 ![img](docs/img/upstream-repo.png)
-This allows you to pull the changes that i make to my setup from github.com/loeken/homelab, send to your repo and thus apply the changes to your config
+This allows you to pull the changes that i make to my setup from github.com/loeken/homelab, send to your repo and thus apply the changes to your cluster
 
-### 3.1. create a new private repo
+### 2.1. create a new private repo
 head to github, if you havent done so yet create an account, then create a new homelab in this example i ll call it github.com/loeken/homelab-private
 
-the principles are outlined here: https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository
+also make sure your ssh pubkey is added in github as we'll be pulling a private repo and auth via ssh keys.
+
+the principles of cloning the public repo to a private are outlined here: https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository
 
 
 ```
@@ -72,14 +63,14 @@ Receiving objects: 100% (30/30), 8.89 KiB | 8.89 MiB/s, done.
 Resolving deltas: 100% (5/5), done.
 ```
 
-### 3.2 push changes from loeken/homelab to private repo
+### 2.2 push changes from loeken/homelab to private repo
 now we cd into the homelab.git folder to then push the changes to our newly created private repo
 ```
 cd homelab.git
 git push --mirror git@github.com:loeken/homelab-private
 ```
 
-### 3.3. configure upstream
+### 2.3. configure upstream
 we now clone our own private repo and add the public repo as an upstream, this allows you to pull all the changes that i send to github.com/loeken/homelab
 ```
 cd ~/Projects/private
@@ -88,7 +79,7 @@ cd homelab-private
 git remote add upstream https://github.com/loeken/homelab.git
 ```
 
-### 3.4 how to pull changes from "upstream"
+### 2.4 how to pull changes from "upstream"
 ```
 git pull upstream main
 remote: Enumerating objects: 6, done.
@@ -132,7 +123,7 @@ and then last but not lease we can send the updates that we pulled from upstream
 git push origin main
 ```
 
-### 3.5. create a deploy key, upload it github so argocd can pull from the private repo
+### 2.5. create a deploy key, add it to the github repository, so argocd can pull from the private repo
 ```
 cd Projects/private/homelab
 mkdir deploy/mysecrets
@@ -162,6 +153,16 @@ The key's randomart image is:
 
 now head to your github repo like https://github.com/loeken/homelab-private/settings/keys/new and insert the contents of id_rsa_homelab_private_deploy_key.pub call it argocd-deploy-key this key is read only - so perfect for what we need it for ( argocd to pull code from out private repo ).
 
+### 3.1 creating debian 11 template
+as the image build process is a one off thing i ve moved it to a seperate folder to reduce confusion :)
+
+To get started building an image we first need to set some values in the variables.tf. This file will contain variables specific to your own setup - this is why the repo doesnt come with the file directly but with a variables.tf.example, you then create a variables.tf based of variables.tf.example - this allows you to pull changes from github.com/loeken/homelab at a later stage and dont have your variables.tf overwritten - while you can still compare the structure of both files for changes.
+
+```
+cd deploy/terraform
+cp variables.tf.example variables.tf
+```
+
 ## 4. bootstrapping kubernetes
 then we can create the k3s cluster for this to function. We'l run terraform which creates 3 vms for k3s, installs k3s using k3sup, then installs helm, it then adds the repo for argocd, installs argocd, kubeseal and then last but not least triggeres a local helm chart located in deploy/helm/bootstrap-core-apps. This local helm chart comes with a values.yaml to set your own settings. This app follows the "app of app" pattern ( it basically is responsible for loading all other apps - and updates in the future ).
 
@@ -173,12 +174,12 @@ cp values.yaml.example values.yaml
 now change the contents of the file to match your project then we git add/push to our private repo.
 
 ```
-❯ git add deploy/helm/bootstrap-core-apps/values.yaml
-❯ git commit -m "writing docs"
+git add deploy/helm/bootstrap-core-apps/values.yaml
+git commit -m "writing docs"
 [main 8632a35] writing docs
  1 file changed, 5 insertions(+)
  create mode 100644 deploy/helm/bootstrap-core-apps/values.yaml
-❯ git push
+git push
 Krypton ▶ Requesting SSH authentication from phone
 Krypton ▶ Success. Request Allowed ✔
 Enumerating objects: 9, done.
