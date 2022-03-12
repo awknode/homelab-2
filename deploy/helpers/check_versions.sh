@@ -14,6 +14,11 @@ function lastversion() {
 # plexCurrentVersion=`cat versions/k8s-at-home/plex`
 # echo plex current: $plexCurrentVersion remote: $plexversion
 
+# argocd
+argocdVersion=`lastversion argo argo-cd`
+argocdVersionCurrent=`cat versions/argo/argo-cd`
+echo argo-cd current: $argocdVersionCurrent remote: $argocdVersion
+
 # certManager
 certManagerVersion=`lastversion cert-manager cert-manager`
 certManagerVersionCurrent=`cat versions/cert-manager/cert-manager`
