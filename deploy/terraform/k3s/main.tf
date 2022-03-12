@@ -210,6 +210,19 @@ resource "helm_release" "argocd" {
     ]
   }
 }
+resource "helm_release" "sealed_secrets" {
+  name       = "sealed-secrets-controller"
+  repository = "https://bitnami-labs.github.io/sealed-secrets/"
+  chart      = "sealed-secrets"
+  create_namespace = true 
+  namespace = "kube-system"
+  version = "2.1.2"
+  depends_on = [
+    proxmox_vm_qemu.k3s-master-01,
+    proxmox_vm_qemu.k3s-master-02
+  ]
+}
+
 resource "helm_release" "bootstrap-core-apps" {
   name       = "bootstrap-core-apps"
   chart      = "./../../helm/bootstrap-core-apps"
