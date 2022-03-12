@@ -218,6 +218,9 @@ resource "helm_release" "bootstrap-core-apps" {
   depends_on = [
     helm_release.argocd
   ]
+  values = [
+    "${file("../../helm/bootstrap-core-apps/values.yaml")}"
+  ]
 }
 # resource "helm_release" "bootstrap-optional-apps" {
 #   name       = "bootstrap-optional-apps"
