@@ -52,6 +52,7 @@ the principles of cloning the public repo to a private are outlined here: https:
 
 
 ```
+# ~/Projects/private is the project root where i clone private projects to
 cd ~/Projects/private
 git clone --bare git@github.com:loeken/homelab
 Cloning into bare repository 'homelab.git'...
