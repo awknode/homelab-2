@@ -125,8 +125,7 @@ git push origin main
 
 ### 2.5. create a deploy key, add it to the github repository, so argocd can pull from the private repo
 ```
-cd Projects/private/homelab
-mkdir deploy/mysecrets
+cd ~/Projects/private/homelab
 cd deploy/mysecrets
 ssh-keygen -t rsa -b 4096
 Generating public/private rsa key pair.
@@ -168,12 +167,13 @@ then we can create the k3s cluster for this to function. We'l run terraform whic
 
 In your private repo 
 ```
-cd Projects/private/homelab-private/deploy/helm/bootstrap-core-apps/
+cd ~/Projects/private/homelab-private/deploy/helm/bootstrap-core-apps/
 cp values.yaml.example values.yaml
 ```
 now change the contents of the file to match your project then we git add/push to our private repo.
 
 ```
+cd ~/Projects/private/homelab-private
 git add deploy/helm/bootstrap-core-apps/values.yaml
 git commit -m "writing docs"
 [main 8632a35] writing docs
@@ -195,7 +195,7 @@ To github.com:loeken/homelab-private
 at this stage we can start creating the k3s cluster from within our private repo
 
 ```
-cd Projects/private/homelab/deploy/terraform/k3s
+cd ~/Projects/private/homelab-private/deploy/terraform/k3s
 terraform init
 terraform plan
 terraform apply
@@ -203,15 +203,22 @@ terraform apply
 
 terraform should have completed by now and we can attempt to access argocd's webui
 ```
+cd ~/Projects/private/homelab-private/deploy/terraform/k3s
 export KUBECONFIG=$PWD/kubeconfig
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 kubectl -n argocd port-forward svc/argocd-server 8081:443
 ```
 
-now we can visit http://localhost:8081 in our browser. at this stage the bootstrap-core-apps app will be in a failed state as it needs the private key of the deploy we created above to be able to pull from github. this is basically the first secret we'll send to the cluster. We don't want to send it to the cluster unencrypted, this is where kubeseal comes in, we basically send the secret yaml to the kubeseal controller, which encrypts it and returns us the encrypted file, we then apply the encrypted format to the cluster, whenever argocd rolls out code and needs this information the cluster will decrypt and access the secret.
+now we can visit http://localhost:8081 in our browser. at this stage the bootstrap-core-apps app will be in a failed state as it needs the private key of the deploy we created above to be able to pull from github. 
+
+error message in argocd's webui:
+```
+rpc error: code = Unknown desc = error creating SSH agent: "SSH agent requested but SSH_AUTH_SOCK not-specified"
+```
+this is basically the first secret we'll send to the cluster. We don't want to send it to the cluster unencrypted, this is where kubeseal comes in, we basically send the secret yaml to the kubeseal controller, which encrypts it and returns us the encrypted file, we then apply the encrypted format to the cluster, whenever argocd rolls out code and needs this information the cluster will decrypt and access the secret.
 
 ```
-cd Projects/private/homelab/deploy/mysecrets
+cd ~/Projects/private/homelab/deploy/mysecrets
 nano argocd-bootstrap-core-apps-repo.yaml
 ```
 

@@ -174,7 +174,8 @@ resource "helm_release" "cert-manager" {
   ]
 }
 
-
+/*
+//@TODO test if can be removed with proxmox has hypervisor iirc issues with ovh's managed kubernetes
 resource "time_sleep" "wait_30_seconds" {
   depends_on = [helm_release.cert-manager]
   create_duration = "30s"
@@ -184,7 +185,7 @@ resource "time_sleep" "wait_30_seconds" {
 resource "null_resource" "next" {
   depends_on = [time_sleep.wait_30_seconds]
 }
-
+*/
 resource "helm_release" "argocd" {
   name       = "argocd"
   repository = "https://argoproj.github.io/argo-helm"
@@ -198,7 +199,7 @@ resource "helm_release" "argocd" {
   ]
 
   depends_on = [
-    null_resource.next,
+    //null_resource.next,
     proxmox_vm_qemu.k3s-master-01,
     proxmox_vm_qemu.k3s-master-02,
     proxmox_vm_qemu.k3s-master-03
