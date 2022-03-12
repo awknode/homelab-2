@@ -162,9 +162,31 @@ then we can create the k3s cluster for this to function. We'l run terraform whic
 
 In your private repo 
 ```
-cd Projects/private/homelab
-nano deploy/helm/bootstrap-core-apps/values.yaml
+cd Projects/private/homelab-private/deploy/helm/bootstrap-core-apps/
+cp values.yaml.example values.yaml
 ```
+now change the contents of the file to match your project then we git add/push to our private repo.
+
+```
+❯ git add deploy/helm/bootstrap-core-apps/values.yaml
+❯ git commit -m "writing docs"
+[main 8632a35] writing docs
+ 1 file changed, 5 insertions(+)
+ create mode 100644 deploy/helm/bootstrap-core-apps/values.yaml
+❯ git push
+Krypton ▶ Requesting SSH authentication from phone
+Krypton ▶ Success. Request Allowed ✔
+Enumerating objects: 9, done.
+Counting objects: 100% (9/9), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (5/5), 433 bytes | 433.00 KiB/s, done.
+Total 5 (delta 3), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
+To github.com:loeken/homelab-private
+   ebe173d..8632a35  main -> main
+```
+at this stage we can start creating the k3s cluster from within our private repo
 
 ```
 cd Projects/private/homelab/terraform/deploy/k3s
