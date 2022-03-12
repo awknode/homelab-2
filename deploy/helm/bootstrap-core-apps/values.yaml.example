@@ -1,6 +1,2 @@
 githubUser: loeken
 githubRepo: homelab-private
-githubDeployKey: |
-  -----BEGIN OPENSSH PRIVATE KEY-----
-  YOURKEY
-  -----END OPENSSH PRIVATE KEY-----
