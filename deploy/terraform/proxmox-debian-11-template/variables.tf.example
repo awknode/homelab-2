@@ -1,0 +1,21 @@
+## deploy/terraform/proxmox-debian-11-template section
+variable "pm_ssh_user" {
+    type = string
+    default = "loeken" 
+}
+variable "pm_ssh_host" {
+    type = string
+    default = "172.16.137.14" 
+}
+variable "pm_ssh_password" {
+    type = string
+    default = "demotime" 
+}
+variable "ssh_public_key" {
+    type = string
+    default = "ssh-rsa AAHw== user@host"
+}
+variable "pm_bridge" {
+    type = string
+    default = "vmbr0"
+}

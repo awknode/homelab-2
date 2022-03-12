@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-dns
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    chart: external-dns
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: "6.0.2"
+    helm:
+      values: |
+        provider: cloudflare
+        cloudflare:
+          secretName: cloudflare-secrets
+          proxied: false
+  destination:
+    namespace: external-dns
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

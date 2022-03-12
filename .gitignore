@@ -1,0 +1,3 @@
+deploy/terraform/proxmox-debian-11-template/variables.tf
+**.tfstate**
+.terraform**

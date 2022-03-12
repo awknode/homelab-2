@@ -1,0 +1,18 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bootstrap-core-apps
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    path: deploy/bootstrap-core-apps
+    repoURL: https://github.com/loeken/homelab
+    targetRevision: HEAD
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  syncPolicy: {}
