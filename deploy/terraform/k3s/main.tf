@@ -236,12 +236,16 @@ resource "helm_release" "bootstrap-core-apps" {
     "${file("../../helm/bootstrap-core-apps/values.yaml")}"
   ]
 }
-# resource "helm_release" "bootstrap-optional-apps" {
-#   name       = "bootstrap-optional-apps"
-#   chart      = "./../../helm/bootstrap-optional-apps"
-#   create_namespace = true 
-#   namespace = "argocd"
-#   depends_on = [
-#     helm_release.bootstrap-core-apps
-#   ]
-# }
+resource "helm_release" "bootstrap-optional-apps" {
+  name       = "bootstrap-optional-apps"
+  chart      = "./../../helm/bootstrap-optional-apps"
+  create_namespace = true 
+  namespace = "argocd"
+
+  depends_on = [
+    helm_release.argocd
+  ]
+  values = [
+    "${file("../../helm/bootstrap-optional-apps/values.yaml")}"
+  ]
+}

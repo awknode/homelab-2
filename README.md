@@ -228,11 +228,10 @@ nano argocd-bootstrap-core-apps-repo.yaml
 replace the ssh key section with the private key we created above ( id_rsa_homelab_private_deploy_key ).
 
 ```
+cd ~/Projects/private/homelab-private/deploy/mysecrets
 cat argocd-bootstrap-core-apps-repo.yaml | kubeseal | kubectl apply -f  -
 ```
 we display the contents of argocd-bootstrap-core-apps-repo.yaml use kubeseal to send it to the cluster and then kubeapply it to the cluster in encrypted format.
-
-From this moment forwards we can start managing the rest of the applications through argocd.
 
 the rest of the core apps can by synced in one go, only external-dns will need another secret, containing the credentials ( such as cloudflare`s api key/token ) so the cluster can update external dns.
 
@@ -240,3 +239,9 @@ the rest of the core apps can by synced in one go, only external-dns will need a
 
 ```
 cd ~/Projects/private/homelab-private/deploy/mysecrets
+cat argocd-external-dns-cloudflare.yaml | kubeseal | kubectl apply -f  -
+```
+
+the docs for the rest of the applications can be found here:
+
+[application docs for admin](docs/apps/admin/README.md)
