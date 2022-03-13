@@ -17,7 +17,7 @@ spec:
           service.externalTrafficPolicy: "Local"
         ingress:
           annotations:
-            cert-manager.io/cluster-issuer: "{{ .Values.ClusterIssuer }}"
+            cert-manager.io/cluster-issuer: "{{ .Values.clusterIssuer }}"
             external-dns.alpha.kubernetes.io/hostname: "whoami.{{ .Values.domain }}."
             external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
             external-dns.alpha.kubernetes.io/ttl: "120"
