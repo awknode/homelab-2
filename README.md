@@ -176,6 +176,8 @@ terraform apply
 
 this should create a proxmox template ( id 999 ).
 
+as this variables.tf contains the proxmox password we won't add it to github ( it is ignored via .gitignore )
+
 ## 4. bootstrapping kubernetes
 then we can create the k3s cluster for this to function. We'l run terraform which creates 3 vms for k3s, installs k3s using k3sup, then installs helm, it then adds the repo for argocd, installs argocd, kubeseal and then last but not least triggeres two local helm chart located in deploy/helm/bootstrap-core-apps and deploy/helm/bootstrap-optional-apps. These local helm charts come with a values.yaml to set your own settings. This app follows the "app of app" pattern ( it basically is responsible for loading all other apps - and updates in the future ).
 
@@ -200,40 +202,70 @@ nano values.yaml
 ```
 the templates folder inside this folder are part of a local helm chart and contain the manifest for all "optional apps", the values.yaml in this folder can be used to pass variables such as your "domain name" to all other helm charts. this is the main file where you configure your apps, if you need to configure something else which you cannot find in this values.yaml create an issue on github.com/loeken/homelab
 
-```
-cd ~/Projects/private/homelab-private
-
-git add deploy/helm/bootstrap-core-apps/values.yaml
-git add deploy/helm/bootstrap-optional-apps/values.yaml
-git add deploy/argocd/bootstrap-optional-apps/values.yaml
-
-git commit -m "writing docs"
-[main 8632a35] writing docs
- 1 file changed, 5 insertions(+)
- create mode 100644 deploy/helm/bootstrap-core-apps/values.yaml
- create mode 100644 deploy/helm/bootstrap-optional-apps/values.yaml
-
-git push
-Enumerating objects: 9, done.
-Counting objects: 100% (9/9), done.
-Delta compression using up to 8 threads
-Compressing objects: 100% (4/4), done.
-Writing objects: 100% (5/5), 433 bytes | 433.00 KiB/s, done.
-Total 5 (delta 3), reused 0 (delta 0), pack-reused 0
-remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
-To github.com:loeken/homelab-private
-   ebe173d..8632a35  main -> main
-```
-
-at this stage we can start creating the k3s cluster from within our private repo. we've added a variables.tf before which was responsible for creating the proxmox template. now we edit the contents of the one responsible for bootstrapping k3s
+we've added a variables.tf before which was responsible for creating the proxmox template. now we edit the contents of the one responsible for bootstrapping k3s
 
 ```
 cd ~/Projects/private/homelab-private/deploy/terraform/k3s
 nano variables.tf
 ```
-we edit the contents of the variables.tf then terraform is all set to create the cluster.
 
+as this variables.tf contains the proxmox password and other information we won't add it to github ( it is ignored via .gitignore )
 ```
+cd ~/Projects/private/homelab-private
+
+git status
+On branch main
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	deploy/argocd/bootstrap-optional-apps/values.yaml
+	deploy/helm/bootstrap-core-apps/values.yaml
+	deploy/helm/bootstrap-optional-apps/values.yaml
+```
+as you can see we created 4 configs let's add them to git
+```
+git add .
+git status
+On branch main
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   deploy/argocd/bootstrap-optional-apps/values.yaml
+	new file:   deploy/helm/bootstrap-core-apps/values.yaml
+	new file:   deploy/helm/bootstrap-optional-apps/values.yaml
+```
+now we commit the changes
+```
+git commit -m "added my own configs"
+[main 60c43d5] added my own configs
+ 4 files changed, 137 insertions(+)
+ create mode 100644 deploy/argocd/bootstrap-optional-apps/values.yaml
+ create mode 100644 deploy/helm/bootstrap-core-apps/values.yaml
+ create mode 100644 deploy/helm/bootstrap-optional-apps/values.yaml
+```
+and send them to our private repository
+```
+git push origin main
+Krypton ▶ Requesting SSH authentication from phone
+Krypton ▶ Success. Request Allowed ✔
+Enumerating objects: 23, done.
+Counting objects: 100% (23/23), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (15/15), done.
+Writing objects: 100% (15/15), 1.34 KiB | 1.34 MiB/s, done.
+Total 15 (delta 8), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (8/8), completed with 6 local objects.
+To github.com:loeken/homelab-private
+   53676ca..60c43d5  main -> main
+```
+
+now we can run the terraform scripts to create the k3s cluster
+```
+cd ~/Projects/private/homelab-private/deploy/terraform/k3s
 terraform init
 terraform plan
 terraform apply

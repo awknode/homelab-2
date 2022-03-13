@@ -3,3 +3,5 @@ deploy/terraform/proxmox-debian-11-template/variables.tf
 .terraform**
 kubeconfig
 deploy/mysecrets/id_rsa**
+deploy/terraform/k3s/variables.tf
+deploy/terraform/proxmox-debian-11-template/variables.tf
