@@ -289,7 +289,8 @@ rpc error: code = Unknown desc = error creating SSH agent: "SSH agent requested 
 this is basically the first secret we'll send to the cluster. We don't want to send it to the cluster unencrypted, this is where kubeseal comes in, we basically send the secret yaml to the kubeseal controller, which encrypts it and returns us the encrypted file, we then apply the encrypted format to the cluster, whenever argocd rolls out code and needs this information the cluster will decrypt and access the secret.
 
 ```
-cd ~/Projects/private/homelab/deploy/mysecrets
+cd ~/Projects/private/homelab/deploy/
+cp argocd-bootstrap-core-apps-repo.yaml.example argocd-bootstrap-core-apps-repo.yaml
 nano argocd-bootstrap-core-apps-repo.yaml
 ```
 
@@ -297,9 +298,10 @@ replace the ssh key section with the private key we created above ( id_rsa_homel
 
 ```
 cd ~/Projects/private/homelab-private/deploy/mysecrets
-cat argocd-bootstrap-core-apps-repo.yaml | kubeseal | kubectl apply -f  -
+cat argocd-bootstrap-core-apps-repo.yaml | kubeseal > argocd-bootstrap-core-apps-repo-encrypted.yaml
+kubectl apply -f argocd-bootstrap-core-apps-repo-encrypted.yaml
 ```
-we display the contents of argocd-bootstrap-core-apps-repo.yaml use kubeseal to send it to the cluster and then kubeapply it to the cluster in encrypted format.
+we display the contents of argocd-bootstrap-core-apps-repo.yaml use kubeseal to send it to the cluster and then save the encrypted output to argocd-bootstrap-core-apps-repo-encrypted.yaml then we use kubectl apply -f to send it to the cluster. You can also git add/commit/push the -encrypted.yaml to the repo
 
 the rest of the core apps can by synced in one go, only external-dns will need another secret, containing the credentials ( such as cloudflare`s api key/token ) so the cluster can update external dns.
 
@@ -307,7 +309,9 @@ the rest of the core apps can by synced in one go, only external-dns will need a
 
 ```
 cd ~/Projects/private/homelab-private/deploy/mysecrets
-cat argocd-external-dns-cloudflare.yaml | kubeseal | kubectl apply -f  -
+cp argocd-external-dns-cloudflare.yaml.example argocd-external-dns-cloudflare.yaml
+cat argocd-external-dns-cloudflare.yaml | kubeseal > argocd-external-dns-cloudflare-encrypted.yaml
+kubectl apply -f argocd-external-dns-cloudflare-encrypted.yaml
 ```
 
 the docs for the rest of the applications can be found here:
