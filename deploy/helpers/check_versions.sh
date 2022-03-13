@@ -23,3 +23,18 @@ echo argo-cd current: $argocdVersionCurrent remote: $argocdVersion
 certManagerVersion=`lastversion cert-manager cert-manager`
 certManagerVersionCurrent=`cat versions/cert-manager/cert-manager`
 echo cert-manager current: $certManagerVersionCurrent remote: $certManagerVersion
+
+# externalDns
+externalDnsVersion=`lastversion bitnami external-dns`
+externalDnsVersionCurrent=`cat versions/bitnami/external-dns`
+echo external-dns current: $externalDnsVersionCurrent remote: $externalDnsVersion
+
+# nginx-ingress
+nginxIngresVersion=`lastversion bitnami nginx-ingress-controller`
+nginxIngresVersionCurrent=`cat versions/bitnami/nginx-ingress-controller`
+echo nginx-ingress-controller current: $nginxIngresVersionCurrent remote: $nginxIngresVersion
+
+# sealed-secrets
+sealedSecretsVersion=`lastversion bitnami-labs sealed-secrets`
+sealedSecretsVersionCurrent=`cat versions/bitnami-labs/sealed-secrets`
+echo sealed-secrets current: $sealedSecretsVersionCurrent remote: $sealedSecretsVersion

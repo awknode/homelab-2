@@ -1,22 +1,22 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cluster-issuer
+  name: external-snapshotter-crds
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-wave: "-2"
 spec:
   project: default
   source:
-    path: deploy/helm/cluster-issuer
-    repoURL: https://github.com/loeken/homelab
+    path: client/config/crd
+    repoURL: https://github.com/kubernetes-csi/external-snapshotter
+    targetRevision: HEAD
   destination:
-    namespace: cert-manager
+    namespace: kube-system
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
-    - Validate=false
-    - CreateNamespace=true
+      - CreateNamespace=true
