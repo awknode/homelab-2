@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: whoami
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    chart: whoami
+    repoURL: 'https://cowboysysop.github.io/charts/'
+    targetRevision: 2.5.3
+    helm:
+      values: |
+        service:
+          service.externalTrafficPolicy: "Local"
+        ingress:
+          annotations:
+            cert-manager.io/cluster-issuer: "letsencrypt-staging"
+            external-dns.alpha.kubernetes.io/hostname: "whoami.internetz.cloud."
+            external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+            external-dns.alpha.kubernetes.io/ttl: "120"
+            #nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+            #nginx.ingress.kubernetes.io/auth-signin: https://auth.internetz.cloud
+            nginx.ingress.kubernetes.io/auth-snippet: |
+              proxy_set_header X-Forwarded-Method $request_method;
+            nginx.ingress.kubernetes.io/configuration-snippet: |
+              proxy_set_header X-Forwarded-Method $request_method;
+
+          enabled: 'true'
+          ingressClassName: "nginx"
+          pathType: ImplementationSpecific
+          hosts:
+            - host: whoami.internetz.cloud
+              paths:
+              - "/"
+          tls:
+          - secretName: whoami-tls
+            hosts:
+              - whoami.internetz.cloud
+  destination:
+    namespace: whoami
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
