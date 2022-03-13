@@ -192,7 +192,6 @@ nano bootstrap-optional-apps/values.yaml
 now edit these two values.yaml files to match your project then we git add/push to our private repo. these values.yaml's shouldnt contain passwords, whenever passwords are involved we aim to use a sealed secret ( existingSecret used ).
 
 
-
 we still need to add 1 further values.yaml file - what i call "the global values.yaml for the optional apps". inside deploy/argocd/bootstrap-optional-apps you will find a values.yaml.example again we
 ```
 cd ~/Projects/private/homelab-private/deploy/argocd/bootstrap-optional-apps
@@ -200,6 +199,31 @@ cp values.yaml.example values.yaml
 nano values.yaml
 ```
 the templates folder inside this folder are part of a local helm chart and contain the manifest for all "optional apps", the values.yaml in this folder can be used to pass variables such as your "domain name" to all other helm charts. this is the main file where you configure your apps, if you need to configure something else which you cannot find in this values.yaml create an issue on github.com/loeken/homelab
+
+```
+cd ~/Projects/private/homelab-private
+
+git add deploy/helm/bootstrap-core-apps/values.yaml
+git add deploy/helm/bootstrap-optional-apps/values.yaml
+git add deploy/argocd/bootstrap-optional-apps/values.yaml
+
+git commit -m "writing docs"
+[main 8632a35] writing docs
+ 1 file changed, 5 insertions(+)
+ create mode 100644 deploy/helm/bootstrap-core-apps/values.yaml
+ create mode 100644 deploy/helm/bootstrap-optional-apps/values.yaml
+
+git push
+Enumerating objects: 9, done.
+Counting objects: 100% (9/9), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (5/5), 433 bytes | 433.00 KiB/s, done.
+Total 5 (delta 3), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
+To github.com:loeken/homelab-private
+   ebe173d..8632a35  main -> main
+```
 
 at this stage we can start creating the k3s cluster from within our private repo. we've added a variables.tf before which was responsible for creating the proxmox template. now we edit the contents of the one responsible for bootstrapping k3s
 
