@@ -30,13 +30,11 @@ now that the pool exists we can create some structure in it by creating datasets
 
 ![name pool pool](../../img/truenas/../../../img/truenas/create-pool-3.png)
 
-next step we ll create a user dedicated for democratic csi ( dcsi ) kubernetes will use this account to ssh into truenas. make sure to have the homedirectory set and that the shell is set to bash or sh. 
-
-Note: you need to go to Services to enable the SSH server.
 
 We also create a new ssh keypair 
 ```
-❯ ssh-keygen -t rsa -b 4096
+cd ~/Projects/private/homelab-private/deploy/mysecrets
+ssh-keygen -t rsa -b 4096
 Generating public/private rsa key pair.
 Enter file in which to save the key (/home/loeken/.ssh/id_rsa): id_rsa_truenas
 Enter passphrase (empty for no passphrase): 
@@ -62,7 +60,9 @@ id_rsa_truenas
 id_rsa_truenas.pub
 ```
 
-enter the contents of id_rsa_truenas.pub in the authorized_keys section of the truenas user. the private key will be used in the config of the democratic-csi argocd app.
+enter the contents of id_rsa_truenas.pub in the authorized_keys section of the truenas root user. ( I am only using truenas to provide storage for my k3s, if you run other apps conside creating a dedidated user on truenas). the private key will be used in the config of the democratic-csi argocd app.
+
+Note: you need to go to Services to enable the SSH server.
 
 ![create user](../../img/truenas/../../../img/truenas/create-user-dcsi.png)
 
@@ -87,14 +87,6 @@ Portal Tab: click add on the top right. in this form select 0.0.0.0 as ip.
 ![nfs select ip](../../img/truenas/../../../img/truenas/select-ip.png)
 
 Initiators Tab: create a new one and select the checkbox at the top left to allow all.
-
-now the last step that needs to be done is to ssh into the server and 
-
-```
-chown -R dcsi /mnt
-```
-
-since we ll connect to truenas via ssh by using the democratic-csi we ll need to have our storage owned by this user.
 
 
 #### customize your settings
