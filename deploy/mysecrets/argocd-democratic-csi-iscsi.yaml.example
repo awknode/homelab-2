@@ -19,7 +19,7 @@ stringData:
     sshConnection:
       host: 172.16.137.13
       port: 22
-      username: dcsi
+      username: root
       # use either password or key
       privateKey: |
         -----BEGIN OPENSSH PRIVATE KEY-----

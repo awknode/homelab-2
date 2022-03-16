@@ -64,10 +64,7 @@ enter the contents of id_rsa_truenas.pub in the authorized_keys section of the t
 
 Note: you need to go to Services to enable the SSH server.
 
-![create user](../../img/truenas/../../../img/truenas/create-user-dcsi.png)
-
-
-now we can click on services in the left menu, and turn on nfs.
+now we can click on services in the left menu, and turn on nfs and iscsi
 ![enable nfs](../../img/truenas/../../../img/truenas/enable-nfs.png)
 
 now click on the edit icon in the Actions column to change the settings for nfs. Enable

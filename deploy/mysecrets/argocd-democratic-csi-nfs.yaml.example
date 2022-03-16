@@ -18,7 +18,7 @@ stringData:
     sshConnection:
       host: 172.16.137.13
       port: 22
-      username: dcsi
+      username: root
       privateKey: |
         -----BEGIN OPENSSH PRIVATE KEY-----
         YOUR PRIVATE KEY
@@ -29,14 +29,14 @@ stringData:
       datasetEnableQuotas: true
       datasetEnableReservation: false
       datasetPermissionsMode: "0777"
-      datasetPermissionsUser: dcsi
+      datasetPermissionsUser: root
       datasetPermissionsGroup: wheel
     nfs:
       shareHost: 172.16.137.13
       shareAlldirs: false
       shareAllowedHosts: []
       shareAllowedNetworks: []
-      shareMaprootUser: dcsi
+      shareMaprootUser: root
       shareMaprootGroup: wheel
       shareMapallUser: ""
       shareMapallGroup: ""
