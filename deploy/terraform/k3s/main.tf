@@ -156,7 +156,7 @@ provider "helm" {
     config_path = "${path.module}/kubeconfig"
   }
 }
-
+/*
 resource "helm_release" "cert-manager" {
   name        = "cert-manager"
   chart       = "cert-manager"
@@ -173,7 +173,7 @@ resource "helm_release" "cert-manager" {
     proxmox_vm_qemu.k3s-master-03
   ]
 }
-
+*/
 /*
 //@TODO test if can be removed with proxmox has hypervisor iirc issues with ovh's managed kubernetes
 resource "time_sleep" "wait_30_seconds" {
