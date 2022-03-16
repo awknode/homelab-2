@@ -156,36 +156,6 @@ provider "helm" {
     config_path = "${path.module}/kubeconfig"
   }
 }
-/*
-resource "helm_release" "cert-manager" {
-  name        = "cert-manager"
-  chart       = "cert-manager"
-  repository  = "https://charts.jetstack.io"
-  create_namespace = true
-  set {
-    name = "installCRDs"
-    value = "true"
-  }
-  namespace = "cert-manager"
-  depends_on = [
-    proxmox_vm_qemu.k3s-master-01,
-    proxmox_vm_qemu.k3s-master-02,
-    proxmox_vm_qemu.k3s-master-03
-  ]
-}
-*/
-/*
-//@TODO test if can be removed with proxmox has hypervisor iirc issues with ovh's managed kubernetes
-resource "time_sleep" "wait_30_seconds" {
-  depends_on = [helm_release.cert-manager]
-  create_duration = "30s"
-}
-
-# This resource will create (at least) 30 seconds after null_resource.previous
-resource "null_resource" "next" {
-  depends_on = [time_sleep.wait_30_seconds]
-}
-*/
 resource "helm_release" "argocd" {
   name       = "argocd"
   repository = "https://argoproj.github.io/argo-helm"
@@ -210,19 +180,6 @@ resource "helm_release" "argocd" {
     ]
   }
 }
-resource "helm_release" "sealed_secrets" {
-  name       = "sealed-secrets-controller"
-  repository = "https://bitnami-labs.github.io/sealed-secrets/"
-  chart      = "sealed-secrets"
-  create_namespace = true 
-  namespace = "kube-system"
-  version = "2.1.2"
-  depends_on = [
-    proxmox_vm_qemu.k3s-master-01,
-    proxmox_vm_qemu.k3s-master-02
-  ]
-}
-
 resource "helm_release" "bootstrap-core-apps" {
   name       = "bootstrap-core-apps"
   chart      = "./../../helm/bootstrap-core-apps"
