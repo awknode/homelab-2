@@ -129,17 +129,17 @@ git push origin main
 ```
 cd ~/Projects/private/homelab-private
 cd deploy/mysecrets
-ssh-keygen -t rsa -b 4096
-Generating public/private rsa key pair.
-Enter file in which to save the key (/home/loeken/.ssh/id_rsa): id_rsa_homelab_private_deploy_key
+ssh-keygen -t ed25519 -a 100
+Generating public/private ed25519 key pair.
+Enter file in which to save the key (/home/loeken/.ssh/id_ed25519): id_ed25519_homelab_private_deploy_key
 Enter passphrase (empty for no passphrase): 
 Enter same passphrase again: 
-Your identification has been saved in id_rsa_homelab_private_deploy_key
-Your public key has been saved in id_rsa_homelab_private_deploy_key.pub
+Your identification has been saved in id_ed25519_homelab_private_deploy_key
+Your public key has been saved in id_ed25519_homelab_private_deploy_key.pub
 The key fingerprint is:
-SHA256:u2ghdom2SWnEd+7TtakYGe9j4yIdu94dPNMag3OpqEk loeken@0x00f
+SHA256:xNNad3N+/NZIOjwD1bqqNeQOs802bLBkk1qs+pY7Ptc loeken@0x00f
 The key's randomart image is:
-+---[RSA 4096]----+
++--[ED25519 256]--+
 |                 |
 |                 |
 |   .             |
@@ -152,7 +152,7 @@ The key's randomart image is:
 +----[SHA256]-----+
 ```
 
-now head to your github repo like https://github.com/loeken/homelab-private/settings/keys/new and insert the contents of id_rsa_homelab_private_deploy_key.pub call it argocd-deploy-key this key is read only - so perfect for what we need it for ( argocd to pull code from out private repo ).
+now head to your github repo like https://github.com/loeken/homelab-private/settings/keys/new and insert the contents of id_ed25519_homelab_private_deploy_key.pub call it argocd-deploy-key this key is read only - so perfect for what we need it for ( argocd to pull code from out private repo ).
 
 ## 3. creating debian 11 template
 as the image build process is a one off thing i ve moved it to a seperate folder to reduce confusion :)
@@ -294,7 +294,7 @@ cp argocd-bootstrap-core-apps-repo.yaml.example argocd-bootstrap-core-apps-repo.
 nano argocd-bootstrap-core-apps-repo.yaml
 ```
 
-replace the ssh key section with the private key we created above ( id_rsa_homelab_private_deploy_key ).
+replace the ssh key section with the private key we created above ( id_ed25519_homelab_private_deploy_key ).
 
 ```
 cd ~/Projects/private/homelab-private/deploy/mysecrets

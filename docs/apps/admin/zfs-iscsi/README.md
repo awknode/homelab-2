@@ -34,17 +34,17 @@ now that the pool exists we can create some structure in it by creating datasets
 We also create a new ssh keypair 
 ```
 cd ~/Projects/private/homelab-private/deploy/mysecrets
-ssh-keygen -t rsa -b 4096
-Generating public/private rsa key pair.
-Enter file in which to save the key (/home/loeken/.ssh/id_rsa): id_rsa_truenas
+ssh-keygen -t ed25519 -a 100
+Generating public/private ed25519 key pair.
+Enter file in which to save the key (/home/loeken/.ssh/id_ed25519): id_ed25519_truenas
 Enter passphrase (empty for no passphrase): 
 Enter same passphrase again: 
-Your identification has been saved in id_rsa_truenas
-Your public key has been saved in id_rsa_truenas.pub
+Your identification has been saved in id_ed25519_truenas
+Your public key has been saved in id_ed25519_truenas.pub
 The key fingerprint is:
-SHA256:sGx+CHDuo3n6AyFvxDPRKlMq0FhZefFnY1FgI04BKcU loeken@0x00f
+SHA256:P0JpRGm7QlQKIn7POh6nKJZnQyRclOsbaUG+5Z9imb4 loeken@0x00f
 The key's randomart image is:
-+---[RSA 4096]----+
++--[ED25519 256]--+
 | +.+.++++.=o.    |
 |o = + E+ o o     |
 |.+.o.o. o =      |
