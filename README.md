@@ -1,4 +1,4 @@
-# awknode's remotelab -- main contrib - loeken
+# THIS IS BEING SCRAPPED AND RE-DONE, STAY TUNED
 This repo contains my homelab setup. I run this on a single server ( in 3 kvms ), but this can also be spread across multiple servers for HA. This setup has been tested on debian 11 / proxmox pve 7. 
 
 ## how does this work?
