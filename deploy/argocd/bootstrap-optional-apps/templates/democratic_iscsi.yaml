@@ -16,7 +16,6 @@ spec:
         csiDriver:
           # should be globally unique for a given cluster
           name: "org.democratic-csi.iscsi"
-
         # add note here about volume expansion requirements
         storageClasses:
         - name: freenas-iscsi-csi
@@ -27,7 +26,6 @@ spec:
           parameters:
             # for block-based storage can be ext3, ext4, xfs
             fsType: ext4
-
           mountOptions: []
           secrets:
             provisioner-secret:
@@ -35,7 +33,6 @@ spec:
             node-stage-secret:
             node-publish-secret:
             controller-expand-secret:
-
         driver:
           existingConfigSecret: democractic-csi-iscsi-driver-config
           config:
