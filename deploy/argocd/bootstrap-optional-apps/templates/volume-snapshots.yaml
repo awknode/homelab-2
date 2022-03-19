@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     path: deploy/helm/external-snapshotter
-    repoURL: https://github.com/loeken/homelab
+    repoURL: git@github.com:{{ .Values.githubUser }}/{{ .Values.githubRepo }}
     targetRevision: HEAD
   destination:
     namespace: kube-system
