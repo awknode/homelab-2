@@ -23,7 +23,9 @@ spec:
           LDAP_REMOVE_CONFIG_AFTER_SETUP: "true"
           LDAP_READONLY_USER: "false"
         replicaCount: 1
-        existingSecret: "openldap-creds"
+        #existingSecret: "openldap-creds"
+        adminPassword: homelab
+        configPassword: homelab
         persistence:
           storageClass: "{{ .Values.storageClass }}"
           size: 1Gi
@@ -38,8 +40,10 @@ spec:
               external-dns.alpha.kubernetes.io/hostname: "ltb-passwd.{{ .Values.domain }}."
               external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
               external-dns.alpha.kubernetes.io/ttl: "120"
+              {{if (default .Values.useAuthelia true)}}
               nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
               nginx.ingress.kubernetes.io/auth-signin: https://auth.{{ .Values.domain }}
+              {{end}}
             tls:
               - secretName: ltb-passwd-tls
                 hosts:

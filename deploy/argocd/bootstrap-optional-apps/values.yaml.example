@@ -7,3 +7,4 @@ storageClass: freenas-iscsi-csi
 openldap:
   searchDomain: dc=ldap,dc=example,dc=com
   bindDN: cn=admin,dc=ldap,dc=example,dc=com
+  useAuthelia: false
