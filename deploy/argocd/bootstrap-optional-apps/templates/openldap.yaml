@@ -34,7 +34,7 @@ spec:
               - ltb-passwd.{{ .Values.domain }}
             annotations:
               kubernetes.io/ingress.class: "nginx"
-              cert-manager.io/cluster-issuer: "letsencrypt-staging"
+              cert-manager.io/cluster-issuer: "{{ .Values.clusterIssuer }}"
               external-dns.alpha.kubernetes.io/hostname: "ltb-passwd.{{ .Values.domain }}."
               external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
               external-dns.alpha.kubernetes.io/ttl: "120"
