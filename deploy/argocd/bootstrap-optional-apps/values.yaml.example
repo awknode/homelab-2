@@ -3,3 +3,7 @@ domain: internetz.cloud
 clusterIssuer: letsencrypt-staging
 githubUser: loeken
 githubRepo: homelab-private
+storageClass: freenas-iscsi-csi
+openldap:
+  searchDomain: dc=ldap,dc=example,dc=com
+  bindDN: cn=admin,dc=ldap,dc=example,dc=com

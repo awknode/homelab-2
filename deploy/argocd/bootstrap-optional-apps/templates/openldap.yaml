@@ -1,0 +1,81 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: openldap
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    chart: openldap-stack-ha
+    repoURL: https://jp-gouin.github.io/helm-openldap/
+    targetRevision: "2.1.6"
+    helm:
+      values: |
+        service:
+          type: NodePort
+        env:
+          LDAP_DOMAIN: "ldap.{{ domain }}"
+          LDAP_ORGANISATION: "{{ domain }}"
+          LDAP_TLS: "false"
+          LDAP_TLS_ENFORCE: "false"
+          LDAP_REMOVE_CONFIG_AFTER_SETUP: "true"
+          LDAP_READONLY_USER: "false"
+        replicaCount: 1
+        exitingSecret: "openldap-creds"
+        persistence:
+          storageClass: "{{ storageClass }}"
+          size: 1Gi
+        ltb-passwd:
+          ingress:
+            enabled: true
+            hosts:
+              - ltb-passwd.{{ domain }}
+            annotations:
+              kubernetes.io/ingress.class: "nginx"
+              cert-manager.io/cluster-issuer: "letsencrypt-staging"
+              external-dns.alpha.kubernetes.io/hostname: "ltb-passwd.{{ domain }}."
+              external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+              external-dns.alpha.kubernetes.io/ttl: "120"
+              nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+              nginx.ingress.kubernetes.io/auth-signin: https://auth.{{ domain }}
+            tls:
+              - secretName: ltb-passwd-tls
+                hosts:
+                  - ltb-passwd.{{ domain }}
+          ldap:
+            server: ldap://openldap-openldap-stack-ha
+            searchBase: {{ openldap.searchBase }}
+            bindDN: {{ openldap.bindDN }}
+            bindPWKey: LDAP_ADMIN_PASSWORD
+
+        phpldapadmin:
+          ingress:
+            annotations:
+              kubernetes.io/ingress.class: "nginx"
+              cert-manager.io/cluster-issuer: "{{ clusterIssuer }}"
+              external-dns.alpha.kubernetes.io/hostname: "ldap-admin.{{ domain }}."
+              external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+              external-dns.alpha.kubernetes.io/ttl: "120"
+              nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+              nginx.ingress.kubernetes.io/auth-signin: https://auth.{{ domain }}
+            hosts:
+              - ldap-admin.{{ domain }}
+            tls:
+              - secretName: phpldapadmin-tls
+                hosts:
+                - ldap-admin.{{ domain }}
+          env:
+            PHPLDAPADMIN_LDAP_HOSTS: "ldap://openldap-openldap-stack-ha:389"
+            PHPLDAPADMIN_HTTPS: "false"
+            PHPLDAPADMIN_TRUST_PROXY_SSL: "true" 
+  destination:
+    namespace: openldap
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
