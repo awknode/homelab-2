@@ -1,3 +1,5 @@
 # this file acts as a global value files to all bootstrap-optional-apps
 domain: internetz.cloud
 clusterIssuer: letsencrypt-staging
+githubUser: loeken
+githubRepo: homelab-private
