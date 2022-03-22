@@ -6,5 +6,4 @@ metadata:
   namespace: openldap
 type: Opaque
 stringData:
-  adminPassword: homelab
-  configPassword: homelab
+  LDAP_ADMIN_PASSWORD: homelab
