@@ -7,4 +7,5 @@ storageClass: freenas-iscsi-csi
 openldap:
   searchDomain: dc=ldap,dc=example,dc=com
   bindDN: cn=admin,dc=ldap,dc=example,dc=com
-  useAuthelia: false
+  #first setup openldap with useAuthelia=no, then setup authelia, then change this to "yes"
+  useAuthelia: "no"

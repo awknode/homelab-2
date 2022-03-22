@@ -23,9 +23,7 @@ spec:
           LDAP_REMOVE_CONFIG_AFTER_SETUP: "true"
           LDAP_READONLY_USER: "false"
         replicaCount: 1
-        #existingSecret: "openldap-creds"
-        adminPassword: homelab
-        configPassword: homelab
+        existingSecret: "openldap-creds"
         persistence:
           storageClass: "{{ .Values.storageClass }}"
           size: 1Gi
