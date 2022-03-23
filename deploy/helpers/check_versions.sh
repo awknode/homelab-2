@@ -38,3 +38,11 @@ echo nginx-ingress-controller current: $nginxIngresVersionCurrent remote: $nginx
 sealedSecretsVersion=`lastversion bitnami-labs sealed-secrets`
 sealedSecretsVersionCurrent=`cat versions/bitnami-labs/sealed-secrets`
 echo sealed-secrets current: $sealedSecretsVersionCurrent remote: $sealedSecretsVersion
+
+# openldap-stack-ha
+openldapVersion=`lastversion helm-openldap openldap-stack-ha`
+openldapVersionCurrent=`cat versions/helm-openldap/openldap-stack-ha`
+echo openldap-stack-ha current: $openldapVersionCurrent remote: $openldapVersion
+
+# authelia
+echo authelia check on https://charts.authelia.com/

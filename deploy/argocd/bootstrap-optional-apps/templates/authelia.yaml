@@ -1,0 +1,148 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: authelia
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    chart: authelia
+    targetRevision: 0.8.1
+    repoURL: https://charts.authelia.com
+    helm:
+      values: |
+        secret:
+          existingSecret: "authelia"
+        persistence:
+          enabled: true
+          mountPath: "/config"
+          storageClass: "freenas-iscsi-csi"
+          accessMode: "ReadWriteMany"
+        domain: {{ .Values.domain }}
+        pod:
+          replicas: 1
+          kind: StatefulSet
+          revisionHistoryLimit: 2
+        configMap:
+          log:
+            level: info
+          authentication_backend:
+            ldap:
+              enabled: true
+              implementation: custom
+              url: ldap://openldap-openldap-stack-ha.openldap.svc.cluster.local
+              timeout: 10s
+              start_tls: false
+              tls:
+                server_name: openldap-openldap-stack-ha.openldap.svc.cluster.local
+                skip_verify: true
+                minimum_version: TLS1.2
+              base_dn: {{ .Values.openldap.searchDomain }}
+              username_attribute: uid
+              additional_users_dn: ou=User
+              users_filter: (&({username_attribute}={input})(objectClass=inetOrgPerson))
+              additional_groups_dn: ou=Group
+              group_name_attribute: cn
+              groups_filter: (&(member={dn})(objectClass=groupOfNames))
+              mail_attribute: mail
+              display_name_attribute: displayName
+              user: "{{ .Values.openldap.bindDN }}"
+            # file:
+            #   enabled: true
+            #   password:
+            #     algorithm: sha512
+            #     iterations: 100000
+            #   path: /config/users/users_database.yml
+          default_redirection_url: "https://hub.{{ .Values.domain }}"
+          session:
+            redis:
+              enabled: false
+            domain: {{ .Values.domain }}
+            expiration: 3600
+            inactivity: 300
+          storage:
+            local:
+              enabled: true
+            postgres:
+              enabled: false
+          notifier:
+            filesystem:
+              enabled: false
+              filename: /config/notification.txt
+            smtp:
+              enabled: true
+              enabledSecret: true
+              host: {{ .Values.authelia.smtp.host }}
+              port: {{ .Values.authelia.smtp.port }}
+              timeout: 5s
+              username: {{ .Values.authelia.smtp.username }}
+              sender: {{ .Values.authelia.smtp.sender }}
+              identifier: {{ .Values.authelia.smtp.host }}
+              subject: "[Authelia] {title}"
+              startup_check_address: {{ .Values.authelia.smtp.sender }}
+              disable_require_tls: false
+              disable_html_emails: false
+              tls:
+                server_name: "{{ .Values.authelia.smtp.host }}"
+                skip_verify: false
+                minimum_version: TLS1.2
+          identity_providers:
+            oidc:
+              enabled: false
+          theme: dark
+          access_control:
+            default_policy: deny
+            rules:
+            - domain: "*.{{ .Values.domain }}"
+              policy: bypass
+              networks:
+                - 10.42.0.0/16
+            - domain: ['lidarr.{{ .Values.domain }}','sonarr.{{ .Values.domain }}', 'overseerr.{{ .Values.domain }}', 'radarr.{{ .Values.domain }}', 'ha.{{ .Values.domain }}', 'plex.{{ .Values.domain }}', 'nextcloud.{{ .Values.domain }}', 'ha.{{ .Values.domain }}', 'vaultwarden.{{ .Values.domain }}']
+              policy: bypass
+              resources:
+                - "^/api.*"
+                - "^/signalr.*"
+            - domain: 'rtorrent.{{ .Values.domain }}'
+              policy: bypass
+              resources:
+                - "^/RPC2.*"
+            - domain: ['lidarr.{{ .Values.domain }}', 'ldap-admin.{{ .Values.domain }}', 'ha.{{ .Values.domain }}', 'prowlarr.{{ .Values.domain }}', 'sonarr.{{ .Values.domain }}', 'radarr.{{ .Values.domain }}', 'rtorrent.{{ .Values.domain }}', 'nzbget.{{ .Values.domain }}']
+              policy: two_factor
+              subject: 
+              - 'group:admins'
+            - domain: ['whoami.{{ .Values.domain }}', 'harbor.{{ .Values.domain }}', 'ltb-passwd.{{ .Values.domain }}', 'plex.{{ .Values.domain }}', 'overseerr.{{ .Values.domain }}', 'nextcloud.{{ .Values.domain }}', 'photos.{{ .Values.domain }}', 'vaultwarden.{{ .Values.domain }}']
+              policy: two_factor
+              subject:
+              - 'group:users'
+            - domain: ['hub.{{ .Values.domain }}']
+              policy: bypass
+        ingress:
+          annotations:
+            kubernetes.io/ingress.class: "nginx"
+            cert-manager.io/cluster-issuer: "{{ .Values.clusterIssuer }}"
+            external-dns.alpha.kubernetes.io/hostname: "auth.{{ .Values.domain }}."
+            external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+            external-dns.alpha.kubernetes.io/ttl: "120"
+          enabled: true
+          hosts:
+            - host: auth.{{ .Values.domain }}
+              paths:
+                - path: /
+                  pathType: Prefix
+                  service:
+                    port: 80
+          tls:
+            enabled: true
+            secret: auth-tls
+  destination:
+    namespace: authelia
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

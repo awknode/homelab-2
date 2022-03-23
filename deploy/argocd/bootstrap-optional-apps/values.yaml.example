@@ -9,3 +9,9 @@ openldap:
   bindDN: cn=admin,dc=ldap,dc=example,dc=com
   #first setup openldap with useAuthelia=no, then setup authelia, then change this to "yes"
   useAuthelia: "no"
+authelia:
+  smtp:
+    host: mail.example.com
+    port: 587
+    username: authelia@example.com
+    sender: authelia@example.com
