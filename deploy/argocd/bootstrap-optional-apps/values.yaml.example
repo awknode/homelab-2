@@ -20,3 +20,5 @@ vaultwarden:
 sharedmedia:
   size: 1000Gi
   storageClass: freenas-nfs-csi
+nzbget:
+  size: 100Gi
