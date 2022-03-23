@@ -51,15 +51,17 @@ spec:
         postgresql:
           enabled: true
           postgresqlUsername: postgres
-          existingSecret: vaultwarden-postgresql
+          existingSecret: vaultwarden
           postgresqlDatabase: vaultwarden
           persistence:
             enabled: true
             storageClass: "freenas-iscsi-csi"
             accessModes:
               - ReadWriteOnce
-        env:
-           ADMIN_TOKEN: homelab
+        envFrom:
+        - secretRef:
+            name: vaultwarden
+
   destination:
     namespace: vaultwarden
     server: https://kubernetes.default.svc
