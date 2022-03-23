@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     chart: authelia
-    targetRevision: 0.8.1
+    targetRevision: 0.8.20
     repoURL: https://charts.authelia.com
     helm:
       values: |
