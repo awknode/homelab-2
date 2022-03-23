@@ -2,6 +2,7 @@
 
 #### username/password
 
+default username nzgbet password tegbzn6789
 - Settings ( top ) -> Security
 - change controlusername
 - change controlpassword
