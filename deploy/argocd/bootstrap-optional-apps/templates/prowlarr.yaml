@@ -1,0 +1,57 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prowlarr
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    chart: prowlarr
+    repoURL: https://k8s-at-home.com/charts/
+    targetRevision: "4.2.0"
+    helm:
+      values: |
+        persistence:
+          config:
+            enabled: true
+            accessMode: "ReadWriteOnce"
+            storageClass: "{{ .Values.storageClass }}"
+            size: "5Gi"
+            readOnly: false
+        ingress:
+          main:
+            annotations:
+              kubernetes.io/ingress.class: "nginx"
+              cert-manager.io/cluster-issuer: "{{ .Values.domain }}"
+              external-dns.alpha.kubernetes.io/hostname: "prowlarr.{{ .Values.domain }}."
+              external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+              external-dns.alpha.kubernetes.io/ttl: "120"
+              nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+              nginx.ingress.kubernetes.io/auth-signin: https://auth.{{ .Values.domain }}
+            enabled: true
+            hosts:
+              - host: prowlarr.{{ .Values.domain }}
+                paths:
+                  - path: /
+                    pathType: Prefix
+                    service:
+                      port: 9696
+            tls:
+            - secretName: prowlarr-tls
+              hosts:
+              - prowlarr.{{ .Values.domain }}
+        podSecurityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+          fsGroup: 1000
+  destination:
+    namespace: media
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
