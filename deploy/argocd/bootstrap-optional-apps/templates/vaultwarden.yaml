@@ -59,7 +59,7 @@ spec:
             accessModes:
               - ReadWriteOnce
         env:
-           ADMIN_TOKEN: NCkV4iF6ULNyDW46kDlQcypzoDZOKgJvY5LZ9VGFCcmvnHDd60arLMFdeaivShIv
+           ADMIN_TOKEN: homelab
   destination:
     namespace: vaultwarden
     server: https://kubernetes.default.svc
