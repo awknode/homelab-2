@@ -59,20 +59,7 @@ spec:
             accessModes:
               - ReadWriteOnce
         env:
-           ADMIN_TOKEN: homelab
-        #   DATABASE_URL: postgresql://postgresql:YY6fBf5u2bupeLNw@vaultwarden-postgresql/vaultwarden
-        #   DOMAIN: https://vaultwarden.{{ .Values.domain }}
-        #   SMTP_HOST: mail.internetz.me
-        #   SMTP_FROM: vaultwarden@internetz.me
-        #   SMTP_FROM_NAME: vaultwarden
-        #   SMTP_PORT: 465          # Ports 587 (submission) and 25 (smtp) are standard without encryption and with encryption via STARTTLS (Explicit TLS). Port 465 is outdated and used with Implicit TLS.
-        #   SMTP_SSL: true          # (Explicit) - This variable by default configures Explicit STARTTLS, it will upgrade an insecure connection to a secure one. Unless SMTP_EXPLICIT_TLS is set to true. Either port 587 or 25 are default.
-        #   SMTP_EXPLICIT_TLS: true # (Implicit) - N.B. This variable configures Implicit TLS. It's currently mislabelled (see bug #851) - SMTP_SSL Needs to be set to true for this option to work. Usually port 465 is used here.
-        #   SMTP_USERNAME: vaultwarden@internetz.me
-        #   SMTP_PASSWORD: SgSF@4iqoXTkd
-        #   SMTP_TIMEOUT: 15
-        #   SMTP_AUTH_MECHANISM: "STARTTLS"
-        #   HELO_NAME: mail.internetz.me
+           ADMIN_TOKEN: NCkV4iF6ULNyDW46kDlQcypzoDZOKgJvY5LZ9VGFCcmvnHDd60arLMFdeaivShIv
   destination:
     namespace: vaultwarden
     server: https://kubernetes.default.svc
