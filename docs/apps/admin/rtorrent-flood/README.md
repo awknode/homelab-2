@@ -1,5 +1,4 @@
-## setup prowlarr
+## setup rtorrent-flood
 
-login to webui, create username/password
-
-####
+#### prepare shared-media pvc
+make sure you created the shared-media pv/pvc before loading this app in argocd

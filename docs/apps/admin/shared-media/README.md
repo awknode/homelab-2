@@ -2,7 +2,27 @@
 
 first we ll need to manually create a persistent volume
 ```
-cd deploy/mysecrets
+kubectl create namespace media
+cd /tmp
+nano media-persistent-volume-claim.yaml
+```
+now we insert the following text into this file:
+```
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: shared-media
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1000Gi
+  storageClassName: freenas-nfs-csi
+```
+adjust the size/storageClassName and make sure they match the values from the deploy/argocd/bootstrap-optional-apps/values.yaml
+```
 kubectl apply -f media-persistent-volume-claim.yaml
 persistentvolumeclaim/shared-media created
 ```

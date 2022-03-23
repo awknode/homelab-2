@@ -56,3 +56,8 @@ echo vaultwarden current: $vaultwardenVersionCurrent remote: $vaultwardenVersion
 heimdallVersion=`lastversion k8s-at-home heimdall`
 heimdallVersionCurrent=`cat versions/k8s-at-home/heimdall`
 echo heimdall current: $heimdallVersionCurrent remote: $heimdallVersion
+
+# rtorrent-flood
+rtorrentFloodVersion=`lastversion k8s-at-home rtorrent-flood`
+rtorrentFloodVersionCurrent=`cat versions/k8s-at-home/rtorrent-flood`
+echo rtorrent-flood current: $rtorrentFloodVersionCurrent remote: $rtorrentFloodVersion

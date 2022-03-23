@@ -22,10 +22,10 @@
 [vaultwarden](vaultwarden/README.md)
 
 ## 8.) Heimdall
-[kuma](kuma/README.md)
+[kuma](heimdall/README.md)
 
-## 9.) Uptime Kuma
-[kuma](kuma/README.md)
+## 9.) shared-media disk
+[shared-media](shared-media/README.md)
 
 ## 10.) Rtorrent-flood
 [rtorrent-flood](rtorrent-flood/README.md)
