@@ -21,10 +21,8 @@ spec:
               external-dns.alpha.kubernetes.io/hostname: "vaultwarden.{{ .Values.domain }}."
               external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
               external-dns.alpha.kubernetes.io/ttl: "120"
-              {{- if eq $.Values.vaultwarden.useAuthelia "yes" }}
               nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
               nginx.ingress.kubernetes.io/auth-signin: https://auth.{{ .Values.domain }}
-              {{end}}
             enabled: true
             hosts:
               - host: vaultwarden.{{ .Values.domain }}
@@ -52,7 +50,29 @@ spec:
             storageClass: freenas-iscsi-csi
         postgresql:
           enabled: true
+          postgresqlUsername: vaultwarden
           existingSecret: vaultwarden-postgresql
+          postgresqlDatabase: vaultwarden
+          persistence:
+            enabled: true
+            storageClass: "freenas-iscsi-csi"
+            accessModes:
+              - ReadWriteOnce
+        # env:
+        #   ADMIN_TOKEN: X3QfYcyzrADNLJVm
+        #   DATABASE_URL: postgresql://vaultwarden:5ka3BVxrjRxeSqPp6b@vaultwarden-postgresql/vaultwarden
+        #   DOMAIN: https://vaultwarden.{{ .Values.domain }}
+        #   SMTP_HOST: mail.internetz.me
+        #   SMTP_FROM: vaultwarden@internetz.me
+        #   SMTP_FROM_NAME: vaultwarden
+        #   SMTP_PORT: 465          # Ports 587 (submission) and 25 (smtp) are standard without encryption and with encryption via STARTTLS (Explicit TLS). Port 465 is outdated and used with Implicit TLS.
+        #   SMTP_SSL: true          # (Explicit) - This variable by default configures Explicit STARTTLS, it will upgrade an insecure connection to a secure one. Unless SMTP_EXPLICIT_TLS is set to true. Either port 587 or 25 are default.
+        #   SMTP_EXPLICIT_TLS: true # (Implicit) - N.B. This variable configures Implicit TLS. It's currently mislabelled (see bug #851) - SMTP_SSL Needs to be set to true for this option to work. Usually port 465 is used here.
+        #   SMTP_USERNAME: vaultwarden@internetz.me
+        #   SMTP_PASSWORD: SgSF@4iqoXTkd
+        #   SMTP_TIMEOUT: 15
+        #   SMTP_AUTH_MECHANISM: "STARTTLS"
+        #   HELO_NAME: mail.internetz.me
   destination:
     namespace: vaultwarden
     server: https://kubernetes.default.svc
