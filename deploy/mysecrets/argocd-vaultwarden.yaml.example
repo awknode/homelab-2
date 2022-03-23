@@ -7,5 +7,6 @@ metadata:
 type: Opaque
 stringData:
   password: homelab
-  postgres-password: homelab
+  postgresql-postgres-password: homelab
+  postgresql--password: homelab
   replication-password: homelab

@@ -59,7 +59,7 @@ spec:
             accessModes:
               - ReadWriteOnce
         env:
-           ADMIN_TOKEN: X3QfYcyzrADNLJVm
+           ADMIN_TOKEN: homelab
         #   DATABASE_URL: postgresql://postgresql:YY6fBf5u2bupeLNw@vaultwarden-postgresql/vaultwarden
         #   DOMAIN: https://vaultwarden.{{ .Values.domain }}
         #   SMTP_HOST: mail.internetz.me
