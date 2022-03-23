@@ -37,7 +37,7 @@ spec:
             accessMode: "ReadWriteMany"
             size: "{{ .Values.sharedmedia.size }}"
             storageClass: "{{ .Values.sharedmedia.storageClass }}"
-            existingClaim: "sharedmedia"
+            existingClaim: "shared-media"
         ingress:
           main:
             annotations:
