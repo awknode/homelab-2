@@ -52,10 +52,7 @@ spec:
             storageClass: freenas-iscsi-csi
         postgresql:
           enabled: true
-          auth:
-            postgresqlUsername: ime
-            postgresqlPassword: homelab
-            postgresqlDatabase: ime
+          existingSecret: vaultwarden-postgresql
   destination:
     namespace: vaultwarden
     server: https://kubernetes.default.svc
