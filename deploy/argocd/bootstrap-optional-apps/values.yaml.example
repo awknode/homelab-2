@@ -15,3 +15,5 @@ authelia:
     port: 587
     username: authelia@example.com
     sender: authelia@example.com
+vaultwarden:
+  useAuthelia: "yes"
