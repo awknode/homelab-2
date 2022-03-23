@@ -50,7 +50,7 @@ spec:
             storageClass: freenas-iscsi-csi
         postgresql:
           enabled: true
-          postgresqlUsername: vaultwarden
+          postgresqlUsername: postgresql
           existingSecret: vaultwarden-postgresql
           postgresqlDatabase: vaultwarden
           persistence:
@@ -58,9 +58,9 @@ spec:
             storageClass: "freenas-iscsi-csi"
             accessModes:
               - ReadWriteOnce
-        # env:
-        #   ADMIN_TOKEN: X3QfYcyzrADNLJVm
-        #   DATABASE_URL: postgresql://vaultwarden:5ka3BVxrjRxeSqPp6b@vaultwarden-postgresql/vaultwarden
+        env:
+           ADMIN_TOKEN: X3QfYcyzrADNLJVm
+        #   DATABASE_URL: postgresql://postgresql:YY6fBf5u2bupeLNw@vaultwarden-postgresql/vaultwarden
         #   DOMAIN: https://vaultwarden.{{ .Values.domain }}
         #   SMTP_HOST: mail.internetz.me
         #   SMTP_FROM: vaultwarden@internetz.me
