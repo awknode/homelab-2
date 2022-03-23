@@ -46,3 +46,13 @@ echo openldap-stack-ha current: $openldapVersionCurrent remote: $openldapVersion
 
 # authelia
 echo authelia check on https://charts.authelia.com/
+
+# vaultwarden
+vaultwardenVersion=`lastversion k8s-at-home vaultwarden`
+vaultwardenVersionCurrent=`cat versions/k8s-at-home/vaultwarden`
+echo vaultwarden current: $vaultwardenVersionCurrent remote: $vaultwardenVersion
+
+# heimdall
+heimdallVersion=`lastversion k8s-at-home heimdall`
+heimdallVersionCurrent=`cat versions/k8s-at-home/heimdall`
+echo heimdall current: $heimdallVersionCurrent remote: $heimdallVersion

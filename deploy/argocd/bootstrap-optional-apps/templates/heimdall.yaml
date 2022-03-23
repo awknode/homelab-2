@@ -1,0 +1,51 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: heimdall
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    chart: heimdall
+    repoURL: https://k8s-at-home.com/charts/
+    targetRevision: "8.2.0"
+    helm:
+      values: |
+        ingress:
+          main:
+            annotations:
+              kubernetes.io/ingress.class: "nginx"
+              cert-manager.io/cluster-issuer: "letsencrypt-prod"
+              external-dns.alpha.kubernetes.io/hostname: "{{ .Values.domain }}."
+              external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+              external-dns.alpha.kubernetes.io/ttl: "120"
+              nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+              nginx.ingress.kubernetes.io/auth-signin: https://auth.{{ .Values.domain }}
+            enabled: true
+            hosts:
+              - host: hub.{{ .Values.domain }}
+                paths:
+                  - path: /
+                    pathType: Prefix
+                    service:
+                      port: 80
+            tls:
+            - secretName: hub-tls
+              hosts:
+              - hub.{{ .Values.domain }}
+        persistence:
+          config:
+            enabled: true
+            storageClass: freenas-iscsi-csi
+            readOnly: false
+  destination:
+    namespace: heimdall
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
