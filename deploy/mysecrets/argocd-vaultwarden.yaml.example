@@ -2,11 +2,22 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: vaultwarden-postgresql
+  name: vaultwarden
   namespace: vaultwarden
 type: Opaque
 stringData:
-  password: homelab
-  postgresql-postgres-password: homelab
-  postgresql--password: homelab
-  replication-password: homelab
+  #you can enable the /admin dashboard for testing email and a few other things
+  #ADMIN_TOKEN: homelab
+  DATABASE_URL: postgresql://vaultwarden:homelab@vaultwarden-postgresql/vaultwarden
+  DOMAIN: https://vaultwarden.example.com
+  SMTP_HOST: mail.example.com
+  SMTP_FROM: vaultwarden@example.com
+  SMTP_FROM_NAME: vaultwarden
+  SMTP_PORT: "587"
+  SMTP_SSL: "true"
+  SMTP_EXPLICIT_TLS: "false"
+  SMTP_USERNAME: vaultwarden@example.com
+  SMTP_PASSWORD: SgSF@4iqoXTkd
+  SMTP_TIMEOUT: "15"
+  SMTP_AUTH_MECHANISM: "STARTTLS"
+  HELO_NAME: mail.example.com
