@@ -17,6 +17,6 @@ authelia:
     sender: authelia@example.com
 vaultwarden:
   useAuthelia: "yes"
-shared-media:
+sharedmedia:
   size: 1000Gi
   storageClass: freenas-nfs-csi

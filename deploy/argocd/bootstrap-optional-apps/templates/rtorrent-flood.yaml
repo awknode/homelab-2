@@ -35,9 +35,9 @@ spec:
             enabled: true
             mountPath: "/downloads"
             accessMode: "ReadWriteMany"
-            size: "{{ .Values.shared-media.size }}"
-            storageClass: "{{ .Values.shared-media.storageClass }}"
-            existingClaim: "shared-media"
+            size: "{{ .Values.sharedmedia.size }}"
+            storageClass: "{{ .Values.sharedmedia.storageClass }}"
+            existingClaim: "sharedmedia"
         ingress:
           main:
             annotations:
