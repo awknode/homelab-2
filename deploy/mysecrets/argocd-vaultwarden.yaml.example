@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vaultwarden-postgresql
+  namespace: vaultwarden
+type: Opaque
+stringData:
+  password: homelab
+  postgres-password: homelab
+  replication-password: homelab
