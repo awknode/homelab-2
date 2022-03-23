@@ -40,7 +40,7 @@ spec:
                 server_name: openldap-openldap-stack-ha.openldap.svc.cluster.local
                 skip_verify: true
                 minimum_version: TLS1.2
-              base_dn: {{ .Values.openldap.searchDomain }}
+              base_dn: {{ .Values.openldap.searchBase }}
               username_attribute: uid
               additional_users_dn: ou=User
               users_filter: (&({username_attribute}={input})(objectClass=inetOrgPerson))
