@@ -50,7 +50,7 @@ spec:
             storageClass: freenas-iscsi-csi
         postgresql:
           enabled: true
-          postgresqlUsername: postgres
+          postgresqlUsername: vaultwarden
           existingSecret: vaultwarden-postgresql
           postgresqlDatabase: vaultwarden
           persistence:
