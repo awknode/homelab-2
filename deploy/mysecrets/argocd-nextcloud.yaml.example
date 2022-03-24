@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nextcloud
+  namespace: nextcloud
+type: Opaque
+stringData:
+  usernameKey: loeken
+  passwordKey: homelab
+  smtpUsernameKey: smtp_username
+  smtpPasswordKey: smtp_password
+  pgusername: ncloud
+  pgpassword: homelab

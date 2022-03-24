@@ -22,3 +22,9 @@ sharedmedia:
   storageClass: freenas-nfs-csi
 nzbget:
   size: 100Gi
+nextcloud:
+  smtp:
+    host: mail.example.com
+    port: 587
+    username: nextcloud@example.com
+    sender: nextcloud@example.com

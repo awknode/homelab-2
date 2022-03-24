@@ -17,7 +17,7 @@ stringData:
   SMTP_SSL: "true"
   SMTP_EXPLICIT_TLS: "false"
   SMTP_USERNAME: vaultwarden@example.com
-  SMTP_PASSWORD: SgSF@4iqoXTkd
+  SMTP_PASSWORD: homelab
   SMTP_TIMEOUT: "15"
   SMTP_AUTH_MECHANISM: "STARTTLS"
   HELO_NAME: mail.example.com

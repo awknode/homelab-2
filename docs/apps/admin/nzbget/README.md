@@ -20,3 +20,6 @@ default username nzgbet password tegbzn6789
 ## News-servers
 
 this depends on your usenet provider, usually you have to set a server name a host username password
+
+## download path
+settings -> path -> MainDir: /downloads

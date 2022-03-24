@@ -15,3 +15,10 @@ Settings -> Dowload clients
 - port 6789
 - username/password set in nzbget
 - Category: Movies
+
+
+## set root folder
+
+Settings -> Media Management > Add Root Folder
+
+select /media/movies
