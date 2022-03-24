@@ -26,7 +26,7 @@ spec:
             size: "{{ .Values.navidrome.size }}"
             storageClass: "{{ .Values.navidrome.storageClass }}"
             existingClaim: "shared-media"
-            mountPath: "/media"
+            mountPath: "/music"
         ingress:
           main:
             annotations:
