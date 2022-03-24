@@ -25,6 +25,7 @@ nzbget:
 nextcloud:
   smtp:
     host: mail.example.com
+    domain: example.com
     port: 587
     username: nextcloud@example.com
     sender: nextcloud@example.com

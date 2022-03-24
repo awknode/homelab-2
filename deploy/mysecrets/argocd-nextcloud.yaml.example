@@ -6,9 +6,11 @@ metadata:
   namespace: nextcloud
 type: Opaque
 stringData:
-  usernameKey: loeken
-  passwordKey: homelab
-  smtpUsernameKey: smtp_username
-  smtpPasswordKey: smtp_password
+  username: loeken
+  password: homelab
+  smtp_username: smtp_username
+  smtp_password: smtp_password
   pgusername: ncloud
   pgpassword: homelab
+  postgresql-password: homelab
+  postgresql-postgres-password: homelab
