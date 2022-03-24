@@ -16,11 +16,13 @@ spec:
         persistence:
           config:
             enabled: true
+            accessMode: "ReadWriteOnce"
             storageClass: "{{ .Values.storageClass }}"
             size: "1Gi"
             readOnly: false
           music:
             enabled: true
+            accessMode: "ReadWriteOnce"
             size: "{{ .Values.navidrome.size }}"
             storageClass: "{{ .Values.navidrome.storageClass }}"
             mountPath: "/music"
