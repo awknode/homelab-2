@@ -28,7 +28,7 @@ spec:
           enabled: true
           postgresqlUsername: ncloud
           existingSecret: nextcloud
-          postgresqlDatabase: ncloud
+          postgresqlDatabase: nextcloud
           persistence:
             enabled: true
             storageClass: "{{ .Values.storageClass }}"

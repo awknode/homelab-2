@@ -1,47 +1,5 @@
 ## setup nextcloud
 
-#### prepare 
-
-first we ll need to manually create a persistent volume
-```
-kubectl create namespace media
-cd /tmp
-nano media-persistent-volume-claim.yaml
-```
-now we insert the following text into this file:
-```
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: nextcloud-nextcloud
-  namespace: nextcloud
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 10Gi
-  storageClassName: freenas-iscsi-csi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: nextcloud-nextcloud-data
-  namespace: nextcloud
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 1000Gi
-  storageClassName: freenas-iscsi-csi
-```
-adjust the size/storageClassName and make sure they match the values from the deploy/argocd/bootstrap-optional-apps/values.yaml
-```
-kubectl apply -f media-persistent-volume-claim.yaml
-persistentvolumeclaim/shared-media created
-```
-
 #### login 
 
 - default username/password specified in nextcloud.yaml in helm-values secret
