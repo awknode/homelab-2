@@ -43,7 +43,7 @@ spec:
                   - path: /
                     pathType: Prefix
                     service:
-                      port: 7878
+                      port: 4533
             tls:
             - secretName: navidrome-tls
               hosts:
