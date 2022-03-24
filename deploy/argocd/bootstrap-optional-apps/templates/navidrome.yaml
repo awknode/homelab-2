@@ -1,0 +1,60 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: navidrome
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    chart: navidrome
+    repoURL: https://k8s-at-home.com/charts/
+    targetRevision: "16.0.1"
+    helm:
+      values: |
+        persistence:
+          config:
+            enabled: true
+            accessMode: "ReadWriteOnce"
+            storageClass: "{{ .Values.storageClass }}"
+            size: "1Gi"
+            readOnly: false
+          music:
+            enabled: true
+            accessMode: "ReadWriteOnce"
+            size: "{{ .Values.navidrome.size }}"
+            storageClass: "{{ .Values.navidrome.storageClass }}"
+            existingClaim: "shared-media"
+            mountPath: "/media"
+        ingress:
+          main:
+            annotations:
+              kubernetes.io/ingress.class: "nginx"
+              cert-manager.io/cluster-issuer: "{{ .Values.clusterIssuer }}"
+              external-dns.alpha.kubernetes.io/hostname: "navidrome.{{ .Values.domain }}."
+              external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+              external-dns.alpha.kubernetes.io/ttl: "120"
+              nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+              nginx.ingress.kubernetes.io/auth-signin: https://auth.{{ .Values.domain }}
+            enabled: true
+            hosts:
+              - host: navidrome.{{ .Values.domain }}
+                paths:
+                  - path: /
+                    pathType: Prefix
+                    service:
+                      port: 7878
+            tls:
+            - secretName: navidrome-tls
+              hosts:
+              - navidrome.{{ .Values.domain }}
+  destination:
+    namespace: media
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
