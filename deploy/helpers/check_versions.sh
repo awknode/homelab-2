@@ -61,3 +61,8 @@ echo heimdall current: $heimdallVersionCurrent remote: $heimdallVersion
 rtorrentFloodVersion=`lastversion k8s-at-home rtorrent-flood`
 rtorrentFloodVersionCurrent=`cat versions/k8s-at-home/rtorrent-flood`
 echo rtorrent-flood current: $rtorrentFloodVersionCurrent remote: $rtorrentFloodVersion
+
+# overseerr
+rtorrentFloodVersion=`lastversion k8s-at-home overseerr`
+rtorrentFloodVersionCurrent=`cat versions/k8s-at-home/overseerr`
+echo overseerr current: $rtorrentFloodVersionCurrent remote: $rtorrentFloodVersion
