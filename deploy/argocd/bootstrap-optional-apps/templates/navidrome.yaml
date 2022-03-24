@@ -25,7 +25,6 @@ spec:
             accessMode: "ReadWriteOnce"
             size: "{{ .Values.navidrome.size }}"
             storageClass: "{{ .Values.navidrome.storageClass }}"
-            existingClaim: "shared-media"
             mountPath: "/music"
         ingress:
           main:
