@@ -122,7 +122,7 @@ spec:
           enabled: true
           annotations: {}
           storageClass: "{{ .Values.storageClass }}"
-          existingClaim: nextcloud-nextcloud
+          #existingClaim: nextcloud-nextcloud
           accessMode: ReadWriteOnce
           size: 8Gi
           ## Use an additional pvc for the data directory rather than a subpath of the default PVC
@@ -131,7 +131,7 @@ spec:
             enabled: true
             annotations: {}
             storageClass: "{{ .Values.storageClass }}"
-            existingClaim: nextcloud-nextcloud-data
+            #existingClaim: nextcloud-nextcloud-data
             accessMode: ReadWriteOnce
             size: 500Gi
   destination:
