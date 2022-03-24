@@ -34,8 +34,10 @@ Settings -> Apps
 - prowlar host: http://prowlarr.media:9696
 - radar host:   http://radarr.media:7878
 - api key - copy from radarr Settings -> General
+- full sync
 
 ###### Sonarr
 - prowlar host: http://prowlarr.media:9696
 - radar host:   http://sonarr.media:8989
 - api key - copy from sonarr Settings -> General
+- full sync

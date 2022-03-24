@@ -4,8 +4,8 @@
 
 Settings -> Dowload clients
 
-###### rtorrent
-- hostname rtorrent
+###### flood
+- hostname rtorrent-flood
 - port 3000
 - Url Base /
 - username/password set in rtorrent
@@ -16,9 +16,3 @@ Settings -> Dowload clients
 - username/password set in nzbget
 - Category: TV
 
-
-## set root folder
-
-Settings -> Media Management > Add Root Folder
-
-select /media/tv

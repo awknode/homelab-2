@@ -4,8 +4,8 @@
 
 Settings -> Dowload clients
 
-###### rtorrent
-- hostname rtorrent
+###### flood
+- hostname rtorrent-flood
 - port 3000
 - Url Base /
 - username/password set in rtorrent

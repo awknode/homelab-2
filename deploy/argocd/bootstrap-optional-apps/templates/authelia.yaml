@@ -19,7 +19,7 @@ spec:
         persistence:
           enabled: true
           mountPath: "/config"
-          storageClass: "freenas-iscsi-csi"
+          storageClass: "{{ .Values.storageClass }}"
           accessMode: "ReadWriteMany"
         domain: {{ .Values.domain }}
         pod:

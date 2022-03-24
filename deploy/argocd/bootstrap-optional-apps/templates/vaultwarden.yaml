@@ -47,7 +47,7 @@ spec:
           config:
             enabled: true
             readOnly: false
-            storageClass: freenas-iscsi-csi
+            storageClass: "{{ .Values.storageClass }}"
         postgresql:
           enabled: true
           postgresqlUsername: vaultwarden
@@ -55,7 +55,7 @@ spec:
           postgresqlDatabase: vaultwarden
           persistence:
             enabled: true
-            storageClass: "freenas-iscsi-csi"
+            storageClass: "{{ .Values.storageClass }}"
             accessModes:
               - ReadWriteOnce
         envFrom:

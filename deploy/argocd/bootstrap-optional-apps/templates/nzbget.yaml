@@ -17,7 +17,7 @@ spec:
           config:
             enabled: true
             accessMode: "ReadWriteOnce"
-            storageClass: "freenas-iscsi-csi"
+            storageClass: "{{ .Values.storageClass }}"
             size: "1Gi"
             readOnly: false
           media:
@@ -30,7 +30,7 @@ spec:
             enabled: true
             accessMode: "ReadWriteOnce"
             size: "{{ .Values.nzbget.size }}"
-            storageClass: "freenas-iscsi-csi"
+            storageClass: "{{ .Values.storageClass }}"
         ingress:
           main:
             annotations:

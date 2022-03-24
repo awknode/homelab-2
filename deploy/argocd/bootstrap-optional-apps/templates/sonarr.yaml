@@ -17,7 +17,7 @@ spec:
           config:
             enabled: true
             accessMode: "ReadWriteOnce"
-            storageClass: "freenas-iscsi-csi"
+            storageClass: "{{ .Values.storageClass }}"
             size: "1Gi"
             readOnly: false
           media:

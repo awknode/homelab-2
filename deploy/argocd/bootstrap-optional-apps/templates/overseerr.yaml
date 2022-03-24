@@ -1,70 +1,55 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: plex
+  name: overseerr
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "3"
 spec:
   project: default
   source:
-    chart: plex
+    chart: overseerr
     repoURL: https://k8s-at-home.com/charts/
-    targetRevision: "6.2.0"
+    targetRevision: "5.2.0"
     helm:
       values: |
         persistence:
           config:
-            mountPath: "/config"
+            type: "pvc"
             enabled: true
+            mountPath: /app/config
             accessMode: "ReadWriteOnce"
             size: "1Gi"
             storageClass: "{{ .Values.storageClass }}"
             readOnly: false
-          transcode:
-            enabled: true
-            mountPath: "/transcode"
-            size: "10Gi"
-            storageClass: "local-path"
-            accessMode: "ReadWriteOnce"
-          media:
-            enabled: true
-            accessMode: "ReadWriteMany"
-            size: "{{ .Values.sharedmedia.size }}"
-            storageClass: "{{ .Values.sharedmedia.storageClass }}"
-            existingClaim: "shared-media"
         ingress:
           main:
             annotations:
-              nginx.org/location-snippets: |
-                proxy_set_header Upgrade $http_upgrade;
-                proxy_set_header Connection upgrade;
               kubernetes.io/ingress.class: "nginx"
               cert-manager.io/cluster-issuer: "{{ .Values.clusterIssuer }}"
-              external-dns.alpha.kubernetes.io/hostname: "plex.{{ .Values.domain }}."
+              external-dns.alpha.kubernetes.io/hostname: "overseerr.{{ .Values.domain }}."
               external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
               external-dns.alpha.kubernetes.io/ttl: "120"
-              #//@TODO: test with authelia
-              #nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
-              #nginx.ingress.kubernetes.io/auth-signin: https://auth.{{ .Values.domain }}
+              nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+              nginx.ingress.kubernetes.io/auth-signin: https://auth.{{ .Values.domain }}
             enabled: true
             hosts:
-              - host: plex.{{ .Values.domain }}
+              - host: overseerr.{{ .Values.domain }}
                 paths:
                   - path: /
                     pathType: Prefix
                     service:
-                      port: 32400
+                      port: 5055
             tls:
-            - secretName: plexserver-tls
+            - secretName: overseerr-tls
               hosts:
-              - plex.{{ .Values.domain }}
+              - overseerr.{{ .Values.domain }}
         podSecurityContext:
           runAsUser: 568
           runAsGroup: 568
           fsGroup: 568
   destination:
-    namespace: media
+    namespace: overseerr
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:

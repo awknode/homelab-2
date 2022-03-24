@@ -38,7 +38,7 @@ spec:
         persistence:
           config:
             enabled: true
-            storageClass: freenas-iscsi-csi
+            storageClass: "{{ .Values.storageClass }}"
             readOnly: false
   destination:
     namespace: heimdall
