@@ -32,3 +32,6 @@ nextcloud:
 navidrome:
   size: 100Gi
   storageClass: freenas-nfs-csi
+photoprism:
+  size: 100Gi
+  storageClass: freenas-nfs-csi

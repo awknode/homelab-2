@@ -1,16 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: navidrome
+  name: photoprism
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "3"
 spec:
   project: default
   source:
-    chart: navidrome
+    chart: photoprism
     repoURL: https://k8s-at-home.com/charts/
-    targetRevision: "6.2.0"
+    targetRevision: "6.4.0"
     helm:
       values: |
         persistence:
@@ -20,37 +20,37 @@ spec:
             storageClass: "{{ .Values.storageClass }}"
             size: "1Gi"
             readOnly: false
-            mountPath: "/data"
-          music:
+            mountPath: "/photoprism/storage"
+          originals:
             enabled: true
             accessMode: "ReadWriteOnce"
-            size: "{{ .Values.navidrome.size }}"
-            storageClass: "{{ .Values.navidrome.storageClass }}"
-            mountPath: "/music"
+            size: "{{ .Values.photoprism.size }}"
+            storageClass: "{{ .Values.photoprism.storageClass }}"
+            mountPath: "/photoprism/originals"
         ingress:
           main:
             annotations:
               kubernetes.io/ingress.class: "nginx"
               cert-manager.io/cluster-issuer: "{{ .Values.clusterIssuer }}"
-              external-dns.alpha.kubernetes.io/hostname: "navidrome.{{ .Values.domain }}."
+              external-dns.alpha.kubernetes.io/hostname: "photos.{{ .Values.domain }}."
               external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
               external-dns.alpha.kubernetes.io/ttl: "120"
-              nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
-              nginx.ingress.kubernetes.io/auth-signin: https://auth.{{ .Values.domain }}
+              #nginx.ingress.kubernetes.io/auth-url: http://authelia.authelia.svc.cluster.local/api/verify
+              #nginx.ingress.kubernetes.io/auth-signin: https://auth.{{ .Values.domain }}
             enabled: true
             hosts:
-              - host: navidrome.{{ .Values.domain }}
+              - host: photos.{{ .Values.domain }}
                 paths:
                   - path: /
                     pathType: Prefix
                     service:
-                      port: 4533
+                      port: 2342
             tls:
-            - secretName: navidrome-tls
+            - secretName: photoprism-tls
               hosts:
-              - navidrome.{{ .Values.domain }}
+              - photos.{{ .Values.domain }}
   destination:
-    namespace: navidrome
+    namespace: photoprism
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
