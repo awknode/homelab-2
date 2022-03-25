@@ -10,7 +10,7 @@ spec:
   source:
     chart: jackett
     repoURL: https://k8s-at-home.com/charts/
-    targetRevision: "14.0.1"
+    targetRevision: "11.3.0"
     helm:
       values: |
         persistence:
@@ -44,7 +44,7 @@ spec:
                   - path: /
                     pathType: Prefix
                     service:
-                      port: 8686
+                      port: 9117
             tls:
             - secretName: jackett-tls
               hosts:
