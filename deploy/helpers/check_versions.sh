@@ -66,3 +66,8 @@ echo rtorrent-flood current: $rtorrentFloodVersionCurrent remote: $rtorrentFlood
 rtorrentFloodVersion=`lastversion k8s-at-home overseerr`
 rtorrentFloodVersionCurrent=`cat versions/k8s-at-home/overseerr`
 echo overseerr current: $rtorrentFloodVersionCurrent remote: $rtorrentFloodVersion
+
+# nextcloud
+version=`lastversion nextcloud nextcloud`
+versionCurrent=`cat versions/nextcloud/nextcloud`
+echo nextcloud current: $versionCurrent=`cat versions/nextcloud/nextcloud` remote: $version

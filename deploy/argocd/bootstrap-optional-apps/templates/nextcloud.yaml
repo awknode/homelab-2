@@ -10,7 +10,7 @@ spec:
   source:
     chart: nextcloud
     repoURL: https://nextcloud.github.io/helm/
-    targetRevision: "2.12.1"
+    targetRevision: "2.13.2"
     helm:
       values: |
         internalDatabase:

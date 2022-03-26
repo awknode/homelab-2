@@ -100,11 +100,17 @@ spec:
               policy: bypass
               networks:
                 - 10.42.0.0/16
-            - domain: ['lidarr.{{ .Values.domain }}','sonarr.{{ .Values.domain }}', 'overseerr.{{ .Values.domain }}', 'radarr.{{ .Values.domain }}', 'ha.{{ .Values.domain }}', 'plex.{{ .Values.domain }}', 'nextcloud.{{ .Values.domain }}', 'ha.{{ .Values.domain }}', 'vaultwarden.{{ .Values.domain }}']
+            - domain: ['lidarr.{{ .Values.domain }}','sonarr.{{ .Values.domain }}', 'overseerr.{{ .Values.domain }}', 'radarr.{{ .Values.domain }}', 'ha.{{ .Values.domain }}', 'plex.{{ .Values.domain }}', 'nextcloud.{{ .Values.domain }}', 'ha.{{ .Values.domain }}']
               policy: bypass
               resources:
                 - "^/api.*"
                 - "^/signalr.*"
+            - domain: ['vaultwarden.{{ .Values.domain }}']
+              policy: bypass
+              resources:
+                - "^/api.*"
+                - "^/identity/connect/token.*"
+                - "^/notifications/hub.*"
             - domain: 'rtorrent.{{ .Values.domain }}'
               policy: bypass
               resources:

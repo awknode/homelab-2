@@ -31,7 +31,7 @@ nextcloud:
     sender: nextcloud@example.com
 navidrome:
   size: 100Gi
-  storageClass: freenas-nfs-csi
+  storageClass: freenas-iscsi-csi
 photoprism:
   size: 100Gi
-  storageClass: freenas-nfs-csi
+  storageClass: freenas-iscsi-csi
