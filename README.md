@@ -45,7 +45,7 @@ I also do use proxmox to configure simple firewall rules on the hosts - but that
 This allows you to pull the changes that i make to my setup from github.com/loeken/homelab, send to your repo and thus apply the changes to your cluster
 
 ### 2.1. create a new private repo
-head to github, if you havent done so yet create an account, then create a new homelab in this example i ll call it github.com/loeken/homelab-private
+head to github, if you haven't done so yet create an account, then create a new homelab in this example i ll call it github.com/loeken/homelab-private
 
 also make sure your ssh pubkey is added in github as we'll be pulling a private repo and auth via ssh keys.
 
