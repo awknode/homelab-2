@@ -20,7 +20,7 @@
     - [4.1. argocd sync bootstrap-core-app of apps](#41-argocd-sync-bootstrap-core-app-of-apps)
 
 ## 1.2. note about old version
-argocd doesnt allow mounting secrets to the repo server anymore. re-created the project - started from scratc
+argocd doesnt allow mounting secrets to the repo server anymore. re-created the project - started from scratch
 
 ## 1.3. goals
 - full disk encryption of proxmox hypervisor
