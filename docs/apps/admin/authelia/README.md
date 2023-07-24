@@ -1,4 +1,4 @@
-## setup authelia
+### setup authelia
 
 #### notifier
 by default it uses notifier.filesystem, means that it will not send emails but echo them to  /config/notification.txt i suggest you setup email instead and enable = false the filesystem
