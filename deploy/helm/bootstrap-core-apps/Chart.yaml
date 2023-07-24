@@ -1,4 +1,4 @@
-apiVersion: v2
+#apiVersion: v2
 name: bootstrap-core-apps
 description: A Helm chart to bootstrap other argocd applications
 type: application
