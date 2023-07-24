@@ -41,7 +41,6 @@ As for storage I have a 4Unit server with 24hdd slots with a HBA - since this is
 I also do use proxmox to configure simple firewall rules on the hosts - but that is pretty much it. Once proxmox is running we can start using this repository to create vms etc.
 
 ## 2. fork this repo
-![img](docs/img/upstream-repo.png)
 This allows you to pull the changes that i make to my setup from github.com/awknode/homelab, send to your repo and thus apply the changes to your cluster
 
 ### 2.1. create a new private repo
