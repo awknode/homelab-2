@@ -6,7 +6,7 @@ metadata:
   namespace: nextcloud
 type: Opaque
 stringData:
-  username: loeken
+  username: awknode
   password: homelab
   smtp_username: smtp_username
   smtp_password: smtp_password
