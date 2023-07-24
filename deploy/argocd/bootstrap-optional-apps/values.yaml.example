@@ -1,7 +1,7 @@
 # this file acts as a global value files to all bootstrap-optional-apps
-domain: internetz.cloud
+domain: awknode.cloud
 clusterIssuer: letsencrypt-staging
-githubUser: loeken
+githubUser: awknode
 githubRepo: homelab-private
 storageClass: freenas-iscsi-csi
 openldap:
