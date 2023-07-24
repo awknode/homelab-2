@@ -1,4 +1,4 @@
-#deploy/terraform/proxmox-debian-11-template/variables.tf
+deploy/terraform/proxmox-debian-11-template/variables.tf
 **.tfstate**
 .terraform**
 kubeconfig
