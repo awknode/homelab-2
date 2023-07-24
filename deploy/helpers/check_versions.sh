@@ -1,4 +1,4 @@
-#!/bin/bash
+##!/bin/bash
 
 function lastversion() {
     version=$(curl -s https://artifacthub.io/api/v1/packages/helm/$1/$2/feed/rss | xmlstarlet sel -t -m "/rss/channel/item[1]" -v "title")
