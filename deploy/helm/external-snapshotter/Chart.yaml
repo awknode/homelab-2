@@ -1,4 +1,4 @@
-#apiVersion: v2
+apiVersion: v2
 name: external-snapshotter
 description: A Helm chart to create volumeclasses required for csi/kasten k10
 type: application
