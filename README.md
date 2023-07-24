@@ -11,7 +11,7 @@
   - [2. proxmox installation](#2-proxmox-installation)
   - [2. fork this repo](#2-fork-this-repo)
     - [2.1. create a new private repo](#21-create-a-new-private-repo)
-    - [2.2 push changes from loeken/homelab to private repo](#22-push-changes-from-loekenhomelab-to-private-repo)
+    - [2.2 push changes from awknode/homelab to private repo](#22-push-changes-from-awknodehomelab-to-private-repo)
     - [2.3. configure upstream](#23-configure-upstream)
     - [2.4 how to pull changes from "upstream"](#24-how-to-pull-changes-from-upstream)
     - [2.5. create a deploy key, add it to the github repository, so argocd can pull from the private repo](#25-create-a-deploy-key-add-it-to-the-github-repository-so-argocd-can-pull-from-the-private-repo)
@@ -42,10 +42,10 @@ I also do use proxmox to configure simple firewall rules on the hosts - but that
 
 ## 2. fork this repo
 ![img](docs/img/upstream-repo.png)
-This allows you to pull the changes that i make to my setup from github.com/loeken/homelab, send to your repo and thus apply the changes to your cluster
+This allows you to pull the changes that i make to my setup from github.com/awknode/homelab, send to your repo and thus apply the changes to your cluster
 
 ### 2.1. create a new private repo
-head to github, if you haven't done so yet create an account, then create a new homelab in this example i ll call it github.com/loeken/homelab-private
+head to github, if you haven't done so yet create an account, then create a new homelab in this example i ll call it github.com/awknode/homelab-private
 
 also make sure your ssh pubkey is added in github as we'll be pulling a private repo and auth via ssh keys.
 
@@ -55,7 +55,7 @@ the principles of cloning the public repo to a private are outlined here: https:
 ```
 # ~/Projects/private is the project root where i clone private projects to
 cd ~/Projects/private
-git clone --bare git@github.com:loeken/homelab
+git clone --bare git@github.com:awknode/homelab
 Cloning into bare repository 'homelab.git'...
 remote: Enumerating objects: 30, done.
 remote: Counting objects: 100% (30/30), done.
@@ -65,15 +65,15 @@ Receiving objects: 100% (30/30), 8.89 KiB | 8.89 MiB/s, done.
 Resolving deltas: 100% (5/5), done.
 ```
 
-### 2.2 push changes from loeken/homelab to private repo
+### 2.2 push changes from awknode/homelab to private repo
 now we cd into the homelab.git folder to then push the changes to our newly created private repo
 ```
 cd homelab.git
-git push --mirror git@github.com:loeken/homelab-private
+git push --mirror git@github.com:awknode/homelab-private
 ```
 
 ### 2.3. configure upstream
-we now clone our own private repo and add the public repo as an upstream, this allows you to pull all the changes that i send to github.com/loeken/homelab
+we now clone our own private repo and add the public repo as an upstream, this allows you to pull all the changes that i send to github.com/awknode/homelab
 ```
 cd ~/Projects/private
 git clone git@github.com:awknode/homelab-private
