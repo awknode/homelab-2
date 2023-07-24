@@ -76,9 +76,9 @@ git push --mirror git@github.com:loeken/homelab-private
 we now clone our own private repo and add the public repo as an upstream, this allows you to pull all the changes that i send to github.com/loeken/homelab
 ```
 cd ~/Projects/private
-git clone git@github.com:loeken/homelab-private
+git clone git@github.com:awknode/homelab-private
 cd homelab-private
-git remote add upstream https://github.com/loeken/homelab.git
+git remote add upstream https://github.com/awknode/homelab.git
 ```
 
 ### 2.4 how to pull changes from "upstream"
@@ -89,7 +89,7 @@ remote: Counting objects: 100% (6/6), done.
 remote: Compressing objects: 100% (2/2), done.
 remote: Total 5 (delta 1), reused 5 (delta 1), pack-reused 0
 Unpacking objects: 100% (5/5), 240.62 KiB | 2.62 MiB/s, done.
-From https://github.com/loeken/homelab
+From https://github.com/awknode/homelab
  * branch            main       -> FETCH_HEAD
  * [new branch]      main       -> upstream/main
 Updating c189a8d..cdbc04e
@@ -131,13 +131,13 @@ cd ~/Projects/private/homelab-private
 cd deploy/mysecrets
 ssh-keygen -t ed25519 -a 100
 Generating public/private ed25519 key pair.
-Enter file in which to save the key (/home/loeken/.ssh/id_ed25519): id_ed25519_homelab_private_deploy_key
+Enter file in which to save the key (/home/awknode/.ssh/id_ed25519): id_ed25519_homelab_private_deploy_key
 Enter passphrase (empty for no passphrase): 
 Enter same passphrase again: 
 Your identification has been saved in id_ed25519_homelab_private_deploy_key
 Your public key has been saved in id_ed25519_homelab_private_deploy_key.pub
 The key fingerprint is:
-SHA256:xNNad3N+/NZIOjwD1bqqNeQOs802bLBkk1qs+pY7Ptc loeken@0x00f
+SHA256:xNNad3N+/NZIOjwD1bqqNeQOs802bLBkk1qs+pY7Ptc awknode@0x00f
 The key's randomart image is:
 +--[ED25519 256]--+
 |                 |
@@ -152,12 +152,12 @@ The key's randomart image is:
 +----[SHA256]-----+
 ```
 
-now head to your github repo like https://github.com/loeken/homelab-private/settings/keys/new and insert the contents of id_ed25519_homelab_private_deploy_key.pub call it argocd-deploy-key this key is read only - so perfect for what we need it for ( argocd to pull code from out private repo ).
+now head to your github repo like https://github.com/awknode/homelab-private/settings/keys/new and insert the contents of id_ed25519_homelab_private_deploy_key.pub call it argocd-deploy-key this key is read only - so perfect for what we need it for ( argocd to pull code from out private repo ).
 
 ## 3. creating debian 11 template
 as the image build process is a one off thing i ve moved it to a seperate folder to reduce confusion :)
 
-To get started building an image we first need to set some values in the variables.tf. This file will contain variables specific to your own setup - this is why the repo doesnt come with the file directly but with a variables.tf.example, you then create a variables.tf based of variables.tf.example - this allows you to pull changes from github.com/loeken/homelab at a later stage and dont have your variables.tf overwritten - while you can still compare the structure of both files for changes.
+To get started building an image we first need to set some values in the variables.tf. This file will contain variables specific to your own setup - this is why the repo doesnt come with the file directly but with a variables.tf.example, you then create a variables.tf based of variables.tf.example - this allows you to pull changes from github.com/awknode/homelab at a later stage and dont have your variables.tf overwritten - while you can still compare the structure of both files for changes.
 
 ```
 cd ~/Projects/private/homelab-private/deploy/terraform
@@ -200,7 +200,7 @@ cd ~/Projects/private/homelab-private/deploy/argocd/bootstrap-optional-apps
 cp values.yaml.example values.yaml
 nano values.yaml
 ```
-the templates folder inside this folder are part of a local helm chart and contain the manifest for all "optional apps", the values.yaml in this folder can be used to pass variables such as your "domain name" to all other helm charts. this is the main file where you configure your apps, if you need to configure something else which you cannot find in this values.yaml create an issue on github.com/loeken/homelab
+the templates folder inside this folder are part of a local helm chart and contain the manifest for all "optional apps", the values.yaml in this folder can be used to pass variables such as your "domain name" to all other helm charts. this is the main file where you configure your apps, if you need to configure something else which you cannot find in this values.yaml create an issue on github.com/awknode/homelab
 
 we've added a variables.tf before which was responsible for creating the proxmox template. now we edit the contents of the one responsible for bootstrapping k3s
 
@@ -259,7 +259,7 @@ Compressing objects: 100% (15/15), done.
 Writing objects: 100% (15/15), 1.34 KiB | 1.34 MiB/s, done.
 Total 15 (delta 8), reused 0 (delta 0), pack-reused 0
 remote: Resolving deltas: 100% (8/8), completed with 6 local objects.
-To github.com:loeken/homelab-private
+To github.com:awknode/homelab-private
    53676ca..60c43d5  main -> main
 ```
 
