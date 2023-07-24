@@ -7,7 +7,7 @@ metadata:
     argocd.argoproj.io/secret-type: repository
 stringData:
   name: homelab-private
-  url: git@github.com:loeken/homelab-private
+  url: git@github.com:awknode/homelab-private
   sshPrivateKey: |
     -----BEGIN OPENSSH PRIVATE KEY-----
     YOURKEY
