@@ -26,7 +26,7 @@ argocd doesnt allow mounting secrets to the repo server anymore. re-created the 
 - full disk encryption of proxmox hypervisor
 - all secrets used in helm charts exist in secrets and are encrypted using kubeseal
 
-## 1.5. the hardware
+## 1.4. the hardware
 I see a lot of ppl attempting to run their homelab in high availability - i dont really plan to run any "critical applications", these i would run in the clouds. I ll by running the entire stack on a single server ( that happens to have a bunch of disks ), we ll be running 4 vms in proxmox, 3 that form a k3s cluster and 1 that provides storage ( truenas ). If you want to attempt to run it in ha you can run the 3 k3s nodes on 3 seperated hardware, provide a redundant truenas and off you go
 
 ## 2. proxmox installation
