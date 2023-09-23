@@ -33,7 +33,7 @@ proxmox installation is quite forward. I ll be installing debian 11 with full di
 
 As for storage I have a 4Unit server with 24hdd slots with a HBA - since this is PCI device i ll simply pass this pci device with all disks to the truenas instance. if you dont have a similar device you can still pass in storage from the disks to the truenas vm using proxmox.
 
-I also do use proxmox to configure simple firewall rules on the hosts - but that is pretty much it. Once proxmox is running we can start using this repository to create vms etc.
+I also do use proxmox to configure simple firewall rules on the hosts (OpnSense) - but that is pretty much it. Once proxmox is running we can start using this repository to create vms etc.
 
 ## 2. fork this repo
 This allows you to pull the changes that i make to my setup from github.com/awknode/homelab, send to your repo and thus apply the changes to your cluster
